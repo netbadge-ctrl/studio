@@ -10,6 +10,12 @@ export type Component = {
   partNumber: string;
 };
 
+export type SOPStep = {
+  step: number;
+  action: string;
+  completed: boolean;
+};
+
 export type Device = {
   id: string;
   type: '服务器' | '交换机' | '存储设备';
@@ -21,6 +27,7 @@ export type Device = {
   };
   currentConfig: Component[];
   targetConfig: Component[];
+  sop: SOPStep[];
 };
 
 export type WorkOrder = {

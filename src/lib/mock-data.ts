@@ -32,6 +32,15 @@ export const workOrders: WorkOrder[] = [
           { type: "内存", model: "DDR4 32GB 3200MHz", quantity: 4, partNumber: "MEM-32G-3200-B" },
           { type: "SSD", model: "Samsung PM883 480GB", quantity: 2, partNumber: "SSD-480G-S-PM883" },
         ],
+        sop: [
+          { step: 1, action: "验证服务器序列号", completed: false },
+          { step: 2, action: "安全停机并断开电源", completed: false },
+          { step: 3, action: "移除所有旧的 16GB 内存条", completed: false },
+          { step: 4, action: "安装新的 32GB 内存条", completed: false },
+          { step: 5, action: "重新连接电源并启动服务器", completed: false },
+          { step: 6, action: "进入 BIOS/UEFI 确认内存识别正确", completed: false },
+          { step: 7, action: "将工单状态标记为“已完成”", completed: false },
+        ]
       },
     ],
   },
@@ -58,6 +67,14 @@ export const workOrders: WorkOrder[] = [
             { type: "SSD", model: "Intel P4510 1TB NVMe", quantity: 4, partNumber: "SSD-1T-I-P4510" },
             { type: "网卡", model: "Mellanox CX-5 25GbE", quantity: 2, partNumber: "NIC-MEL-CX5" },
         ],
+        sop: [
+          { step: 1, action: "将服务器安装到指定机架位置", completed: true },
+          { step: 2, action: "安装 2 个 CPU", completed: true },
+          { step: 3, action: "安装 8 条内存", completed: false },
+          { step: 4, action: "安装 4 个 NVMe SSD", completed: false },
+          { step: 5, action: "安装 2 个网卡", completed: false },
+          { step: 6, action: "连接电源线和网络线", completed: false },
+        ]
       },
       {
         id: "dev-006",
@@ -70,6 +87,12 @@ export const workOrders: WorkOrder[] = [
         },
         currentConfig: [],
         targetConfig: [],
+        sop: [
+           { step: 1, action: "将交换机安装到指定机架位置", completed: true },
+           { step: 2, action: "连接上行链路", completed: false },
+           { step: 3, action: "连接服务器 SN-F2G8H4I6J1", completed: false },
+           { step: 4, action: "配置 VLAN", completed: false },
+        ]
       }
     ],
   },
@@ -91,6 +114,7 @@ export const workOrders: WorkOrder[] = [
             },
             currentConfig: [],
             targetConfig: [],
+            sop: []
         }
     ],
   },
@@ -117,12 +141,13 @@ export const workOrders: WorkOrder[] = [
           { type: "SATA", model: "Seagate Exos 4TB", quantity: 8, partNumber: "HDD-4T-S-EXOS" },
           { type: "SSD", model: "Samsung PM883 960GB", quantity: 4, partNumber: "SSD-960G-S-PM883" },
         ],
+        sop: []
       },
     ],
   },
   {
     id: "wo-005",
-    title: "淘汰服务器 Rhea-15",
+    title: "淘汰服务器 Rhea-15, Rhea-16",
     type: "服务器改造",
     status: "待处理",
     assignedTo: [],
@@ -136,8 +161,34 @@ export const workOrders: WorkOrder[] = [
           rack: "R18",
           uPosition: 30,
         },
-        currentConfig: [],
+        currentConfig: [
+            { type: "CPU", model: "Intel Xeon E5-2620 v3", quantity: 2, partNumber: "CPU-INT-2620V3"},
+            { type: "内存", model: "DDR4 16GB 2133MHz", quantity: 4, partNumber: "MEM-16G-2133-C" },
+        ],
         targetConfig: [],
+        sop: [
+          { step: 1, action: "下架服务器", completed: false },
+          { step: 2, action: "擦除数据", completed: false },
+        ]
+      },
+      {
+        id: "dev-007",
+        type: "服务器",
+        serialNumber: "SN-V6W2X8Y4Z2",
+        location: {
+          module: "A1",
+          rack: "R18",
+          uPosition: 31,
+        },
+        currentConfig: [
+            { type: "CPU", model: "Intel Xeon E5-2620 v3", quantity: 2, partNumber: "CPU-INT-2620V3"},
+            { type: "内存", model: "DDR4 16GB 2133MHz", quantity: 4, partNumber: "MEM-16G-2133-C" },
+        ],
+        targetConfig: [],
+        sop: [
+          { step: 1, action: "下架服务器", completed: false },
+          { step: 2, action: "擦除数据", completed: false },
+        ]
       },
     ],
   },
