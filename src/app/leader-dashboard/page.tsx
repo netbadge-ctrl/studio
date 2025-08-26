@@ -6,10 +6,10 @@ export default function LeaderDashboardPage() {
     return (
         <div className="flex min-h-screen w-full flex-col bg-background">
             <MainNav />
-            <main className="flex-1 bg-muted/40 p-4 sm:px-6 sm:py-0 md:gap-8">
-               <div className="max-w-7xl mx-auto py-6">
+            <main className="flex-1 bg-muted/40 p-4 md:p-6">
+               <div className="max-w-7xl mx-auto">
                  <header>
-                    <h1 className="text-3xl font-bold text-foreground tracking-tight">
+                    <h1 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">
                         Leader Dashboard
                     </h1>
                     <p className="mt-1 text-muted-foreground">

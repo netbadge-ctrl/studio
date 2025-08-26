@@ -50,30 +50,30 @@ export default function Home() {
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
       <MainNav />
-      <main className="flex-1 bg-muted/40 p-4 sm:px-6 sm:py-0 md:gap-8">
-        <div className="max-w-7xl mx-auto py-6">
+      <main className="flex-1 bg-muted/40 p-4 md:p-6">
+        <div className="max-w-7xl mx-auto">
           <header>
-            <h1 className="text-3xl font-bold text-foreground tracking-tight">
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">
               My Work Orders
             </h1>
             <p className="mt-1 text-muted-foreground">
-              Here are the tasks assigned to you. Click a card to view details.
+              Here are the tasks assigned to you.
             </p>
           </header>
-          <div className="grid gap-6 mt-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 mt-6 sm:grid-cols-2 lg:grid-cols-3">
             {myWorkOrders.map((order) => (
               <Link href={`/work-orders/${order.id}`} key={order.id} className="group">
                 <Card className="h-full flex flex-col transition-all duration-200 group-hover:shadow-lg group-hover:-translate-y-1">
                   <CardHeader>
                     <div className="flex justify-between items-start">
                       <div className="space-y-1">
-                        <CardTitle className="text-lg">{order.title}</CardTitle>
-                        <CardDescription className="flex items-center gap-2">
+                        <CardTitle className="text-base font-bold">{order.title}</CardTitle>
+                        <CardDescription className="flex items-center gap-2 text-xs">
                           {getTypeIcon(order.type)}
                           {order.type}
                         </CardDescription>
                       </div>
-                      <Badge className={cn("whitespace-nowrap", getStatusClass(order.status))}>
+                      <Badge className={cn("whitespace-nowrap text-xs", getStatusClass(order.status))}>
                         {order.status}
                       </Badge>
                     </div>
@@ -82,13 +82,13 @@ export default function Home() {
                     <p className="text-sm text-muted-foreground">
                       {order.devices.length} device(s) to operate.
                     </p>
-                    <div className="mt-2 text-sm text-foreground font-mono font-medium">
+                    <div className="mt-2 text-xs text-foreground font-mono font-medium">
                       {order.devices.map(d => d.serialNumber).join(', ')}
                     </div>
                   </CardContent>
-                  <CardFooter className="text-sm text-primary group-hover:text-accent-foreground font-medium flex items-center justify-end">
+                  <CardFooter className="text-xs text-primary group-hover:text-accent-foreground font-medium flex items-center justify-end">
                     View Details
-                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    <ArrowRight className="ml-2 h-3 w-3 transition-transform group-hover:translate-x-1" />
                   </CardFooter>
                 </Card>
               </Link>

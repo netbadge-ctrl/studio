@@ -57,16 +57,16 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
       <div className="lg:col-span-3 space-y-6">
         <Card>
           <CardHeader>
-            <div className="flex justify-between items-start">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
               <div>
-                <CardTitle className="text-2xl">{workOrder.title}</CardTitle>
+                <CardTitle className="text-xl md:text-2xl">{workOrder.title}</CardTitle>
                 <CardDescription>Work Order #{workOrder.id}</CardDescription>
               </div>
-              <Badge className={cn("text-base", getStatusClass(workOrder.status))}>{workOrder.status}</Badge>
+              <Badge className={cn("text-base whitespace-nowrap w-fit", getStatusClass(workOrder.status))}>{workOrder.status}</Badge>
             </div>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 <div className="flex items-start gap-3">
                     <MapPin className="h-5 w-5 text-primary mt-1" />
                     <div>
@@ -81,7 +81,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
                         <p className="text-muted-foreground font-mono font-code">{device.serialNumber}</p>
                     </div>
                 </div>
-                 <div className="flex items-start gap-3">
+                 <div className="flex items-start gap-3 col-span-full">
                     <QrCode className="h-5 w-5 text-primary mt-1" />
                     <div>
                         <h4 className="font-semibold">Verification</h4>
@@ -90,23 +90,21 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
                 </div>
             </div>
           </CardContent>
-          <CardFooter>
-             <div className="space-x-2">
-                <Button variant={locatorLight === 'flashing' ? 'default' : 'outline'} onClick={() => setLocatorLight('flashing')}>
-                    {locatorLight === 'flashing' ? <Lightbulb className="mr-2 h-4 w-4" /> : <LightbulbOff className="mr-2 h-4 w-4" />}
-                    Flash Light
-                </Button>
-                 <Button variant={locatorLight === 'on' ? 'default' : 'outline'} onClick={() => setLocatorLight('on')}>
-                    {locatorLight === 'on' ? <Lightbulb className="mr-2 h-4 w-4" /> : <LightbulbOff className="mr-2 h-4 w-4" />}
-                    Turn On Light
-                </Button>
-            </div>
+          <CardFooter className='flex-wrap gap-2'>
+             <Button size="sm" variant={locatorLight === 'flashing' ? 'default' : 'outline'} onClick={() => setLocatorLight('flashing')}>
+                {locatorLight === 'flashing' ? <Lightbulb className="mr-2" /> : <LightbulbOff className="mr-2" />}
+                Flash Light
+            </Button>
+             <Button size="sm" variant={locatorLight === 'on' ? 'default' : 'outline'} onClick={() => setLocatorLight('on')}>
+                {locatorLight === 'on' ? <Lightbulb className="mr-2" /> : <LightbulbOff className="mr-2" />}
+                Turn On Light
+            </Button>
           </CardFooter>
         </Card>
 
         <Card>
             <CardHeader>
-                <CardTitle>Configuration Comparison</CardTitle>
+                <CardTitle className='text-xl'>Configuration Comparison</CardTitle>
                 <CardDescription>Review changes between current and target configurations.</CardDescription>
             </CardHeader>
             <CardContent>
@@ -114,8 +112,8 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
                     <TableHeader>
                         <TableRow>
                             <TableHead>Component</TableHead>
-                            <TableHead className="text-center">Current Qty</TableHead>
-                            <TableHead className="text-center">Target Qty</TableHead>
+                            <TableHead className="text-center">Current</TableHead>
+                            <TableHead className="text-center">Target</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -125,14 +123,14 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
                                     <div className="flex items-center gap-2">
                                         {getComponentIcon(item.type!)}
                                         <div>
-                                            <p className="font-medium">{item.type}</p>
-                                            <p className="text-xs text-muted-foreground font-code">{item.model}</p>
+                                            <p className="font-medium text-xs sm:text-sm">{item.type}</p>
+                                            <p className="text-xs text-muted-foreground font-code hidden sm:block">{item.model}</p>
                                         </div>
                                     </div>
                                 </TableCell>
                                 <TableCell className="text-center font-medium">{item.currentQty}</TableCell>
                                 <TableCell className={cn("text-center font-bold", item.currentQty !== item.targetQty && "text-accent-foreground")}>
-                                  <div className="flex items-center justify-center gap-2">
+                                  <div className="flex items-center justify-center gap-1 sm:gap-2">
                                     {item.currentQty < item.targetQty && <ArrowRight className="h-4 w-4 text-green-500"/>}
                                     {item.currentQty > item.targetQty && <ArrowRight className="h-4 w-4 text-red-500 rotate-180"/>}
                                     {item.targetQty}
@@ -149,7 +147,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
       <div className="lg:col-span-2 space-y-6">
         <Card>
             <CardHeader>
-                <CardTitle>Required Components & AI Suggestions</CardTitle>
+                <CardTitle className='text-xl'>Required Components & AI Suggestions</CardTitle>
                 <CardDescription>Find and retrieve necessary parts for this operation.</CardDescription>
             </CardHeader>
             <CardContent>
@@ -159,11 +157,11 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
 
         <Card>
             <CardHeader>
-                <CardTitle>Visual Operation Guides</CardTitle>
+                <CardTitle className='text-xl'>Visual Operation Guides</CardTitle>
             </CardHeader>
             <CardContent>
                 <Tabs defaultValue="diagram">
-                    <TabsList>
+                    <TabsList className='grid w-full grid-cols-2'>
                         <TabsTrigger value="diagram">Slot Diagram</TabsTrigger>
                         <TabsTrigger value="video">Video Guide</TabsTrigger>
                     </TabsList>

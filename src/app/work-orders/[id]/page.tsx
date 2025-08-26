@@ -22,7 +22,7 @@ export default function WorkOrderDetailPage({ params }: { params: { id: string }
                 <Button asChild variant="outline" size="sm">
                     <Link href="/" className='flex items-center gap-1'>
                         <ChevronLeft className="h-4 w-4" />
-                        Back to All Orders
+                        Back to My Orders
                     </Link>
                 </Button>
             </div>
