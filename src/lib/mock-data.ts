@@ -17,6 +17,7 @@ export const workOrders: WorkOrder[] = [
     devices: [
       {
         id: "dev-001",
+        type: "服务器",
         serialNumber: "SN-A7B3C9D1E5",
         location: {
           module: "A1",
@@ -36,13 +37,14 @@ export const workOrders: WorkOrder[] = [
   },
   {
     id: "wo-002",
-    title: "安装新 Web 服务器 Titan-05",
+    title: "安装新 Web 服务器和交换机",
     type: "新服务器部署",
     status: "进行中",
     assignedTo: [employees[0], employees[2]],
     devices: [
       {
         id: "dev-002",
+        type: "服务器",
         serialNumber: "SN-F2G8H4I6J1",
         location: {
           module: "B2",
@@ -57,6 +59,18 @@ export const workOrders: WorkOrder[] = [
             { type: "网卡", model: "Mellanox CX-5 25GbE", quantity: 2, partNumber: "NIC-MEL-CX5" },
         ],
       },
+      {
+        id: "dev-006",
+        type: "交换机",
+        serialNumber: "SN-SW-A9B8C7D6E5",
+        location: {
+          module: "B2",
+          rack: "R05",
+          uPosition: 24,
+        },
+        currentConfig: [],
+        targetConfig: [],
+      }
     ],
   },
   {
@@ -68,6 +82,7 @@ export const workOrders: WorkOrder[] = [
     devices: [
         {
             id: "dev-003",
+            type: "交换机",
             serialNumber: "SN-K3L9M5N1P7",
             location: {
                 module: "Core",
@@ -88,6 +103,7 @@ export const workOrders: WorkOrder[] = [
     devices: [
       {
         id: "dev-004",
+        type: "服务器",
         serialNumber: "SN-Q8R4S2T7U3",
         location: {
           module: "C3",
@@ -113,6 +129,7 @@ export const workOrders: WorkOrder[] = [
     devices: [
       {
         id: "dev-005",
+        type: "服务器",
         serialNumber: "SN-V6W2X8Y4Z1",
         location: {
           module: "A1",
