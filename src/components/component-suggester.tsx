@@ -15,9 +15,9 @@ import { Bot, Lightbulb } from 'lucide-react';
 import { Skeleton } from './ui/skeleton';
 
 const formSchema = z.object({
-  componentType: z.string().min(1, "Component type is required."),
-  stockLocationCriteria: z.string().min(1, "Criteria is required."),
-  availableOptions: z.string().min(1, "Available options are required."),
+  componentType: z.string().min(1, "组件类型是必填项。"),
+  stockLocationCriteria: z.string().min(1, "标准是必填项。"),
+  availableOptions: z.string().min(1, "可用选项是必填项。"),
 });
 
 export function ComponentSuggester() {
@@ -28,9 +28,9 @@ export function ComponentSuggester() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      componentType: 'Memory',
-      stockLocationCriteria: 'Closest to rack R12, must have at least 4 units available.',
-      availableOptions: 'Box-A1 (Rack A01, 10 units), Box-B3 (Rack B05, 2 units), Box-C7 (Rack R11, 5 units), Box-D2 (Rack R25, 20 units)',
+      componentType: '内存',
+      stockLocationCriteria: '离机架 R12 最近，必须至少有 4 个可用单元。',
+      availableOptions: 'Box-A1 (机架 A01, 10 个单元), Box-B3 (机架 B05, 2 个单元), Box-C7 (机架 R11, 5 个单元), Box-D2 (机架 R25, 20 个单元)',
     },
   });
 
@@ -42,7 +42,7 @@ export function ComponentSuggester() {
       const result = await suggestStockLocations(values);
       setSuggestion(result);
     } catch (e) {
-      setError("Failed to get suggestions. Please try again.");
+      setError("获取建议失败。请重试。");
       console.error(e);
     } finally {
       setIsLoading(false);
@@ -58,18 +58,18 @@ export function ComponentSuggester() {
             name="componentType"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Component Type</FormLabel>
+                <FormLabel>组件类型</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select a component type" />
+                      <SelectValue placeholder="选择一个组件类型" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="SATA">SATA Drive</SelectItem>
-                    <SelectItem value="SSD">SSD Drive</SelectItem>
-                    <SelectItem value="Memory">Memory Module</SelectItem>
-                    <SelectItem value="Network Card">Network Card</SelectItem>
+                    <SelectItem value="SATA">SATA 硬盘</SelectItem>
+                    <SelectItem value="SSD">SSD 硬盘</SelectItem>
+                    <SelectItem value="内存">内存模块</SelectItem>
+                    <SelectItem value="网卡">网卡</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -81,9 +81,9 @@ export function ComponentSuggester() {
             name="stockLocationCriteria"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Stock Location Criteria</FormLabel>
+                <FormLabel>库存位置标准</FormLabel>
                 <FormControl>
-                  <Input placeholder="e.g., Closest to rack R12" {...field} />
+                  <Input placeholder="例如：离机架 R12 最近" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -94,9 +94,9 @@ export function ComponentSuggester() {
             name="availableOptions"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Available Stock Locations</FormLabel>
+                <FormLabel>可用库存位置</FormLabel>
                 <FormControl>
-                  <Textarea placeholder="List available boxes and their locations..." {...field} rows={3} />
+                  <Textarea placeholder="列出可用的盒子及其位置..." {...field} rows={3} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -104,7 +104,7 @@ export function ComponentSuggester() {
           />
           <Button type="submit" disabled={isLoading}>
             <Bot className="mr-2 h-4 w-4" />
-            {isLoading ? 'Thinking...' : 'Get AI Suggestion'}
+            {isLoading ? '思考中...' : '获取 AI 建议'}
           </Button>
         </form>
       </Form>
@@ -127,7 +127,7 @@ export function ComponentSuggester() {
                 <div className="flex items-start gap-3">
                     <Lightbulb className="h-5 w-5 text-primary mt-1 flex-shrink-0" />
                     <div>
-                        <h4 className="font-semibold text-primary">Suggested Location</h4>
+                        <h4 className="font-semibold text-primary">建议位置</h4>
                         <p className="text-lg font-bold font-mono text-primary-dark">{suggestion.suggestedLocations}</p>
                         <p className="mt-2 text-sm text-muted-foreground">{suggestion.reasoning}</p>
                     </div>

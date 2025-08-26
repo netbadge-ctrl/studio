@@ -1,18 +1,18 @@
 import type { Employee, WorkOrder } from "./types";
 
 export const employees: Employee[] = [
-  { id: "emp-001", name: "Alice Johnson" },
-  { id: "emp-002", name: "Bob Williams" },
-  { id: "emp-003", name: "Charlie Brown" },
-  { id: "emp-004", name: "Diana Prince" },
+  { id: "emp-001", name: "爱丽丝" },
+  { id: "emp-002", name: "鲍勃" },
+  { id: "emp-003", name: "查理" },
+  { id: "emp-004", name: "戴安娜" },
 ];
 
 export const workOrders: WorkOrder[] = [
   {
     id: "wo-001",
-    title: "Upgrade RAM for Hyperion-01",
-    type: "Server Modification",
-    status: "Assigned",
+    title: "升级 Hyperion-01 的内存",
+    type: "服务器改造",
+    status: "已分配",
     assignedTo: [employees[0]],
     devices: [
       {
@@ -24,11 +24,11 @@ export const workOrders: WorkOrder[] = [
           uPosition: 24,
         },
         currentConfig: [
-          { type: "Memory", model: "DDR4 16GB 2400MHz", quantity: 4, partNumber: "MEM-16G-2400-A" },
+          { type: "内存", model: "DDR4 16GB 2400MHz", quantity: 4, partNumber: "MEM-16G-2400-A" },
           { type: "SSD", model: "Samsung PM883 480GB", quantity: 2, partNumber: "SSD-480G-S-PM883" },
         ],
         targetConfig: [
-          { type: "Memory", model: "DDR4 32GB 3200MHz", quantity: 4, partNumber: "MEM-32G-3200-B" },
+          { type: "内存", model: "DDR4 32GB 3200MHz", quantity: 4, partNumber: "MEM-32G-3200-B" },
           { type: "SSD", model: "Samsung PM883 480GB", quantity: 2, partNumber: "SSD-480G-S-PM883" },
         ],
       },
@@ -36,9 +36,9 @@ export const workOrders: WorkOrder[] = [
   },
   {
     id: "wo-002",
-    title: "Install new web server Titan-05",
-    type: "New Server Setup",
-    status: "In Progress",
+    title: "安装新 Web 服务器 Titan-05",
+    type: "新服务器部署",
+    status: "进行中",
     assignedTo: [employees[0], employees[2]],
     devices: [
       {
@@ -52,18 +52,18 @@ export const workOrders: WorkOrder[] = [
         currentConfig: [],
         targetConfig: [
             { type: "CPU", model: "Intel Xeon Silver 4210", quantity: 2, partNumber: "CPU-INT-4210"},
-            { type: "Memory", model: "DDR4 32GB 3200MHz", quantity: 8, partNumber: "MEM-32G-3200-B" },
+            { type: "内存", model: "DDR4 32GB 3200MHz", quantity: 8, partNumber: "MEM-32G-3200-B" },
             { type: "SSD", model: "Intel P4510 1TB NVMe", quantity: 4, partNumber: "SSD-1T-I-P4510" },
-            { type: "Network Card", model: "Mellanox CX-5 25GbE", quantity: 2, partNumber: "NIC-MEL-CX5" },
+            { type: "网卡", model: "Mellanox CX-5 25GbE", quantity: 2, partNumber: "NIC-MEL-CX5" },
         ],
       },
     ],
   },
   {
     id: "wo-003",
-    title: "Replace faulty switch in core network",
-    type: "Switch Maintenance",
-    status: "Blocked",
+    title: "更换核心网络中的故障交换机",
+    type: "交换机维护",
+    status: "已阻塞",
     assignedTo: [employees[1]],
     devices: [
         {
@@ -81,9 +81,9 @@ export const workOrders: WorkOrder[] = [
   },
   {
     id: "wo-004",
-    title: "Add SSD storage to Prometheus-03",
-    type: "Server Modification",
-    status: "Completed",
+    title: "为 Prometheus-03 添加 SSD 存储",
+    type: "服务器改造",
+    status: "已完成",
     assignedTo: [employees[3]],
     devices: [
       {
@@ -106,9 +106,9 @@ export const workOrders: WorkOrder[] = [
   },
   {
     id: "wo-005",
-    title: "Decommission server Rhea-15",
-    type: "Server Modification",
-    status: "Pending",
+    title: "淘汰服务器 Rhea-15",
+    type: "服务器改造",
+    status: "待处理",
     assignedTo: [],
     devices: [
       {

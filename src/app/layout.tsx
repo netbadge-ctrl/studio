@@ -3,8 +3,8 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 
 export const metadata: Metadata = {
-  title: 'IDC Ops Manager',
-  description: 'Manage IDC work orders with ease.',
+  title: '数据中心运维管理',
+  description: '轻松管理数据中心工单。',
   viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
 };
 
@@ -14,7 +14,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="zh-CN">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

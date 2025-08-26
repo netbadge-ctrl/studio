@@ -19,13 +19,13 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 const getStatusClass = (status: WorkOrder["status"]) => {
   switch (status) {
-    case "Completed":
+    case "已完成":
       return "bg-green-100 text-green-800 border-green-200";
-    case "In Progress":
+    case "进行中":
       return "bg-blue-100 text-primary border-blue-200";
-    case "Blocked":
+    case "已阻塞":
       return "bg-red-100 text-red-800 border-red-200";
-    case "Assigned":
+    case "已分配":
       return "bg-yellow-100 text-yellow-800 border-yellow-200";
     default:
       return "bg-gray-100 text-gray-800 border-gray-200";
@@ -60,7 +60,7 @@ export function LeaderDashboardClient({
           ? {
               ...order,
               assignedTo: assignedEmployees,
-              status: assignedEmployees.length > 0 ? "Assigned" : "Pending",
+              status: assignedEmployees.length > 0 ? "已分配" : "待处理",
             }
           : order
       )
@@ -71,17 +71,17 @@ export function LeaderDashboardClient({
     <>
       <Card>
         <CardHeader>
-          <CardTitle>All Work Orders</CardTitle>
+          <CardTitle>所有工单</CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Title</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Assigned To</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead>标题</TableHead>
+                <TableHead>类型</TableHead>
+                <TableHead>状态</TableHead>
+                <TableHead>分配给</TableHead>
+                <TableHead className="text-right">操作</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -103,7 +103,7 @@ export function LeaderDashboardClient({
                           </Avatar>
                         ))
                       ) : (
-                        <span className="text-muted-foreground text-xs">Unassigned</span>
+                        <span className="text-muted-foreground text-xs">未分配</span>
                       )}
                     </div>
                   </TableCell>
@@ -113,7 +113,7 @@ export function LeaderDashboardClient({
                       size="sm"
                       onClick={() => handleOpenDialog(order)}
                     >
-                      Assign / Modify
+                      分配 / 修改
                     </Button>
                   </TableCell>
                 </TableRow>

@@ -16,13 +16,13 @@ import { ArrowRight, Server, Wrench, HardDrive } from "lucide-react";
 
 const getStatusClass = (status: WorkOrder["status"]) => {
   switch (status) {
-    case "Completed":
+    case "已完成":
       return "bg-green-100 text-green-800 border-green-200";
-    case "In Progress":
+    case "进行中":
       return "bg-blue-100 text-primary border-blue-200";
-    case "Blocked":
+    case "已阻塞":
       return "bg-red-100 text-red-800 border-red-200";
-    case "Assigned":
+    case "已分配":
       return "bg-yellow-100 text-yellow-800 border-yellow-200";
     default:
       return "bg-muted text-muted-foreground";
@@ -31,11 +31,11 @@ const getStatusClass = (status: WorkOrder["status"]) => {
 
 const getTypeIcon = (type: WorkOrder["type"]) => {
   switch(type) {
-    case 'Server Modification':
+    case '服务器改造':
       return <Wrench className="w-5 h-5" />;
-    case 'New Server Setup':
+    case '新服务器部署':
       return <Server className="w-5 h-5" />;
-    case 'Switch Maintenance':
+    case '交换机维护':
       return <HardDrive className="w-5 h-5" />;
     default:
       return <Wrench className="w-5 h-5" />;
@@ -54,10 +54,10 @@ export default function Home() {
         <div className="max-w-7xl mx-auto">
           <header>
             <h1 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">
-              My Work Orders
+              我的工单
             </h1>
             <p className="mt-1 text-muted-foreground">
-              Here are the tasks assigned to you.
+              以下是分配给您的任务。
             </p>
           </header>
           <div className="grid gap-4 mt-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -80,14 +80,14 @@ export default function Home() {
                   </CardHeader>
                   <CardContent className="flex-grow">
                     <p className="text-sm text-muted-foreground">
-                      {order.devices.length} device(s) to operate.
+                      需要操作 {order.devices.length} 台设备。
                     </p>
                     <div className="mt-2 text-xs text-foreground font-mono font-medium">
                       {order.devices.map(d => d.serialNumber).join(', ')}
                     </div>
                   </CardContent>
                   <CardFooter className="text-xs text-primary group-hover:text-accent-foreground font-medium flex items-center justify-end">
-                    View Details
+                    查看详情
                     <ArrowRight className="ml-2 h-3 w-3 transition-transform group-hover:translate-x-1" />
                   </CardFooter>
                 </Card>

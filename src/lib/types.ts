@@ -4,7 +4,7 @@ export type Employee = {
 };
 
 export type Component = {
-  type: 'SATA' | 'SSD' | 'Memory' | 'Network Card' | 'CPU' | 'PSU';
+  type: 'SATA' | 'SSD' | '内存' | '网卡' | 'CPU' | 'PSU';
   model: string;
   quantity: number;
   partNumber: string;
@@ -25,8 +25,8 @@ export type Device = {
 export type WorkOrder = {
   id: string;
   title: string;
-  type: 'Server Modification' | 'New Server Setup' | 'Switch Maintenance';
-  status: 'Pending' | 'Assigned' | 'In Progress' | 'Completed' | 'Blocked';
+  type: '服务器改造' | '新服务器部署' | '交换机维护';
+  status: '待处理' | '已分配' | '进行中' | '已完成' | '已阻塞';
   assignedTo: Employee[];
   devices: Device[];
 };

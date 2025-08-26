@@ -24,12 +24,12 @@ export function MainNav() {
     <>
       <Button asChild variant="ghost" size="sm" className={cn("w-full justify-start text-muted-foreground", {"text-primary font-semibold bg-accent": pathname === '/'})}>
         <Link href="/" className="flex items-center gap-2">
-          <GanttChartSquare className="h-4 w-4" /> My Tasks
+          <GanttChartSquare className="h-4 w-4" /> 我的任务
         </Link>
       </Button>
       <Button asChild variant="ghost" size="sm" className={cn("w-full justify-start text-muted-foreground", {"text-primary font-semibold bg-accent": pathname === '/leader-dashboard'})}>
         <Link href="/leader-dashboard" className="flex items-center gap-2">
-          <User className="h-4 w-4" /> Leader Dashboard
+          <User className="h-4 w-4" /> 主管仪表盘
         </Link>
       </Button>
     </>
@@ -39,7 +39,7 @@ export function MainNav() {
     <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-card px-4 md:px-6">
       <Link href="/" className="flex items-center gap-2 text-lg font-semibold text-primary">
         <Building className="h-6 w-6" />
-        <span className="font-bold hidden sm:inline-block">IDC Ops</span>
+        <span className="font-bold hidden sm:inline-block">数据中心运维</span>
       </Link>
       <nav className="hidden md:flex items-center gap-2 mx-auto">
         {navLinks}
@@ -57,17 +57,17 @@ export function MainNav() {
           <DropdownMenuContent className="w-56" align="end" forceMount>
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">Alice Johnson</p>
+                <p className="text-sm font-medium leading-none">爱丽丝</p>
                 <p className="text-xs leading-none text-muted-foreground">
                   alice.j@idccorp.com
                 </p>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-            <DropdownMenuItem>Settings</DropdownMenuItem>
+            <DropdownMenuItem>个人资料</DropdownMenuItem>
+            <DropdownMenuItem>设置</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Log out</DropdownMenuItem>
+            <DropdownMenuItem>登出</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
         
@@ -75,7 +75,7 @@ export function MainNav() {
             <SheetTrigger asChild>
                 <Button variant="outline" size="icon" className="md:hidden">
                     <Menu className="h-5 w-5" />
-                    <span className="sr-only">Toggle navigation menu</span>
+                    <span className="sr-only">切换导航菜单</span>
                 </Button>
             </SheetTrigger>
             <SheetContent side="left">

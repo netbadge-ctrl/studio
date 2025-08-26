@@ -10,10 +10,10 @@ export default function LeaderDashboardPage() {
                <div className="max-w-7xl mx-auto">
                  <header>
                     <h1 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">
-                        Leader Dashboard
+                        主管仪表盘
                     </h1>
                     <p className="mt-1 text-muted-foreground">
-                        Monitor and assign all work orders.
+                        监控并分配所有工单。
                     </p>
                 </header>
                 <div className="mt-6">

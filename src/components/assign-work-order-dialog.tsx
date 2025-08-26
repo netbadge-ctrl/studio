@@ -53,14 +53,14 @@ export function AssignWorkOrderDialog({
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Assign Work Order</DialogTitle>
+          <DialogTitle>分配工单</DialogTitle>
           <DialogDescription>
-            Select employees to assign to "{workOrder.title}".
+            为工单“{workOrder.title}”选择分配的员工。
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="space-y-2">
-            <h4 className="font-medium text-sm">Available Employees</h4>
+            <h4 className="font-medium text-sm">可用员工</h4>
             <div className="space-y-3 rounded-md border p-4 max-h-60 overflow-y-auto">
               {employees.map((employee) => (
                 <div key={employee.id} className="flex items-center space-x-2">
@@ -81,9 +81,9 @@ export function AssignWorkOrderDialog({
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => setIsOpen(false)}>
-            Cancel
+            取消
           </Button>
-          <Button onClick={handleSubmit}>Save Assignment</Button>
+          <Button onClick={handleSubmit}>保存分配</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -15,10 +15,10 @@ import { cn } from '@/lib/utils';
 
 const getStatusClass = (status: WorkOrder["status"]) => {
   switch (status) {
-    case "Completed": return "bg-green-100 text-green-800 border-green-200";
-    case "In Progress": return "bg-blue-100 text-primary border-blue-200";
-    case "Blocked": return "bg-red-100 text-red-800 border-red-200";
-    case "Assigned": return "bg-yellow-100 text-yellow-800 border-yellow-200";
+    case "已完成": return "bg-green-100 text-green-800 border-green-200";
+    case "进行中": return "bg-blue-100 text-primary border-blue-200";
+    case "已阻塞": return "bg-red-100 text-red-800 border-red-200";
+    case "已分配": return "bg-yellow-100 text-yellow-800 border-yellow-200";
     default: return "bg-muted text-muted-foreground";
   }
 };
@@ -28,7 +28,7 @@ const getComponentIcon = (type: Component['type']) => {
     switch(type) {
         case 'SATA': return <HardDrive {...props} />;
         case 'SSD': return <HardDrive {...props} />;
-        case 'Memory': return <MemoryStick {...props} />;
+        case '内存': return <MemoryStick {...props} />;
         case 'CPU': return <Cpu {...props} />;
         default: return <Server {...props} />;
     }
@@ -60,7 +60,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
               <div>
                 <CardTitle className="text-xl md:text-2xl">{workOrder.title}</CardTitle>
-                <CardDescription>Work Order #{workOrder.id}</CardDescription>
+                <CardDescription>工单 #{workOrder.id}</CardDescription>
               </div>
               <Badge className={cn("text-base whitespace-nowrap w-fit", getStatusClass(workOrder.status))}>{workOrder.status}</Badge>
             </div>
@@ -70,22 +70,22 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
                 <div className="flex items-start gap-3">
                     <MapPin className="h-5 w-5 text-primary mt-1" />
                     <div>
-                        <h4 className="font-semibold">Location</h4>
+                        <h4 className="font-semibold">位置</h4>
                         <p className="text-muted-foreground font-mono">{device.location.module} / {device.location.rack} / U{device.location.uPosition}</p>
                     </div>
                 </div>
                 <div className="flex items-start gap-3">
                     <Server className="h-5 w-5 text-primary mt-1" />
                     <div>
-                        <h4 className="font-semibold">Device SN</h4>
+                        <h4 className="font-semibold">设备序列号</h4>
                         <p className="text-muted-foreground font-mono font-code">{device.serialNumber}</p>
                     </div>
                 </div>
                  <div className="flex items-start gap-3 col-span-full">
                     <QrCode className="h-5 w-5 text-primary mt-1" />
                     <div>
-                        <h4 className="font-semibold">Verification</h4>
-                        <Button variant="outline" size="sm" className="mt-1">Scan SN Code</Button>
+                        <h4 className="font-semibold">验证</h4>
+                        <Button variant="outline" size="sm" className="mt-1">扫描序列号</Button>
                     </div>
                 </div>
             </div>
@@ -93,27 +93,27 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
           <CardFooter className='flex-wrap gap-2'>
              <Button size="sm" variant={locatorLight === 'flashing' ? 'default' : 'outline'} onClick={() => setLocatorLight('flashing')}>
                 {locatorLight === 'flashing' ? <Lightbulb className="mr-2" /> : <LightbulbOff className="mr-2" />}
-                Flash Light
+                闪灯
             </Button>
              <Button size="sm" variant={locatorLight === 'on' ? 'default' : 'outline'} onClick={() => setLocatorLight('on')}>
                 {locatorLight === 'on' ? <Lightbulb className="mr-2" /> : <LightbulbOff className="mr-2" />}
-                Turn On Light
+                开灯
             </Button>
           </CardFooter>
         </Card>
 
         <Card>
             <CardHeader>
-                <CardTitle className='text-xl'>Configuration Comparison</CardTitle>
-                <CardDescription>Review changes between current and target configurations.</CardDescription>
+                <CardTitle className='text-xl'>配置对比</CardTitle>
+                <CardDescription>检查当前配置和目标配置之间的变更。</CardDescription>
             </CardHeader>
             <CardContent>
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead>Component</TableHead>
-                            <TableHead className="text-center">Current</TableHead>
-                            <TableHead className="text-center">Target</TableHead>
+                            <TableHead>组件</TableHead>
+                            <TableHead className="text-center">当前</TableHead>
+                            <TableHead className="text-center">目标</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -147,8 +147,8 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
       <div className="lg:col-span-2 space-y-6">
         <Card>
             <CardHeader>
-                <CardTitle className='text-xl'>Required Components & AI Suggestions</CardTitle>
-                <CardDescription>Find and retrieve necessary parts for this operation.</CardDescription>
+                <CardTitle className='text-xl'>所需组件和 AI 建议</CardTitle>
+                <CardDescription>查找并获取此操作所需的部件。</CardDescription>
             </CardHeader>
             <CardContent>
                 <ComponentSuggester />
@@ -157,22 +157,22 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
 
         <Card>
             <CardHeader>
-                <CardTitle className='text-xl'>Visual Operation Guides</CardTitle>
+                <CardTitle className='text-xl'>可视化操作指南</CardTitle>
             </CardHeader>
             <CardContent>
                 <Tabs defaultValue="diagram">
                     <TabsList className='grid w-full grid-cols-2'>
-                        <TabsTrigger value="diagram">Slot Diagram</TabsTrigger>
-                        <TabsTrigger value="video">Video Guide</TabsTrigger>
+                        <TabsTrigger value="diagram">插槽示意图</TabsTrigger>
+                        <TabsTrigger value="video">视频指南</TabsTrigger>
                     </TabsList>
                     <TabsContent value="diagram" className="mt-4">
                         <div className="relative aspect-video w-full overflow-hidden rounded-lg border">
-                           <Image src="https://picsum.photos/600/400" alt="Motherboard diagram" fill className="object-cover" data-ai-hint="motherboard schematic" />
+                           <Image src="https://picsum.photos/600/400" alt="主板示意图" fill className="object-cover" data-ai-hint="motherboard schematic" />
                         </div>
                     </TabsContent>
                     <TabsContent value="video" className="mt-4">
                        <div className="relative aspect-video w-full overflow-hidden rounded-lg border bg-slate-200 flex items-center justify-center">
-                           <p className="text-muted-foreground">Operation video placeholder.</p>
+                           <p className="text-muted-foreground">操作视频占位符。</p>
                         </div>
                     </TabsContent>
                 </Tabs>
