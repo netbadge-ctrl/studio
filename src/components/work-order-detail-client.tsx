@@ -29,11 +29,9 @@ import {
   Server as ServerIcon,
   HardDrive,
   Network,
-  Layers,
-  Wand2,
+  Layers
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { GetPartsDialog } from './get-parts-dialog';
 
 
 const getStatusClass = (status: WorkOrder['status']) => {
@@ -66,8 +64,6 @@ const getDeviceIcon = (type: WorkOrder['devices'][0]['type']) => {
 };
 
 export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
-  const [isGetPartsDialogOpen, setIsGetPartsDialogOpen] = React.useState(false);
-
   const requiredComponents = React.useMemo(() => {
     const componentsMap = new Map<string, { component: ComponentType, model: string, quantity: number }>();
 
@@ -183,12 +179,6 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
                   <PackageSearch className="h-5 w-5 text-primary" />
                   所需备件
                 </h3>
-                {requiredComponents.length > 0 && (
-                    <Button variant="outline" size="sm" onClick={() => setIsGetPartsDialogOpen(true)}>
-                        <Wand2 className='mr-2 h-4 w-4' />
-                        AI 领取建议
-                    </Button>
-                )}
              </div>
             {requiredComponents.length > 0 ? (
               <div className="p-4 bg-muted/50 rounded-lg border">
@@ -223,11 +213,6 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
           </Button>
         </CardFooter>
       </Card>
-      <GetPartsDialog 
-        isOpen={isGetPartsDialogOpen}
-        setIsOpen={setIsGetPartsDialogOpen}
-        requiredComponents={requiredComponents}
-      />
     </>
   );
 }
