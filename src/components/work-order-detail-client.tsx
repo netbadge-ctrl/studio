@@ -30,8 +30,10 @@ import {
   HardDrive,
   Network,
   Layers,
+  Wand2,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { GetPartsDialog } from './get-parts-dialog';
 
 
 const getStatusClass = (status: WorkOrder['status']) => {
@@ -64,9 +66,10 @@ const getDeviceIcon = (type: WorkOrder['devices'][0]['type']) => {
 };
 
 export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
+  const [isGetPartsDialogOpen, setIsGetPartsDialogOpen] = React.useState(false);
 
   const requiredComponents = React.useMemo(() => {
-    const componentsMap = new Map<string, { component: ComponentType, quantity: number }>();
+    const componentsMap = new Map<string, { component: ComponentType, model: string, quantity: number }>();
 
     workOrder.devices.forEach((device) => {
       const targetComponents = new Map<string, number>();
@@ -90,10 +93,11 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
            const componentInfo = device.targetConfig.find(c => c.partNumber === partNumber) || device.currentConfig.find(c => c.partNumber === partNumber);
            if(componentInfo) {
               const existing = componentsMap.get(partNumber);
+              const model = `${componentInfo.manufacturer} ${componentInfo.model}`
               if (existing) {
                 existing.quantity += requiredQty;
               } else {
-                componentsMap.set(partNumber, { component: componentInfo, quantity: requiredQty });
+                componentsMap.set(partNumber, { component: componentInfo, model, quantity: requiredQty });
               }
            }
         }
@@ -102,7 +106,6 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
 
     const components = Array.from(componentsMap.values());
     
-    // Sort consistently to avoid hydration mismatch
     return components.sort((a, b) => {
         if (a.component.type !== b.component.type) {
             return a.component.type.localeCompare(b.component.type);
@@ -173,22 +176,30 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
           </div>
 
           <div className="space-y-4">
-            <h3 className="font-semibold text-lg flex items-center gap-2">
-              <PackageSearch className="h-5 w-5 text-primary" />
-              所需备件
-            </h3>
+             <div className='flex justify-between items-center'>
+                <h3 className="font-semibold text-lg flex items-center gap-2">
+                  <PackageSearch className="h-5 w-5 text-primary" />
+                  所需备件
+                </h3>
+                {requiredComponents.length > 0 && (
+                    <Button variant="outline" size="sm" onClick={() => setIsGetPartsDialogOpen(true)}>
+                        <Wand2 className='mr-2 h-4 w-4' />
+                        AI 领取建议
+                    </Button>
+                )}
+             </div>
             {requiredComponents.length > 0 ? (
-              <div className="p-4 bg-muted/50 rounded-lg">
+              <div className="p-4 bg-muted/50 rounded-lg border">
                 <ul className="space-y-4">
-                  {requiredComponents.map(({ component: comp, quantity }) => (
+                  {requiredComponents.map(({ component: comp, quantity, model }) => (
                     <li key={comp.partNumber} className="grid grid-cols-[1fr_auto] items-start gap-x-4">
                       <div>
-                         <p className='font-semibold leading-tight'>{comp.model}</p>
+                         <p className='font-semibold leading-tight'>{model}</p>
                          <p className='text-xs text-muted-foreground'>{comp.type} / {comp.manufacturer}</p>
                       </div>
                       <div className='flex flex-col items-end'>
                         <span className="font-bold text-primary text-lg">x {quantity}</span>
-                         <p className='text-xs font-mono text-muted-foreground mt-1'>库位: {comp.partNumber}</p>
+                         <p className='text-xs font-mono text-muted-foreground mt-1'>部件号: {comp.partNumber}</p>
                       </div>
                     </li>
                   ))}
@@ -208,13 +219,13 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
               <ArrowRight />
             </Link>
           </Button>
-          <Button asChild variant="outline" size="lg">
-            <Link href="/">
-              返回我的工单
-            </Link>
-          </Button>
         </CardFooter>
       </Card>
+      <GetPartsDialog 
+        isOpen={isGetPartsDialogOpen}
+        setIsOpen={setIsGetPartsDialogOpen}
+        requiredComponents={requiredComponents}
+      />
     </>
   );
 }

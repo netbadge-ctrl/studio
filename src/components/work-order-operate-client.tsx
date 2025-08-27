@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import type { WorkOrder, Component, Device, SOPStep } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,13 +9,13 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Layers, Server as ServerIcon, HardDrive, MemoryStick, Cpu, ArrowRight, Network, Search, Video, Image as ImageIcon, QrCode, ArrowLeft, ArrowUp, ArrowDown } from 'lucide-react';
+import { Layers, Server as ServerIcon, HardDrive, MemoryStick, Cpu, ArrowUp, ArrowDown, Network, Video, Image as ImageIcon, QrCode } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Image from 'next/image';
+import { ScanDeviceDialog } from './scan-device-dialog';
 
 
 const getStatusClass = (status: WorkOrder["status"]) => {
@@ -103,8 +103,6 @@ function SOPList({ sop, deviceId }: { sop: SOPStep[], deviceId: string }) {
 function DeviceOperation({ device }: { device: Device }) {
   const operationDetails = useMemo(() => {
     const operations: { action: '装' | '卸', component: Component }[] = [];
-    const currentMap = new Map(device.currentConfig.map(c => [c.partNumber, c]));
-    const targetMap = new Map(device.targetConfig.map(c => [c.partNumber, c]));
 
     const currentSlotMap = new Map(device.currentConfig.map(c => [c.slot, c]));
     const targetSlotMap = new Map(device.targetConfig.map(c => [c.slot, c]));
@@ -124,11 +122,9 @@ function DeviceOperation({ device }: { device: Device }) {
     }
     
     return operations.sort((a, b) => {
-        // Sort by action: '卸' comes before '装'
         if (a.action !== b.action) {
             return a.action === '卸' ? -1 : 1;
         }
-        // Then sort by slot
         return a.component.slot.localeCompare(b.component.slot);
     });
   }, [device.currentConfig, device.targetConfig]);
@@ -148,14 +144,13 @@ function DeviceOperation({ device }: { device: Device }) {
               <TabsTrigger value="video"><Video className="mr-2" /> 视频教程</TabsTrigger>
             </TabsList>
             <TabsContent value="image" className="mt-4">
-              <div className="aspect-video bg-muted rounded-lg flex items-center justify-center">
+              <div className="aspect-video bg-muted rounded-lg flex items-center justify-center relative overflow-hidden">
                  <Image 
-                    src="https://picsum.photos/600/400"
+                    src="https://storage.googleapis.com/maker-studio-project-files-prod/v1/scenes/bRKM4o3t0mB-M-b-rI46-/resources/image_0.jpeg"
                     alt="操作指引图片"
-                    width={600}
-                    height={400}
-                    data-ai-hint="server maintenance"
-                    className="rounded-lg object-cover"
+                    fill
+                    data-ai-hint="server motherboard"
+                    className="object-contain"
                   />
               </div>
             </TabsContent>
@@ -231,11 +226,10 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
   const { toast } = useToast();
   const router = useRouter();
   const [openAccordionItems, setOpenAccordionItems] = useState<string[]>([]);
-  const [serialNumberInput, setSerialNumberInput] = useState('');
+  const [isScanDialogOpen, setIsScanDialogOpen] = useState(false);
   const deviceRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
-
-  const handleFindDevice = () => {
+  const handleFindDevice = (serialNumberInput: string) => {
     if (!serialNumberInput) return;
 
     const device = workOrder.devices.find(d => d.serialNumber.toLowerCase() === serialNumberInput.toLowerCase());
@@ -271,69 +265,63 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
   }
 
   return (
-    <Card>
-        <CardHeader>
-            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
-              <div>
-                  <CardTitle className="text-xl md:text-2xl">{workOrder.title}</CardTitle>
-                  <CardDescription>工单 #{workOrder.id} - 步骤 2/2: 操作</CardDescription>
-              </div>
-              <Badge className={cn("text-base whitespace-nowrap w-fit", getStatusClass(workOrder.status))}>{workOrder.status}</Badge>
-            </div>
-        </CardHeader>
-        <CardContent>
-           <div className="p-4 border rounded-lg bg-muted/50 mb-6">
-                <Label htmlFor="serial-number-input" className="font-semibold flex items-center gap-2 mb-2">
-                    <QrCode className="h-5 w-5" />
-                    扫描或输入设备序列号
-                </Label>
-                <div className="flex gap-2">
-                    <Input 
-                        id="serial-number-input" 
-                        placeholder="例如: SN-A7B3C9D1E5"
-                        value={serialNumberInput}
-                        onChange={(e) => setSerialNumberInput(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && handleFindDevice()}
-                    />
-                    <Button onClick={handleFindDevice}><Search className="mr-2 h-4 w-4" /> 查找</Button>
+    <>
+      <Card>
+          <CardHeader>
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
+                <div>
+                    <CardTitle className="text-xl md:text-2xl">{workOrder.title}</CardTitle>
+                    <CardDescription>工单 #{workOrder.id} - 步骤 2/2: 操作</CardDescription>
                 </div>
-            </div>
-
-          {workOrder.devices.length > 0 ? (
-             <Accordion 
-                type="multiple" 
-                value={openAccordionItems} 
-                onValueChange={setOpenAccordionItems}
-                className="w-full space-y-2"
-              >
-              {workOrder.devices.map(device => (
-                  <div key={device.id} ref={el => (deviceRefs.current[device.id] = el)}>
-                    <AccordionItem value={device.id} className="border-b-0 rounded-lg border bg-card text-card-foreground shadow-sm data-[state=open]:shadow-md">
-                        <AccordionTrigger className="px-4 py-3 hover:no-underline text-base">
-                            <div className="flex items-center gap-3">
-                                {getDeviceIcon(device.type)}
-                                <div className='text-left'>
-                                    <p className='font-semibold'>{device.type} ({device.model})</p>
-                                    <p className="text-xs font-normal text-muted-foreground font-code">{device.serialNumber}</p>
-                                </div>
-                            </div>
-                        </AccordionTrigger>
-                        <AccordionContent className="px-4 pb-4">
-                          <DeviceOperation device={device} />
-                        </AccordionContent>
-                    </AccordionItem>
-                  </div>
-              ))}
-            </Accordion>
-          ) : (
-            <p className="text-sm text-muted-foreground text-center py-8">此工单没有关联的设备。</p>
-          )}
-        </CardContent>
-         <CardFooter>
-            <Button size="lg" className="w-full" onClick={handleCompleteWorkOrder}>
-                完成工单
-            </Button>
-        </CardFooter>
-    </Card>
+                <Badge className={cn("text-base whitespace-nowrap w-fit", getStatusClass(workOrder.status))}>{workOrder.status}</Badge>
+              </div>
+          </CardHeader>
+          <CardContent>
+            {workOrder.devices.length > 0 ? (
+               <Accordion 
+                  type="multiple" 
+                  value={openAccordionItems} 
+                  onValueChange={setOpenAccordionItems}
+                  className="w-full space-y-2"
+                >
+                {workOrder.devices.map(device => (
+                    <div key={device.id} ref={el => (deviceRefs.current[device.id] = el)}>
+                      <AccordionItem value={device.id} className="border-b-0 rounded-lg border bg-card text-card-foreground shadow-sm data-[state=open]:shadow-md">
+                          <AccordionTrigger className="px-4 py-3 hover:no-underline text-base">
+                              <div className="flex items-center gap-3">
+                                  {getDeviceIcon(device.type)}
+                                  <div className='text-left'>
+                                      <p className='font-semibold'>{device.type} ({device.model})</p>
+                                      <p className="text-xs font-normal text-muted-foreground font-code">{device.serialNumber}</p>
+                                  </div>
+                              </div>
+                          </AccordionTrigger>
+                          <AccordionContent className="px-4 pb-4">
+                            <DeviceOperation device={device} />
+                          </AccordionContent>
+                      </AccordionItem>
+                    </div>
+                ))}
+              </Accordion>
+            ) : (
+              <p className="text-sm text-muted-foreground text-center py-8">此工单没有关联的设备。</p>
+            )}
+          </CardContent>
+           <CardFooter className="flex-col sm:flex-row sm:justify-between gap-2">
+              <Button variant="outline" size="lg" className="w-full sm:w-auto" onClick={() => setIsScanDialogOpen(true)}>
+                  <QrCode className="mr-2 h-5 w-5" />
+                  扫描/查找设备
+              </Button>
+              <Button size="lg" className="w-full sm:w-auto" onClick={handleCompleteWorkOrder}>
+                  完成工单
+              </Button>
+          </CardFooter>
+      </Card>
+      <ScanDeviceDialog 
+        isOpen={isScanDialogOpen}
+        setIsOpen={setIsScanDialogOpen}
+        onFindDevice={handleFindDevice}
+      />
+    </>
   )
 }
