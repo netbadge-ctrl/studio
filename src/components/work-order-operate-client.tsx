@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import type { WorkOrder, Component, Device, SOPStep } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -319,5 +319,3 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
     </Card>
   )
 }
-
-    
