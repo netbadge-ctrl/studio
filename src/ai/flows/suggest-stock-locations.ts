@@ -12,15 +12,17 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const SuggestStockLocationsInputSchema = z.object({
-  componentType: z
-    .string()
-    .describe('所需服务器组件的类型（例如，SATA、SSD、内存、网卡）。'),
+  components: z.array(z.object({
+    partNumber: z.string(),
+    model: z.string(),
+    quantity: z.number(),
+  })).describe('所需服务器组件及其数量的列表。'),
   stockLocationCriteria: z
     .string()
     .describe(
       '库存位置的标准，例如靠近服务器机架或可用性。'
     ),
-  availableOptions: z
+  availableLocations: z
     .string()
     .describe(
       '可用库存位置及其属性（位置、容量等）的列表。'
@@ -29,11 +31,12 @@ const SuggestStockLocationsInputSchema = z.object({
 export type SuggestStockLocationsInput = z.infer<typeof SuggestStockLocationsInputSchema>;
 
 const SuggestStockLocationsOutputSchema = z.object({
-  suggestedLocations: z
-    .string()
-    .describe(
-      '建议的组件库存位置的逗号分隔列表。'
-    ),
+  suggestedLocations: z.array(z.object({
+    partNumber: z.string().describe('组件的部件号。'),
+    model: z.string().describe('组件的型号。'),
+    quantity: z.number().describe('建议领取的数量。'),
+    location: z.string().describe('建议的领取位置。'),
+  })).describe('建议的组件库存位置列表。'),
   reasoning: z
     .string()
     .describe('AI 对位置建议的推理。'),
@@ -52,18 +55,22 @@ const prompt = ai.definePrompt({
   output: {schema: SuggestStockLocationsOutputSchema},
   prompt: `你是一位专业的服务器组件物流和库存管理专家。
 
-根据组件类型、库存位置标准和可用选项，为技术人员建议最佳的取件位置。
+你的任务是根据一个工单所需的组件列表、库存位置标准以及可用的库存位置信息，为技术人员建议每个组件的最佳取件位置和数量。
 
-组件类型: {{{componentType}}}
-库存位置标准: {{{stockLocationCriteria}}}
-可用选项: {{{availableOptions}}}
+**需求组件列表:**
+{{#each components}}
+- 部件号: {{this.partNumber}}, 型号: {{this.model}}, 数量: {{this.quantity}}
+{{/each}}
 
-考虑所有因素，如距离、容量和可及性，以做出最佳推荐。
+**库存位置标准:**
+{{{stockLocationCriteria}}}
 
-仅用建议的位置（以逗号分隔的列表）和你的决策理由来回应。
+**可用库存位置:**
+{{{availableLocations}}}
 
-建议的位置: {{{{suggestedLocations}}}}
-理由: {{{{reasoning}}}}
+请仔细分析以上信息，特别是每个位置的库存情况，为每一个所需组件推荐一个或多个最合适的领取位置。你需要考虑所有因素，如距离、库存数量和可及性，以做出最佳推荐。
+
+请以结构化的 JSON 格式返回你的建议。
 `,
 });
 
