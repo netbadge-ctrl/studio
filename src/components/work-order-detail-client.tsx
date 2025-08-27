@@ -25,15 +25,13 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   PackageSearch,
   MapPin,
-  Wrench,
+  ArrowRight,
   Server as ServerIcon,
   HardDrive,
   Network,
   Layers,
-  ArrowRight,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { GetPartsDialog } from './get-parts-dialog';
 
 const getStatusClass = (status: WorkOrder['status']) => {
   switch (status) {
@@ -65,7 +63,6 @@ const getDeviceIcon = (type: WorkOrder['devices'][0]['type']) => {
 };
 
 export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
-  const [isGetPartsDialogOpen, setGetPartsDialogOpen] = React.useState(false);
 
   const requiredComponents = React.useMemo(() => {
     const componentsMap = new Map<string, ComponentType & { model: string }>();
@@ -91,7 +88,8 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
         }
       });
     });
-    return Array.from(componentsMap.values());
+    const components = Array.from(componentsMap.values());
+    return components.sort((a,b) => a.type.localeCompare(b.type));
   }, [workOrder.devices]);
 
   return (
@@ -171,14 +169,11 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
                       </div>
                       <div className='flex flex-col items-end'>
                         <span className="font-bold text-primary text-lg">x {comp.quantity}</span>
-                        <span className='text-xs font-mono text-muted-foreground mt-1 bg-background px-2 py-0.5 rounded border'>{comp.partNumber}</span>
+                         <p className='text-xs font-mono text-muted-foreground mt-1'>库位: {comp.partNumber}</p>
                       </div>
                     </li>
                   ))}
                 </ul>
-                <Button className="mt-6 w-full" onClick={() => setGetPartsDialogOpen(true)}>
-                  AI 建议领取位置
-                </Button>
               </div>
             ) : (
               <p className="text-sm text-muted-foreground text-center py-4">
@@ -201,12 +196,6 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
           </Button>
         </CardFooter>
       </Card>
-
-      <GetPartsDialog
-        isOpen={isGetPartsDialogOpen}
-        setIsOpen={setGetPartsDialogOpen}
-        requiredComponents={requiredComponents}
-      />
     </>
   );
 }
