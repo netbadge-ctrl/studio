@@ -67,6 +67,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
   const requiredComponents = React.useMemo(() => {
     const componentsMap = new Map<string, { component: ComponentType, model: string, quantity: number }>();
 
+    // 1. Sort devices to ensure consistent processing order
     const sortedDevices = [...workOrder.devices].sort((a, b) => a.id.localeCompare(b.id));
 
     sortedDevices.forEach((device) => {
@@ -80,6 +81,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
         currentComponents.set(c.partNumber, (currentComponents.get(c.partNumber) || 0) + 1);
       });
       
+      // 2. Sort part numbers to ensure consistent processing order
       const allPartNumbers = Array.from(new Set([...targetComponents.keys(), ...currentComponents.keys()])).sort();
 
       allPartNumbers.forEach(partNumber => {
@@ -104,6 +106,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
 
     const components = Array.from(componentsMap.values());
     
+    // 3. Sort final array to guarantee stable order
     return components.sort((a, b) => {
         if (a.component.type !== b.component.type) {
             return a.component.type.localeCompare(b.component.type);
