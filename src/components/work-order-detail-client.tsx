@@ -67,10 +67,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
   const requiredComponents = React.useMemo(() => {
     const componentsMap = new Map<string, { component: ComponentType, model: string, quantity: number }>();
 
-    // 1. Sort devices to ensure consistent processing order
-    const sortedDevices = [...workOrder.devices].sort((a, b) => a.id.localeCompare(b.id));
-
-    sortedDevices.forEach((device) => {
+    workOrder.devices.forEach((device) => {
       const targetComponents = new Map<string, number>();
       device.targetConfig.forEach(c => {
         targetComponents.set(c.partNumber, (targetComponents.get(c.partNumber) || 0) + 1);
@@ -81,8 +78,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
         currentComponents.set(c.partNumber, (currentComponents.get(c.partNumber) || 0) + 1);
       });
       
-      // 2. Sort part numbers to ensure consistent processing order
-      const allPartNumbers = Array.from(new Set([...targetComponents.keys(), ...currentComponents.keys()])).sort();
+      const allPartNumbers = Array.from(new Set([...targetComponents.keys(), ...currentComponents.keys()]));
 
       allPartNumbers.forEach(partNumber => {
         const targetQty = targetComponents.get(partNumber) || 0;
@@ -104,15 +100,8 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
       });
     });
 
-    const components = Array.from(componentsMap.values());
-    
-    // 3. Sort final array to guarantee stable order
-    return components.sort((a, b) => {
-        if (a.component.type !== b.component.type) {
-            return a.component.type.localeCompare(b.component.type);
-        }
-        return a.component.partNumber.localeCompare(b.component.partNumber);
-    });
+    // Sort the final array to guarantee stable order and fix hydration issues.
+    return Array.from(componentsMap.values()).sort((a, b) => a.model.localeCompare(b.model));
   }, [workOrder.devices]);
 
   return (
