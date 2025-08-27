@@ -184,7 +184,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
                       </div>
                       <div className='flex flex-col items-end'>
                         <span className="font-bold text-primary text-lg">x {quantity}</span>
-                         <p className='text-xs font-mono text-muted-foreground mt-1'>部件号: {comp.partNumber}</p>
+                         <p className='text-xs font-mono text-muted-foreground mt-1'>仓库盒号: {comp.partNumber}</p>
                       </div>
                     </li>
                   ))}
