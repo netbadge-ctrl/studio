@@ -1,4 +1,22 @@
-import type { Employee, WorkOrder } from "./types";
+import type { Employee, WorkOrder, Component } from "./types";
+
+const generatedModels = new Set<string>();
+
+function generateUniqueModel(): string {
+  let modelId;
+  do {
+    modelId = `model-${Math.random().toString().substring(2, 8)}`;
+  } while (generatedModels.has(modelId));
+  generatedModels.add(modelId);
+  return modelId;
+}
+
+function processComponents(components: Component[]): Component[] {
+  return components.map(c => ({
+    ...c,
+    model: generateUniqueModel(),
+  }));
+}
 
 export const employees: Employee[] = [
   { id: "emp-001", name: "爱丽丝" },
@@ -7,7 +25,7 @@ export const employees: Employee[] = [
   { id: "emp-004", name: "戴安娜" },
 ];
 
-export const workOrders: WorkOrder[] = [
+const rawWorkOrders: Omit<WorkOrder, 'devices'> & { devices: Omit<WorkOrder['devices'][0], 'currentConfig' | 'targetConfig'> & { currentConfig: Omit<Component, 'model'>[], targetConfig: Omit<Component, 'model'>[] }[] }[] = [
   {
     id: "wo-001",
     title: "升级 Hyperion-01 的内存",
@@ -26,20 +44,20 @@ export const workOrders: WorkOrder[] = [
           uPosition: 24,
         },
         currentConfig: [
-          { type: "内存", manufacturer: "Hynix", model: "DDR4 16GB 2400MHz", quantity: 1, partNumber: "MEM-16G-2400-A", slot: "A1" },
-          { type: "内存", manufacturer: "Hynix", model: "DDR4 16GB 2400MHz", quantity: 1, partNumber: "MEM-16G-2400-A", slot: "A2" },
-          { type: "内存", manufacturer: "Hynix", model: "DDR4 16GB 2400MHz", quantity: 1, partNumber: "MEM-16G-2400-A", slot: "A3" },
-          { type: "内存", manufacturer: "Hynix", model: "DDR4 16GB 2400MHz", quantity: 1, partNumber: "MEM-16G-2400-A", slot: "A4" },
-          { type: "SSD", manufacturer: "Samsung", model: "PM883 480GB", quantity: 1, partNumber: "SSD-480G-S-PM883", slot: "Disk 0" },
-          { type: "SSD", manufacturer: "Samsung", model: "PM883 480GB", quantity: 1, partNumber: "SSD-480G-S-PM883", slot: "Disk 1" },
+          { type: "内存", manufacturer: "Hynix", quantity: 1, partNumber: "MEM-16G-2400-A", slot: "A1" },
+          { type: "内存", manufacturer: "Hynix", quantity: 1, partNumber: "MEM-16G-2400-A", slot: "A2" },
+          { type: "内存", manufacturer: "Hynix", quantity: 1, partNumber: "MEM-16G-2400-A", slot: "A3" },
+          { type: "内存", manufacturer: "Hynix", quantity: 1, partNumber: "MEM-16G-2400-A", slot: "A4" },
+          { type: "SSD", manufacturer: "Samsung", quantity: 1, partNumber: "SSD-480G-S-PM883", slot: "Disk 0" },
+          { type: "SSD", manufacturer: "Samsung", quantity: 1, partNumber: "SSD-480G-S-PM883", slot: "Disk 1" },
         ],
         targetConfig: [
-          { type: "内存", manufacturer: "Samsung", model: "DDR4 32GB 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A1" },
-          { type: "内存", manufacturer: "Samsung", model: "DDR4 32GB 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A2" },
-          { type: "内存", manufacturer: "Samsung", model: "DDR4 32GB 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A3" },
-          { type: "内存", manufacturer: "Samsung", model: "DDR4 32GB 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A4" },
-          { type: "SSD", manufacturer: "Samsung", model: "PM883 480GB", quantity: 1, partNumber: "SSD-480G-S-PM883", slot: "Disk 0" },
-          { type: "SSD", manufacturer: "Samsung", model: "PM883 480GB", quantity: 1, partNumber: "SSD-480G-S-PM883", slot: "Disk 1" },
+          { type: "内存", manufacturer: "Samsung", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A1" },
+          { type: "内存", manufacturer: "Samsung", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A2" },
+          { type: "内存", manufacturer: "Samsung", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A3" },
+          { type: "内存", manufacturer: "Samsung", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A4" },
+          { type: "SSD", manufacturer: "Samsung", quantity: 1, partNumber: "SSD-480G-S-PM883", slot: "Disk 0" },
+          { type: "SSD", manufacturer: "Samsung", quantity: 1, partNumber: "SSD-480G-S-PM883", slot: "Disk 1" },
         ],
       },
     ],
@@ -63,22 +81,22 @@ export const workOrders: WorkOrder[] = [
         },
         currentConfig: [],
         targetConfig: [
-            { type: "CPU", manufacturer: "Intel", model: "Xeon Silver 4210", quantity: 1, partNumber: "CPU-INT-4210", slot: "CPU 1"},
-            { type: "CPU", manufacturer: "Intel", model: "Xeon Silver 4210", quantity: 1, partNumber: "CPU-INT-4210", slot: "CPU 2"},
-            { type: "内存", manufacturer: "Samsung", model: "DDR4 32GB 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A1" },
-            { type: "内存", manufacturer: "Samsung", model: "DDR4 32GB 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A2" },
-            { type: "内存", manufacturer: "Samsung", model: "DDR4 32GB 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A3" },
-            { type: "内存", manufacturer: "Samsung", model: "DDR4 32GB 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A4" },
-            { type: "内存", manufacturer: "Samsung", model: "DDR4 32GB 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "B1" },
-            { type: "内存", manufacturer: "Samsung", model: "DDR4 32GB 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "B2" },
-            { type: "内存", manufacturer: "Samsung", model: "DDR4 32GB 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "B3" },
-            { type: "内存", manufacturer: "Samsung", model: "DDR4 32GB 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "B4" },
-            { type: "SSD", manufacturer: "Intel", model: "P4510 1TB NVMe", quantity: 1, partNumber: "SSD-1T-I-P4510", slot: "NVMe 0" },
-            { type: "SSD", manufacturer: "Intel", model: "P4510 1TB NVMe", quantity: 1, partNumber: "SSD-1T-I-P4510", slot: "NVMe 1" },
-            { type: "SSD", manufacturer: "Intel", model: "P4510 1TB NVMe", quantity: 1, partNumber: "SSD-1T-I-P4510", slot: "NVMe 2" },
-            { type: "SSD", manufacturer: "Intel", model: "P4510 1TB NVMe", quantity: 1, partNumber: "SSD-1T-I-P4510", slot: "NVMe 3" },
-            { type: "网卡", manufacturer: "Mellanox", model: "CX-5 25GbE", quantity: 1, partNumber: "NIC-MEL-CX5", slot: "PCIe 1" },
-            { type: "网卡", manufacturer: "Mellanox", model: "CX-5 25GbE", quantity: 1, partNumber: "NIC-MEL-CX5", slot: "PCIe 2" },
+            { type: "CPU", manufacturer: "Intel", quantity: 1, partNumber: "CPU-INT-4210", slot: "CPU 1"},
+            { type: "CPU", manufacturer: "Intel", quantity: 1, partNumber: "CPU-INT-4210", slot: "CPU 2"},
+            { type: "内存", manufacturer: "Samsung", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A1" },
+            { type: "内存", manufacturer: "Samsung", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A2" },
+            { type: "内存", manufacturer: "Samsung", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A3" },
+            { type: "内存", manufacturer: "Samsung", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A4" },
+            { type: "内存", manufacturer: "Samsung", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "B1" },
+            { type: "内存", manufacturer: "Samsung", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "B2" },
+            { type: "内存", manufacturer: "Samsung", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "B3" },
+            { type: "内存", manufacturer: "Samsung", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "B4" },
+            { type: "SSD", manufacturer: "Intel", quantity: 1, partNumber: "SSD-1T-I-P4510", slot: "NVMe 0" },
+            { type: "SSD", manufacturer: "Intel", quantity: 1, partNumber: "SSD-1T-I-P4510", slot: "NVMe 1" },
+            { type: "SSD", manufacturer: "Intel", quantity: 1, partNumber: "SSD-1T-I-P4510", slot: "NVMe 2" },
+            { type: "SSD", manufacturer: "Intel", quantity: 1, partNumber: "SSD-1T-I-P4510", slot: "NVMe 3" },
+            { type: "网卡", manufacturer: "Mellanox", quantity: 1, partNumber: "NIC-MEL-CX5", slot: "PCIe 1" },
+            { type: "网卡", manufacturer: "Mellanox", quantity: 1, partNumber: "NIC-MEL-CX5", slot: "PCIe 2" },
         ],
       },
       {
@@ -136,28 +154,28 @@ export const workOrders: WorkOrder[] = [
           uPosition: 3,
         },
         currentConfig: [
-          { type: "SATA", manufacturer: "Seagate", model: "Exos 4TB", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 1" },
-          { type: "SATA", manufacturer: "Seagate", model: "Exos 4TB", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 2" },
-          { type: "SATA", manufacturer: "Seagate", model: "Exos 4TB", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 3" },
-          { type: "SATA", manufacturer: "Seagate", model: "Exos 4TB", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 4" },
-          { type: "SATA", manufacturer: "Seagate", model: "Exos 4TB", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 5" },
-          { type: "SATA", manufacturer: "Seagate", model: "Exos 4TB", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 6" },
-          { type: "SATA", manufacturer: "Seagate", model: "Exos 4TB", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 7" },
-          { type: "SATA", manufacturer: "Seagate", model: "Exos 4TB", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 8" },
+          { type: "SATA", manufacturer: "Seagate", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 1" },
+          { type: "SATA", manufacturer: "Seagate", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 2" },
+          { type: "SATA", manufacturer: "Seagate", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 3" },
+          { type: "SATA", manufacturer: "Seagate", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 4" },
+          { type: "SATA", manufacturer: "Seagate", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 5" },
+          { type: "SATA", manufacturer: "Seagate", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 6" },
+          { type: "SATA", manufacturer: "Seagate", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 7" },
+          { type: "SATA", manufacturer: "Seagate", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 8" },
         ],
         targetConfig: [
-          { type: "SATA", manufacturer: "Seagate", model: "Exos 4TB", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 1" },
-          { type: "SATA", manufacturer: "Seagate", model: "Exos 4TB", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 2" },
-          { type: "SATA", manufacturer: "Seagate", model: "Exos 4TB", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 3" },
-          { type: "SATA", manufacturer: "Seagate", model: "Exos 4TB", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 4" },
-          { type: "SATA", manufacturer: "Seagate", model: "Exos 4TB", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 5" },
-          { type: "SATA", manufacturer: "Seagate", model: "Exos 4TB", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 6" },
-          { type: "SATA", manufacturer: "Seagate", model: "Exos 4TB", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 7" },
-          { type: "SATA", manufacturer: "Seagate", model: "Exos 4TB", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 8" },
-          { type: "SSD", manufacturer: "Samsung", model: "PM883 960GB", quantity: 1, partNumber: "SSD-960G-S-PM883", slot: "Bay 9" },
-          { type: "SSD", manufacturer: "Samsung", model: "PM883 960GB", quantity: 1, partNumber: "SSD-960G-S-PM883", slot: "Bay 10" },
-          { type: "SSD", manufacturer: "Samsung", model: "PM883 960GB", quantity: 1, partNumber: "SSD-960G-S-PM883", slot: "Bay 11" },
-          { type: "SSD", manufacturer: "Samsung", model: "PM883 960GB", quantity: 1, partNumber: "SSD-960G-S-PM883", slot: "Bay 12" },
+          { type: "SATA", manufacturer: "Seagate", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 1" },
+          { type: "SATA", manufacturer: "Seagate", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 2" },
+          { type: "SATA", manufacturer: "Seagate", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 3" },
+          { type: "SATA", manufacturer: "Seagate", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 4" },
+          { type: "SATA", manufacturer: "Seagate", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 5" },
+          { type: "SATA", manufacturer: "Seagate", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 6" },
+          { type: "SATA", manufacturer: "Seagate", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 7" },
+          { type: "SATA", manufacturer: "Seagate", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 8" },
+          { type: "SSD", manufacturer: "Samsung", quantity: 1, partNumber: "SSD-960G-S-PM883", slot: "Bay 9" },
+          { type: "SSD", manufacturer: "Samsung", quantity: 1, partNumber: "SSD-960G-S-PM883", slot: "Bay 10" },
+          { type: "SSD", manufacturer: "Samsung", quantity: 1, partNumber: "SSD-960G-S-PM883", slot: "Bay 11" },
+          { type: "SSD", manufacturer: "Samsung", quantity: 1, partNumber: "SSD-960G-S-PM883", slot: "Bay 12" },
         ],
       },
     ],
@@ -180,12 +198,12 @@ export const workOrders: WorkOrder[] = [
           uPosition: 30,
         },
         currentConfig: [
-            { type: "CPU", manufacturer: "Intel", model: "Xeon E5-2620 v3", quantity: 1, partNumber: "CPU-INT-2620V3", slot: "CPU 1"},
-            { type: "CPU", manufacturer: "Intel", model: "Xeon E5-2620 v3", quantity: 1, partNumber: "CPU-INT-2620V3", slot: "CPU 2"},
-            { type: "内存", manufacturer: "Crucial", model: "DDR4 16GB 2133MHz", quantity: 1, partNumber: "MEM-16G-2133-C", slot: "A1" },
-            { type: "内存", manufacturer: "Crucial", model: "DDR4 16GB 2133MHz", quantity: 1, partNumber: "MEM-16G-2133-C", slot: "A2" },
-            { type: "内存", manufacturer: "Crucial", model: "DDR4 16GB 2133MHz", quantity: 1, partNumber: "MEM-16G-2133-C", slot: "B1" },
-            { type: "内存", manufacturer: "Crucial", model: "DDR4 16GB 2133MHz", quantity: 1, partNumber: "MEM-16G-2133-C", slot: "B2" },
+            { type: "CPU", manufacturer: "Intel", quantity: 1, partNumber: "CPU-INT-2620V3", slot: "CPU 1"},
+            { type: "CPU", manufacturer: "Intel", quantity: 1, partNumber: "CPU-INT-2620V3", slot: "CPU 2"},
+            { type: "内存", manufacturer: "Crucial", quantity: 1, partNumber: "MEM-16G-2133-C", slot: "A1" },
+            { type: "内存", manufacturer: "Crucial", quantity: 1, partNumber: "MEM-16G-2133-C", slot: "A2" },
+            { type: "内存", manufacturer: "Crucial", quantity: 1, partNumber: "MEM-16G-2133-C", slot: "B1" },
+            { type: "内存", manufacturer: "Crucial", quantity: 1, partNumber: "MEM-16G-2133-C", slot: "B2" },
         ],
         targetConfig: [],
       },
@@ -200,12 +218,12 @@ export const workOrders: WorkOrder[] = [
           uPosition: 31,
         },
         currentConfig: [
-            { type: "CPU", manufacturer: "Intel", model: "Xeon E5-2620 v3", quantity: 1, partNumber: "CPU-INT-2620V3", slot: "CPU 1"},
-            { type: "CPU", manufacturer: "Intel", model: "Xeon E5-2620 v3", quantity: 1, partNumber: "CPU-INT-2620V3", slot: "CPU 2"},
-            { type: "内存", manufacturer: "Crucial", model: "DDR4 16GB 2133MHz", quantity: 1, partNumber: "MEM-16G-2133-C", slot: "A1" },
-            { type: "内存", manufacturer: "Crucial", model: "DDR4 16GB 2133MHz", quantity: 1, partNumber: "MEM-16G-2133-C", slot: "A2" },
-            { type: "内存", manufacturer: "Crucial", model: "DDR4 16GB 2133MHz", quantity: 1, partNumber: "MEM-16G-2133-C", slot: "B1" },
-            { type: "内存", manufacturer: "Crucial", model: "DDR4 16GB 2133MHz", quantity: 1, partNumber: "MEM-16G-2133-C", slot: "B2" },
+            { type: "CPU", manufacturer: "Intel", quantity: 1, partNumber: "CPU-INT-2620V3", slot: "CPU 1"},
+            { type: "CPU", manufacturer: "Intel", quantity: 1, partNumber: "CPU-INT-2620V3", slot: "CPU 2"},
+            { type: "内存", manufacturer: "Crucial", quantity: 1, partNumber: "MEM-16G-2133-C", slot: "A1" },
+            { type: "内存", manufacturer: "Crucial", quantity: 1, partNumber: "MEM-16G-2133-C", slot: "A2" },
+            { type: "内存", manufacturer: "Crucial", quantity: 1, partNumber: "MEM-16G-2133-C", slot: "B1" },
+            { type: "内存", manufacturer: "Crucial", quantity: 1, partNumber: "MEM-16G-2133-C", slot: "B2" },
         ],
         targetConfig: [],
       },
@@ -225,16 +243,16 @@ export const workOrders: WorkOrder[] = [
         serialNumber: "SN-DELL-R650-01",
         location: { module: "C1", rack: "R01", uPosition: 10 },
         currentConfig: [
-          { type: "CPU", manufacturer: "Intel", model: "Xeon Gold 6330", quantity: 1, partNumber: "CPU-INT-6330", slot: "CPU 1" },
-          { type: "CPU", manufacturer: "Intel", model: "Xeon Gold 6330", quantity: 1, partNumber: "CPU-INT-6330", slot: "CPU 2" },
-          { type: "内存", manufacturer: "Hynix", model: "DDR4 16GB 2400MHz", quantity: 1, partNumber: "MEM-16G-2400-A", slot: "A1" },
-          { type: "SSD", manufacturer: "Intel", model: "P5510 3.84TB NVMe", quantity: 1, partNumber: "SSD-3.84T-I-P5510", slot: "NVMe 0" },
+          { type: "CPU", manufacturer: "Intel", quantity: 1, partNumber: "CPU-INT-6330", slot: "CPU 1" },
+          { type: "CPU", manufacturer: "Intel", quantity: 1, partNumber: "CPU-INT-6330", slot: "CPU 2" },
+          { type: "内存", manufacturer: "Hynix", quantity: 1, partNumber: "MEM-16G-2400-A", slot: "A1" },
+          { type: "SSD", manufacturer: "Intel", quantity: 1, partNumber: "SSD-3.84T-I-P5510", slot: "NVMe 0" },
         ],
         targetConfig: [
-          { type: "CPU", manufacturer: "Intel", model: "Xeon Gold 6330", quantity: 1, partNumber: "CPU-INT-6330", slot: "CPU 1" },
-          { type: "CPU", manufacturer: "Intel", model: "Xeon Gold 6330", quantity: 1, partNumber: "CPU-INT-6330", slot: "CPU 2" },
-          { type: "内存", manufacturer: "Samsung", model: "DDR4 32GB 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A1" },
-          { type: "SSD", manufacturer: "Intel", model: "P5510 3.84TB NVMe", quantity: 1, partNumber: "SSD-3.84T-I-P5510", slot: "NVMe 0" },
+          { type: "CPU", manufacturer: "Intel", quantity: 1, partNumber: "CPU-INT-6330", slot: "CPU 1" },
+          { type: "CPU", manufacturer: "Intel", quantity: 1, partNumber: "CPU-INT-6330", slot: "CPU 2" },
+          { type: "内存", manufacturer: "Samsung", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A1" },
+          { type: "SSD", manufacturer: "Intel", quantity: 1, partNumber: "SSD-3.84T-I-P5510", slot: "NVMe 0" },
         ],
       },
       {
@@ -245,10 +263,10 @@ export const workOrders: WorkOrder[] = [
         location: { module: "C1", rack: "R01", uPosition: 11 },
         currentConfig: [],
         targetConfig: [
-          { type: "CPU", manufacturer: "Intel", model: "Xeon Gold 6330", quantity: 1, partNumber: "CPU-INT-6330", slot: "CPU 1" },
-          { type: "CPU", manufacturer: "Intel", model: "Xeon Gold 6330", quantity: 1, partNumber: "CPU-INT-6330", slot: "CPU 2" },
-          { type: "内存", manufacturer: "Samsung", model: "DDR4 32GB 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A1" },
-          { type: "SSD", manufacturer: "Intel", model: "P5510 3.84TB NVMe", quantity: 1, partNumber: "SSD-3.84T-I-P5510", slot: "NVMe 0" },
+          { type: "CPU", manufacturer: "Intel", quantity: 1, partNumber: "CPU-INT-6330", slot: "CPU 1" },
+          { type: "CPU", manufacturer: "Intel", quantity: 1, partNumber: "CPU-INT-6330", slot: "CPU 2" },
+          { type: "内存", manufacturer: "Samsung", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A1" },
+          { type: "SSD", manufacturer: "Intel", quantity: 1, partNumber: "SSD-3.84T-I-P5510", slot: "NVMe 0" },
         ],
       },
       {
@@ -259,10 +277,10 @@ export const workOrders: WorkOrder[] = [
         location: { module: "C1", rack: "R02", uPosition: 15 },
         currentConfig: [],
         targetConfig: [
-          { type: "CPU", manufacturer: "Intel", model: "Xeon Silver 4214", quantity: 1, partNumber: "CPU-INT-4214", slot: "CPU 1" },
-          { type: "CPU", manufacturer: "Intel", model: "Xeon Silver 4214", quantity: 1, partNumber: "CPU-INT-4214", slot: "CPU 2" },
-          { type: "内存", manufacturer: "HPE", model: "DDR4 32GB 2933MHz", quantity: 1, partNumber: "MEM-32G-2933-H", slot: "A1" },
-          { type: "SATA", manufacturer: "HPE", model: "1.2TB SAS 10K", quantity: 1, partNumber: "HDD-1.2T-H-10K", slot: "Bay 1" },
+          { type: "CPU", manufacturer: "Intel", quantity: 1, partNumber: "CPU-INT-4214", slot: "CPU 1" },
+          { type: "CPU", manufacturer: "Intel", quantity: 1, partNumber: "CPU-INT-4214", slot: "CPU 2" },
+          { type: "内存", manufacturer: "HPE", quantity: 1, partNumber: "MEM-32G-2933-H", slot: "A1" },
+          { type: "SATA", manufacturer: "HPE", quantity: 1, partNumber: "HDD-1.2T-H-10K", slot: "Bay 1" },
         ],
       },
       {
@@ -291,12 +309,22 @@ export const workOrders: WorkOrder[] = [
         location: { module: "C1", rack: "R03", uPosition: 5 },
         currentConfig: [],
         targetConfig: [
-          { type: "SSD", manufacturer: "NetApp", model: "960GB SSD", quantity: 1, partNumber: "SSD-960G-N", slot: "Disk 1" },
-          { type: "SSD", manufacturer: "NetApp", model: "960GB SSD", quantity: 1, partNumber: "SSD-960G-N", slot: "Disk 2" },
-          { type: "SSD", manufacturer: "NetApp", model: "960GB SSD", quantity: 1, partNumber: "SSD-960G-N", slot: "Disk 3" },
-          { type: "SSD", manufacturer: "NetApp", model: "960GB SSD", quantity: 1, partNumber: "SSD-960G-N", slot: "Disk 4" },
+          { type: "SSD", manufacturer: "NetApp", quantity: 1, partNumber: "SSD-960G-N", slot: "Disk 1" },
+          { type: "SSD", manufacturer: "NetApp", quantity: 1, partNumber: "SSD-960G-N", slot: "Disk 2" },
+          { type: "SSD", manufacturer: "NetApp", quantity: 1, partNumber: "SSD-960G-N", slot: "Disk 3" },
+          { type: "SSD", manufacturer: "NetApp", quantity: 1, partNumber: "SSD-960G-N", slot: "Disk 4" },
         ],
       }
     ]
   }
 ];
+
+
+export const workOrders: WorkOrder[] = rawWorkOrders.map(wo => ({
+  ...wo,
+  devices: wo.devices.map(d => ({
+    ...d,
+    currentConfig: processComponents(d.currentConfig as Component[]),
+    targetConfig: processComponents(d.targetConfig as Component[]),
+  })),
+}));

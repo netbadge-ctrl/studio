@@ -67,7 +67,9 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
   const requiredComponents = React.useMemo(() => {
     const componentsMap = new Map<string, { component: ComponentType, model: string, quantity: number }>();
 
-    workOrder.devices.forEach((device) => {
+    const sortedDevices = [...workOrder.devices].sort((a, b) => a.id.localeCompare(b.id));
+
+    sortedDevices.forEach((device) => {
       const targetComponents = new Map<string, number>();
       device.targetConfig.forEach(c => {
         targetComponents.set(c.partNumber, (targetComponents.get(c.partNumber) || 0) + 1);
@@ -78,7 +80,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
         currentComponents.set(c.partNumber, (currentComponents.get(c.partNumber) || 0) + 1);
       });
       
-      const allPartNumbers = Array.from(new Set([...targetComponents.keys(), ...currentComponents.keys()]));
+      const allPartNumbers = Array.from(new Set([...targetComponents.keys(), ...currentComponents.keys()])).sort();
 
       allPartNumbers.forEach(partNumber => {
         const targetQty = targetComponents.get(partNumber) || 0;
@@ -93,14 +95,13 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
               if (existing) {
                 existing.quantity += requiredQty;
               } else {
-                componentsMap.set(partNumber, { component: componentInfo, model, quantity: requiredQty });
+                componentsMap.set(partNumber, { component: componentInfo, model: componentInfo.model, quantity: requiredQty });
               }
            }
         }
       });
     });
 
-    // Sort the final array to guarantee stable order and fix hydration issues.
     return Array.from(componentsMap.values()).sort((a, b) => a.model.localeCompare(b.model));
   }, [workOrder.devices]);
 
