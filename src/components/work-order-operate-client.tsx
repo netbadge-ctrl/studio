@@ -215,7 +215,7 @@ function DeviceOperation({ device }: { device: Device }) {
 export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) {
   const { toast } = useToast();
   const router = useRouter();
-  const [openAccordionItems, setOpenAccordionItems] = useState<string[]>([]);
+  const [openAccordionItem, setOpenAccordionItem] = useState<string>('');
   const [isScanDialogOpen, setIsScanDialogOpen] = useState(false);
   const deviceRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
@@ -225,7 +225,7 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
     const device = workOrder.devices.find(d => d.serialNumber.toLowerCase() === serialNumberInput.toLowerCase());
 
     if (device) {
-      setOpenAccordionItems(prev => [...new Set([...prev, device.id])]);
+      setOpenAccordionItem(device.id);
       
       setTimeout(() => {
         const element = deviceRefs.current[device.id];
@@ -268,14 +268,18 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
           <CardContent>
             {workOrder.devices.length > 0 ? (
                <Accordion 
-                  type="multiple" 
-                  value={openAccordionItems} 
-                  onValueChange={setOpenAccordionItems}
+                  type="single"
+                  collapsible
+                  value={openAccordionItem} 
+                  onValueChange={setOpenAccordionItem}
                   className="w-full space-y-2"
                 >
                 {workOrder.devices.map(device => (
                     <div key={device.id} ref={el => (deviceRefs.current[device.id] = el)}>
-                      <AccordionItem value={device.id} className="border-b-0 rounded-lg border bg-card text-card-foreground shadow-sm data-[state=open]:shadow-md">
+                      <AccordionItem 
+                        value={device.id} 
+                        className="border-b-0 rounded-lg border bg-card text-card-foreground shadow-sm transition-all data-[state=open]:shadow-lg data-[state=open]:border-primary"
+                      >
                           <AccordionTrigger className="px-4 py-3 hover:no-underline text-base">
                               <div className="flex items-center gap-3">
                                   {getDeviceIcon(device.type)}
