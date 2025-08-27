@@ -257,7 +257,12 @@ export const workOrders: WorkOrder[] = [
         model: "Dell PowerEdge R650",
         serialNumber: "SN-DELL-R650-01",
         location: { module: "C1", rack: "R01", uPosition: 10 },
-        currentConfig: [],
+        currentConfig: [
+          { type: "CPU", manufacturer: "Intel", model: "Xeon Gold 6330", quantity: 1, partNumber: "CPU-INT-6330", slot: "CPU 1" },
+          { type: "CPU", manufacturer: "Intel", model: "Xeon Gold 6330", quantity: 1, partNumber: "CPU-INT-6330", slot: "CPU 2" },
+          { type: "内存", manufacturer: "Hynix", model: "DDR4 16GB 2400MHz", quantity: 1, partNumber: "MEM-16G-2400-A", slot: "A1" },
+          { type: "SSD", manufacturer: "Intel", model: "P5510 3.84TB NVMe", quantity: 1, partNumber: "SSD-3.84T-I-P5510", slot: "NVMe 0" },
+        ],
         targetConfig: [
           { type: "CPU", manufacturer: "Intel", model: "Xeon Gold 6330", quantity: 1, partNumber: "CPU-INT-6330", slot: "CPU 1" },
           { type: "CPU", manufacturer: "Intel", model: "Xeon Gold 6330", quantity: 1, partNumber: "CPU-INT-6330", slot: "CPU 2" },
