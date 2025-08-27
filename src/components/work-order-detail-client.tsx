@@ -162,13 +162,14 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
             </h3>
             {requiredComponents.length > 0 ? (
               <div className="p-4 bg-muted/50 rounded-lg">
-                <ul className="space-y-2 text-sm">
+                <ul className="space-y-3 text-sm">
                   {requiredComponents.map((comp) => (
-                    <li key={comp.partNumber} className="flex justify-between items-center">
-                      <span>
-                        {comp.type} - {comp.model}
-                      </span>
-                      <span className="font-medium text-primary">x {comp.quantity}</span>
+                    <li key={comp.partNumber} className="grid grid-cols-[1fr_auto] items-center gap-x-4">
+                      <div className='flex flex-col'>
+                         <span className='font-medium'>{comp.type} - {comp.manufacturer} {comp.model}</span>
+                         <span className='text-xs text-muted-foreground font-mono'>{comp.partNumber}</span>
+                      </div>
+                      <span className="font-medium text-primary text-base">x {comp.quantity}</span>
                     </li>
                   ))}
                 </ul>

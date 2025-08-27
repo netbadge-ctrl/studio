@@ -5,6 +5,7 @@ export type Employee = {
 
 export type Component = {
   type: 'SATA' | 'SSD' | '内存' | '网卡' | 'CPU' | 'PSU';
+  manufacturer: string;
   model: string;
   quantity: number;
   partNumber: string;

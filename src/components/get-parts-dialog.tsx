@@ -53,7 +53,7 @@ export function GetPartsDialog({
     setSuggestion(null);
     try {
       const result = await suggestStockLocations({
-        components: requiredComponents.map(c => ({ partNumber: c.partNumber, model: c.model, quantity: c.quantity })),
+        components: requiredComponents.map(c => ({ partNumber: c.partNumber, model: `${c.manufacturer} ${c.model}`, quantity: c.quantity })),
         stockLocationCriteria: '找到满足数量需求的最少储藏室组合，并优先选择离A1模块最近的位置。',
         availableLocations: MOCK_AVAILABLE_LOCATIONS,
       });

@@ -26,12 +26,12 @@ export const workOrders: WorkOrder[] = [
           uPosition: 24,
         },
         currentConfig: [
-          { type: "内存", model: "DDR4 16GB 2400MHz", quantity: 4, partNumber: "MEM-16G-2400-A" },
-          { type: "SSD", model: "Samsung PM883 480GB", quantity: 2, partNumber: "SSD-480G-S-PM883" },
+          { type: "内存", manufacturer: "Hynix", model: "DDR4 16GB 2400MHz", quantity: 4, partNumber: "MEM-16G-2400-A" },
+          { type: "SSD", manufacturer: "Samsung", model: "PM883 480GB", quantity: 2, partNumber: "SSD-480G-S-PM883" },
         ],
         targetConfig: [
-          { type: "内存", model: "DDR4 32GB 3200MHz", quantity: 4, partNumber: "MEM-32G-3200-B" },
-          { type: "SSD", model: "Samsung PM883 480GB", quantity: 2, partNumber: "SSD-480G-S-PM883" },
+          { type: "内存", manufacturer: "Samsung", model: "DDR4 32GB 3200MHz", quantity: 4, partNumber: "MEM-32G-3200-B" },
+          { type: "SSD", manufacturer: "Samsung", model: "PM883 480GB", quantity: 2, partNumber: "SSD-480G-S-PM883" },
         ],
         sop: [
           { step: 1, action: "验证服务器序列号", completed: false },
@@ -64,10 +64,10 @@ export const workOrders: WorkOrder[] = [
         },
         currentConfig: [],
         targetConfig: [
-            { type: "CPU", model: "Intel Xeon Silver 4210", quantity: 2, partNumber: "CPU-INT-4210"},
-            { type: "内存", model: "DDR4 32GB 3200MHz", quantity: 8, partNumber: "MEM-32G-3200-B" },
-            { type: "SSD", model: "Intel P4510 1TB NVMe", quantity: 4, partNumber: "SSD-1T-I-P4510" },
-            { type: "网卡", model: "Mellanox CX-5 25GbE", quantity: 2, partNumber: "NIC-MEL-CX5" },
+            { type: "CPU", manufacturer: "Intel", model: "Xeon Silver 4210", quantity: 2, partNumber: "CPU-INT-4210"},
+            { type: "内存", manufacturer: "Samsung", model: "DDR4 32GB 3200MHz", quantity: 8, partNumber: "MEM-32G-3200-B" },
+            { type: "SSD", manufacturer: "Intel", model: "P4510 1TB NVMe", quantity: 4, partNumber: "SSD-1T-I-P4510" },
+            { type: "网卡", manufacturer: "Mellanox", model: "CX-5 25GbE", quantity: 2, partNumber: "NIC-MEL-CX5" },
         ],
         sop: [
           { step: 1, action: "将服务器安装到指定机架位置", completed: true },
@@ -140,11 +140,11 @@ export const workOrders: WorkOrder[] = [
           uPosition: 3,
         },
         currentConfig: [
-          { type: "SATA", model: "Seagate Exos 4TB", quantity: 8, partNumber: "HDD-4T-S-EXOS" },
+          { type: "SATA", manufacturer: "Seagate", model: "Exos 4TB", quantity: 8, partNumber: "HDD-4T-S-EXOS" },
         ],
         targetConfig: [
-          { type: "SATA", model: "Seagate Exos 4TB", quantity: 8, partNumber: "HDD-4T-S-EXOS" },
-          { type: "SSD", model: "Samsung PM883 960GB", quantity: 4, partNumber: "SSD-960G-S-PM883" },
+          { type: "SATA", manufacturer: "Seagate", model: "Exos 4TB", quantity: 8, partNumber: "HDD-4T-S-EXOS" },
+          { type: "SSD", manufacturer: "Samsung", model: "PM883 960GB", quantity: 4, partNumber: "SSD-960G-S-PM883" },
         ],
         sop: []
       },
@@ -168,8 +168,8 @@ export const workOrders: WorkOrder[] = [
           uPosition: 30,
         },
         currentConfig: [
-            { type: "CPU", model: "Intel Xeon E5-2620 v3", quantity: 2, partNumber: "CPU-INT-2620V3"},
-            { type: "内存", model: "DDR4 16GB 2133MHz", quantity: 4, partNumber: "MEM-16G-2133-C" },
+            { type: "CPU", manufacturer: "Intel", model: "Xeon E5-2620 v3", quantity: 2, partNumber: "CPU-INT-2620V3"},
+            { type: "内存", manufacturer: "Crucial", model: "DDR4 16GB 2133MHz", quantity: 4, partNumber: "MEM-16G-2133-C" },
         ],
         targetConfig: [],
         sop: [
@@ -188,8 +188,8 @@ export const workOrders: WorkOrder[] = [
           uPosition: 31,
         },
         currentConfig: [
-            { type: "CPU", model: "Intel Xeon E5-2620 v3", quantity: 2, partNumber: "CPU-INT-2620V3"},
-            { type: "内存", model: "DDR4 16GB 2133MHz", quantity: 4, partNumber: "MEM-16G-2133-C" },
+            { type: "CPU", manufacturer: "Intel", model: "Xeon E5-2620 v3", quantity: 2, partNumber: "CPU-INT-2620V3"},
+            { type: "内存", manufacturer: "Crucial", model: "DDR4 16GB 2133MHz", quantity: 4, partNumber: "MEM-16G-2133-C" },
         ],
         targetConfig: [],
         sop: [
@@ -214,9 +214,9 @@ export const workOrders: WorkOrder[] = [
         location: { module: "C1", rack: "R01", uPosition: 10 },
         currentConfig: [],
         targetConfig: [
-          { type: "CPU", model: "Intel Xeon Gold 6330", quantity: 2, partNumber: "CPU-INT-6330" },
-          { type: "内存", model: "DDR4 32GB 3200MHz", quantity: 16, partNumber: "MEM-32G-3200-B" },
-          { type: "SSD", model: "Intel P5510 3.84TB NVMe", quantity: 2, partNumber: "SSD-3.84T-I-P5510" },
+          { type: "CPU", manufacturer: "Intel", model: "Xeon Gold 6330", quantity: 2, partNumber: "CPU-INT-6330" },
+          { type: "内存", manufacturer: "Samsung", model: "DDR4 32GB 3200MHz", quantity: 16, partNumber: "MEM-32G-3200-B" },
+          { type: "SSD", manufacturer: "Intel", model: "P5510 3.84TB NVMe", quantity: 2, partNumber: "SSD-3.84T-I-P5510" },
         ],
         sop: [{ step: 1, action: "上架并连接电源", completed: false }, { step: 2, action: "配置 iDRAC", completed: false }]
       },
@@ -228,9 +228,9 @@ export const workOrders: WorkOrder[] = [
         location: { module: "C1", rack: "R01", uPosition: 11 },
         currentConfig: [],
         targetConfig: [
-          { type: "CPU", model: "Intel Xeon Gold 6330", quantity: 2, partNumber: "CPU-INT-6330" },
-          { type: "内存", model: "DDR4 32GB 3200MHz", quantity: 16, partNumber: "MEM-32G-3200-B" },
-          { type: "SSD", model: "Intel P5510 3.84TB NVMe", quantity: 2, partNumber: "SSD-3.84T-I-P5510" },
+          { type: "CPU", manufacturer: "Intel", model: "Xeon Gold 6330", quantity: 2, partNumber: "CPU-INT-6330" },
+          { type: "内存", manufacturer: "Samsung", model: "DDR4 32GB 3200MHz", quantity: 16, partNumber: "MEM-32G-3200-B" },
+          { type: "SSD", manufacturer: "Intel", model: "P5510 3.84TB NVMe", quantity: 2, partNumber: "SSD-3.84T-I-P5510" },
         ],
         sop: [{ step: 1, action: "上架并连接电源", completed: false }, { step: 2, action: "配置 iDRAC", completed: false }]
       },
@@ -242,9 +242,9 @@ export const workOrders: WorkOrder[] = [
         location: { module: "C1", rack: "R02", uPosition: 15 },
         currentConfig: [],
         targetConfig: [
-          { type: "CPU", model: "Intel Xeon Silver 4214", quantity: 2, partNumber: "CPU-INT-4214" },
-          { type: "内存", model: "DDR4 32GB 2933MHz", quantity: 8, partNumber: "MEM-32G-2933-H" },
-          { type: "SATA", model: "HPE 1.2TB SAS 10K", quantity: 4, partNumber: "HDD-1.2T-H-10K" },
+          { type: "CPU", manufacturer: "Intel", model: "Xeon Silver 4214", quantity: 2, partNumber: "CPU-INT-4214" },
+          { type: "内存", manufacturer: "HPE", model: "DDR4 32GB 2933MHz", quantity: 8, partNumber: "MEM-32G-2933-H" },
+          { type: "SATA", manufacturer: "HPE", model: "1.2TB SAS 10K", quantity: 4, partNumber: "HDD-1.2T-H-10K" },
         ],
         sop: [{ step: 1, action: "上架并连接电源", completed: false }, { step: 2, action: "配置 iLO", completed: false }]
       },
@@ -276,7 +276,7 @@ export const workOrders: WorkOrder[] = [
         location: { module: "C1", rack: "R03", uPosition: 5 },
         currentConfig: [],
         targetConfig: [
-          { type: "SSD", model: "NetApp 960GB SSD", quantity: 12, partNumber: "SSD-960G-N" },
+          { type: "SSD", manufacturer: "NetApp", model: "960GB SSD", quantity: 12, partNumber: "SSD-960G-N" },
         ],
         sop: [{ step: 1, action: "上架并配置存储", completed: false }]
       }
