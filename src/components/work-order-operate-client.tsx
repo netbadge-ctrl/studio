@@ -177,7 +177,7 @@ function DeviceOperation({ device }: { device: Device }) {
                                 <TableCell className={cn("text-center font-bold", item.currentQty !== item.targetQty && "text-accent-foreground")}>
                                   <div className="flex items-center justify-center gap-1 sm:gap-2">
                                     {item.currentQty < item.targetQty && <ArrowRight className="h-4 w-4 text-green-500"/>}
-                                    {item.currentQty > item.targetQty && <ArrowRight className="h-4 w-4 text-red-500 -rotate-180"/>}
+                                    {item.currentQty > item.targetQty && <ArrowRight className="h-4 w-4 text-red-500 transform rotate-180"/>}
                                     {item.targetQty}
                                   </div>
                                 </TableCell>
@@ -227,7 +227,7 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
                           <div className="flex items-center gap-3">
                               {getDeviceIcon(device.type)}
                               <div className='text-left'>
-                                  <p className='font-semibold'>{device.type}</p>
+                                  <p className='font-semibold'>{device.type} ({device.model})</p>
                                   <p className="text-xs font-normal text-muted-foreground font-code">{device.serialNumber}</p>
                               </div>
                           </div>

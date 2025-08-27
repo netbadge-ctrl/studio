@@ -19,6 +19,7 @@ export type SOPStep = {
 export type Device = {
   id: string;
   type: '服务器' | '交换机' | '存储设备';
+  model: string;
   serialNumber: string;
   location: {
     module: string;

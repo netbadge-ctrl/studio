@@ -21,6 +21,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   PackageSearch,
   MapPin,
@@ -120,11 +121,12 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
               <MapPin className="h-5 w-5 text-primary" />
               设备位置
             </h3>
-            <div className="p-4 bg-muted/50 rounded-lg">
+            <ScrollArea className="h-72 w-full p-4 bg-muted/50 rounded-lg border">
               <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>设备类型</TableHead>
+                    <TableHead>型号</TableHead>
                     <TableHead>序列号</TableHead>
                     <TableHead>位置</TableHead>
                   </TableRow>
@@ -138,6 +140,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
                           <span>{device.type}</span>
                         </div>
                       </TableCell>
+                       <TableCell className="text-xs">{device.model}</TableCell>
                       <TableCell className="font-mono text-xs">
                         {device.serialNumber}
                       </TableCell>
@@ -149,7 +152,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
                   ))}
                 </TableBody>
               </Table>
-            </div>
+            </ScrollArea>
           </div>
 
           <div className="space-y-4">
