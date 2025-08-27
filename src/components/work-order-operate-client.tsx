@@ -4,7 +4,6 @@ import { useState, useRef, useMemo } from 'react';
 import type { WorkOrder, Component, Device, SOPStep } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -16,17 +15,8 @@ import { useRouter } from 'next/navigation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Image from 'next/image';
 import { ScanDeviceDialog } from './scan-device-dialog';
+import { Badge } from '@/components/ui/badge';
 
-
-const getStatusClass = (status: WorkOrder["status"]) => {
-  switch (status) {
-    case "已完成": return "bg-green-100 text-green-800 border-green-200";
-    case "进行中": return "bg-blue-100 text-primary border-blue-200";
-    case "已阻塞": return "bg-red-100 text-red-800 border-red-200";
-    case "已分配": return "bg-yellow-100 text-yellow-800 border-yellow-200";
-    default: return "bg-muted text-muted-foreground";
-  }
-};
 
 const getComponentIcon = (type: Component['type']) => {
     const props = { className: "h-4 w-4 text-muted-foreground" };
@@ -273,7 +263,6 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
                     <CardTitle className="text-xl md:text-2xl">{workOrder.title}</CardTitle>
                     <CardDescription>工单 #{workOrder.id} - 步骤 2/2: 操作</CardDescription>
                 </div>
-                <Badge className={cn("text-base whitespace-nowrap w-fit", getStatusClass(workOrder.status))}>{workOrder.status}</Badge>
               </div>
           </CardHeader>
           <CardContent>
