@@ -25,7 +25,7 @@ export const employees: Employee[] = [
   { id: "emp-004", name: "戴安娜" },
 ];
 
-const rawWorkOrders: Omit<WorkOrder, 'devices'> & { devices: Omit<WorkOrder['devices'][0], 'currentConfig' | 'targetConfig'> & { currentConfig: Omit<Component, 'model'>[], targetConfig: Omit<Component, 'model'>[] }[] }[] = [
+const rawWorkOrders: Omit<WorkOrder, 'devices'> & { devices: Omit<WorkOrder['devices'][0], 'currentConfig' | 'targetConfig' | 'status'> & { currentConfig: Omit<Component, 'model'>[], targetConfig: Omit<Component, 'model'>[] }[] }[] = [
   {
     id: "wo-001",
     title: "升级 Hyperion-01 的内存",
@@ -324,6 +324,7 @@ export const workOrders: WorkOrder[] = rawWorkOrders.map(wo => ({
   ...wo,
   devices: wo.devices.map(d => ({
     ...d,
+    status: '待处理', // Initialize status
     currentConfig: processComponents(d.currentConfig as Component[]),
     targetConfig: processComponents(d.targetConfig as Component[]),
   })),

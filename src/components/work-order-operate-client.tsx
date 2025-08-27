@@ -1,12 +1,12 @@
 "use client"
 
 import { useState, useRef, useMemo, useEffect } from 'react';
-import type { WorkOrder, Component, Device } from '@/lib/types';
+import type { WorkOrder, Component, Device, DeviceStatus } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Layers, Server as ServerIcon, HardDrive, MemoryStick, Cpu, ArrowUp, ArrowDown, Network, Video, Image as ImageIcon, QrCode, CheckCircle } from 'lucide-react';
+import { Layers, Server as ServerIcon, HardDrive, MemoryStick, Cpu, ArrowUp, ArrowDown, Network, Video, Image as ImageIcon, QrCode, CheckCircle, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
@@ -39,7 +39,30 @@ const getDeviceIcon = (type: Device['type']) => {
     }
 }
 
-function DeviceOperation({ device }: { device: Device }) {
+const getStatusBadgeClass = (status: DeviceStatus) => {
+    switch (status) {
+      case '待处理':
+        return 'bg-gray-100 text-gray-800 border-gray-200';
+      case '开始改配':
+        return 'bg-blue-100 text-primary border-blue-200';
+      case '配置带外':
+        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case '结单检测':
+        return 'bg-green-100 text-green-800 border-green-200';
+      case '检测异常':
+        return 'bg-red-100 text-red-800 border-red-200';
+      default:
+        return 'bg-muted text-muted-foreground';
+    }
+  };
+
+function DeviceOperation({ 
+    device,
+    onStatusChange
+ }: { 
+    device: Device,
+    onStatusChange: (status: DeviceStatus) => void;
+}) {
   const [isScanPartDialogOpen, setIsScanPartDialogOpen] = useState(false);
   const [highlightedPart, setHighlightedPart] = useState<string | null>(null);
 
@@ -90,105 +113,141 @@ function DeviceOperation({ device }: { device: Device }) {
       partScanner.off('scan', handleScan);
     };
   }, [operationDetails]);
+  
+  const showHardwareConfig = device.status === '开始改配' || device.status === '配置带外' || device.status === '结单检测' || device.status === '检测异常' ;
+  const showOobConfig = device.status === '配置带外' || device.status === '结单检测' || device.status === '检测异常';
 
   return (
     <>
-      <div className="space-y-6 mt-4">
-        <Card>
-          <CardHeader>
-              <CardTitle className='text-xl'>可视化指南</CardTitle>
-              <CardDescription>查看图片或视频以获取操作指导。</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Tabs defaultValue="image" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="image"><ImageIcon className="mr-2" /> 图片指引</TabsTrigger>
-                <TabsTrigger value="video"><Video className="mr-2" /> 视频教程</TabsTrigger>
-              </TabsList>
-              <TabsContent value="image" className="mt-4">
-                <div className="aspect-video bg-muted rounded-lg flex items-center justify-center relative overflow-hidden">
-                  <Image 
-                      src="https://storage.googleapis.com/maker-studio-project-files-prod/v1/scenes/bRKM4o3t0mB-M-b-rI46-/resources/image_0.jpeg"
-                      alt="操作指引图片"
-                      fill
-                      data-ai-hint="server motherboard"
-                      className="object-contain"
-                    />
-                </div>
-              </TabsContent>
-              <TabsContent value="video" className="mt-4">
-                <div className="aspect-video bg-muted rounded-lg flex items-center justify-center">
-                  <video
-                      src="https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-                      controls
-                      className="w-full h-full rounded-lg"
-                  />
-                </div>
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
+      {showHardwareConfig && (
+         <div className="space-y-6 mt-4">
+         <Card>
+           <CardHeader>
+               <CardTitle className='text-xl'>可视化指南</CardTitle>
+               <CardDescription>查看图片或视频以获取操作指导。</CardDescription>
+           </CardHeader>
+           <CardContent>
+             <Tabs defaultValue="image" className="w-full">
+               <TabsList className="grid w-full grid-cols-2">
+                 <TabsTrigger value="image"><ImageIcon className="mr-2" /> 图片指引</TabsTrigger>
+                 <TabsTrigger value="video"><Video className="mr-2" /> 视频教程</TabsTrigger>
+               </TabsList>
+               <TabsContent value="image" className="mt-4">
+                 <div className="aspect-video bg-muted rounded-lg flex items-center justify-center relative overflow-hidden">
+                   <Image 
+                       src="https://storage.googleapis.com/maker-studio-project-files-prod/v1/scenes/bRKM4o3t0mB-M-b-rI46-/resources/image_0.jpeg"
+                       alt="操作指引图片"
+                       fill
+                       data-ai-hint="server motherboard"
+                       className="object-contain"
+                     />
+                 </div>
+               </TabsContent>
+               <TabsContent value="video" className="mt-4">
+                 <div className="aspect-video bg-muted rounded-lg flex items-center justify-center">
+                   <video
+                       src="https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                       controls
+                       className="w-full h-full rounded-lg"
+                   />
+                 </div>
+               </TabsContent>
+             </Tabs>
+           </CardContent>
+         </Card>
+ 
+         {operationDetails.length > 0 && (
+           <Card>
+               <CardHeader className="flex flex-row items-center justify-between">
+                   <div>
+                     <CardTitle className='text-xl'>配件操作明细</CardTitle>
+                     <CardDescription>根据下表完成配件的安装与卸载。</CardDescription>
+                   </div>
+                   <Button variant="outline" size="sm" onClick={() => setIsScanPartDialogOpen(true)}>
+                     <QrCode className="mr-2 h-4 w-4" />
+                     扫描配件
+                   </Button>
+               </CardHeader>
+               <CardContent>
+                   <Table>
+                       <TableHeader>
+                           <TableRow>
+                               <TableHead>配件</TableHead>
+                               <TableHead>槽位</TableHead>
+                               <TableHead className="text-right">操作</TableHead>
+                           </TableRow>
+                       </TableHeader>
+                       <TableBody>
+                           {operationDetails.map(({ action, component }, index) => (
+                               <TableRow 
+                                 key={component.partNumber + index}
+                                 ref={el => partRefs.current[component.partNumber] = el}
+                                 className={cn(
+                                   action === '装' ? 'bg-green-50/50' : 'bg-red-50/50',
+                                   {'ring-2 ring-primary ring-offset-2 rounded-lg': highlightedPart === component.partNumber}
+                                 )}
+                                 onAnimationEnd={() => setHighlightedPart(null)}
+                                 >
+                                   <TableCell>
+                                       <div className="flex items-center gap-2">
+                                           {getComponentIcon(component.type)}
+                                           <div>
+                                               <p className="font-medium text-xs sm:text-sm">{component.model}</p>
+                                               <p className="text-xs text-muted-foreground">{component.partNumber}</p>
+                                           </div>
+                                       </div>
+                                   </TableCell>
+                                   <TableCell className="font-mono text-xs sm:text-sm">{component.slot}</TableCell>
+                                   <TableCell className="text-right">
+                                     <Badge variant={action === '装' ? 'default' : 'destructive'} className='whitespace-nowrap'>
+                                       {action === '装' ? <ArrowUp className="mr-1 h-3 w-3" /> : <ArrowDown className="mr-1 h-3 w-3" />}
+                                       {action}
+                                     </Badge>
+                                   </TableCell>
+                               </TableRow>
+                           ))}
+                       </TableBody>
+                   </Table>
+               </CardContent>
+           </Card>
+         )}
+         
+         <Button 
+            variant="outline"
+            size="lg"
+            className="w-full border-green-600 bg-green-50 text-green-900 hover:bg-green-100 hover:text-green-900 disabled:opacity-50"
+            onClick={() => onStatusChange('配置带外')}
+            disabled={device.status !== '开始改配'}
+        >
+             <CheckCircle className="mr-2 h-5 w-5" />
+             硬件改配完成，开始带外配置
+         </Button>
+       </div>
+      )}
 
-        {operationDetails.length > 0 && (
-          <Card>
-              <CardHeader className="flex flex-row items-center justify-between">
-                  <div>
-                    <CardTitle className='text-xl'>配件操作明细</CardTitle>
-                    <CardDescription>根据下表完成配件的安装与卸载。</CardDescription>
-                  </div>
-                  <Button variant="outline" size="sm" onClick={() => setIsScanPartDialogOpen(true)}>
-                    <QrCode className="mr-2 h-4 w-4" />
-                    扫描配件
-                  </Button>
-              </CardHeader>
-              <CardContent>
-                  <Table>
-                      <TableHeader>
-                          <TableRow>
-                              <TableHead>配件</TableHead>
-                              <TableHead>槽位</TableHead>
-                              <TableHead className="text-right">操作</TableHead>
-                          </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                          {operationDetails.map(({ action, component }, index) => (
-                              <TableRow 
-                                key={component.partNumber + index}
-                                ref={el => partRefs.current[component.partNumber] = el}
-                                className={cn(
-                                  action === '装' ? 'bg-green-50/50' : 'bg-red-50/50',
-                                  {'ring-2 ring-primary ring-offset-2 rounded-lg': highlightedPart === component.partNumber}
-                                )}
-                                onAnimationEnd={() => setHighlightedPart(null)}
-                                >
-                                  <TableCell>
-                                      <div className="flex items-center gap-2">
-                                          {getComponentIcon(component.type)}
-                                          <div>
-                                              <p className="font-medium text-xs sm:text-sm">{component.model}</p>
-                                              <p className="text-xs text-muted-foreground">{component.partNumber}</p>
-                                          </div>
-                                      </div>
-                                  </TableCell>
-                                  <TableCell className="font-mono text-xs sm:text-sm">{component.slot}</TableCell>
-                                  <TableCell className="text-right">
-                                    <Badge variant={action === '装' ? 'default' : 'destructive'} className='whitespace-nowrap'>
-                                      {action === '装' ? <ArrowUp className="mr-1 h-3 w-3" /> : <ArrowDown className="mr-1 h-3 w-3" />}
-                                      {action}
-                                    </Badge>
-                                  </TableCell>
-                              </TableRow>
-                          ))}
-                      </TableBody>
-                  </Table>
-              </CardContent>
-          </Card>
-        )}
-        <Button variant="outline" size="lg" className="w-full border-green-600 bg-green-50 text-green-900 hover:bg-green-100 hover:text-green-900">
-            <CheckCircle className="mr-2 h-5 w-5" />
-            硬件改配完成，开始带外配置
-        </Button>
-      </div>
+      {showOobConfig && (
+        <div className='space-y-4 mt-6'>
+            <Button
+                size="lg"
+                className="w-full"
+                onClick={() => onStatusChange('结单检测')}
+                disabled={device.status !== '配置带外'}
+            >
+                完成带外配置
+            </Button>
+            <Button
+                variant="destructive"
+                size="lg"
+                className="w-full"
+                onClick={() => onStatusChange('检测异常')}
+                disabled={device.status === '结单检测' || device.status === '检测异常'}
+            >
+                <AlertTriangle className='mr-2 h-5 w-5' />
+                标记异常
+            </Button>
+        </div>
+      )}
+     
       <ScanPartDialog
         isOpen={isScanPartDialogOpen}
         setIsOpen={setIsScanPartDialogOpen}
@@ -204,6 +263,14 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
   const [isScanDeviceDialogOpen, setIsScanDeviceDialogOpen] = useState(false);
   const deviceRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
+  const [deviceStatuses, setDeviceStatuses] = useState<Record<string, DeviceStatus>>(
+    Object.fromEntries(workOrder.devices.map(d => [d.id, d.status]))
+  );
+
+  const handleStatusChange = (deviceId: string, status: DeviceStatus) => {
+    setDeviceStatuses(prev => ({ ...prev, [deviceId]: status }));
+  };
+
   const handleFindDevice = (serialNumberInput: string) => {
     if (!serialNumberInput) return;
 
@@ -211,6 +278,9 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
 
     if (device) {
       setOpenAccordionItem(device.id);
+      if (deviceStatuses[device.id] === '待处理') {
+        handleStatusChange(device.id, '开始改配');
+      }
       
       setTimeout(() => {
         const element = deviceRefs.current[device.id];
@@ -239,6 +309,11 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
     router.push('/');
   }
 
+  const devicesWithStatus = workOrder.devices.map(d => ({
+    ...d,
+    status: deviceStatuses[d.id] || d.status,
+  }));
+
   return (
     <>
       <Card>
@@ -251,7 +326,7 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
               </div>
           </CardHeader>
           <CardContent>
-            {workOrder.devices.length > 0 ? (
+            {devicesWithStatus.length > 0 ? (
                <Accordion 
                   type="single"
                   collapsible
@@ -259,23 +334,29 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
                   onValueChange={setOpenAccordionItem}
                   className="w-full space-y-2"
                 >
-                {workOrder.devices.map(device => (
+                {devicesWithStatus.map(device => (
                     <div key={device.id} ref={el => (deviceRefs.current[device.id] = el)}>
                       <AccordionItem 
                         value={device.id} 
                         className="border-b-0 rounded-lg border bg-card text-card-foreground shadow-sm transition-all data-[state=open]:shadow-lg data-[state=open]:border-primary"
                       >
                           <AccordionTrigger className="px-4 py-3 hover:no-underline text-base">
-                              <div className="flex items-center gap-3">
+                              <div className="flex items-center gap-3 w-full">
                                   {getDeviceIcon(device.type)}
-                                  <div className='text-left'>
+                                  <div className='text-left flex-grow'>
                                       <p className="text-sm font-semibold font-code">{device.serialNumber}</p>
                                       <p className='text-xs text-muted-foreground'>{device.type} ({device.model})</p>
                                   </div>
+                                  <Badge className={cn("whitespace-nowrap text-xs", getStatusBadgeClass(device.status))}>
+                                     {device.status}
+                                  </Badge>
                               </div>
                           </AccordionTrigger>
                           <AccordionContent className="px-4 pb-4">
-                            <DeviceOperation device={device} />
+                            <DeviceOperation 
+                                device={device} 
+                                onStatusChange={(newStatus) => handleStatusChange(device.id, newStatus)}
+                            />
                           </AccordionContent>
                       </AccordionItem>
                     </div>
