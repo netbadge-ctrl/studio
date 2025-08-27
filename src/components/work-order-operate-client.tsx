@@ -10,7 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Layers, Server as ServerIcon, HardDrive, MemoryStick, Cpu, ArrowRight, Network, Search, Video, Image as ImageIcon, QrCode, ArrowLeft, ArrowUp } from 'lucide-react';
+import { Layers, Server as ServerIcon, HardDrive, MemoryStick, Cpu, ArrowRight, Network, Search, Video, Image as ImageIcon, QrCode, ArrowLeft, ArrowUp, ArrowDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
@@ -103,44 +103,34 @@ function SOPList({ sop, deviceId }: { sop: SOPStep[], deviceId: string }) {
 function DeviceOperation({ device }: { device: Device }) {
   const operationDetails = useMemo(() => {
     const operations: { action: '装' | '卸', component: Component }[] = [];
-    const currentMap = new Map(device.currentConfig.map(c => [`${c.partNumber}-${c.slot}`, c]));
-    const targetMap = new Map(device.targetConfig.map(c => [`${c.partNumber}-${c.slot}`, c]));
+    const currentMap = new Map(device.currentConfig.map(c => [c.partNumber, c]));
+    const targetMap = new Map(device.targetConfig.map(c => [c.partNumber, c]));
+
+    const currentSlotMap = new Map(device.currentConfig.map(c => [c.slot, c]));
+    const targetSlotMap = new Map(device.targetConfig.map(c => [c.slot, c]));
 
     // Find components to remove
-    for (const [key, component] of currentMap.entries()) {
-      if (!targetMap.has(key)) {
+    for (const [slot, component] of currentSlotMap.entries()) {
+      if (!targetSlotMap.has(slot) || targetSlotMap.get(slot)?.partNumber !== component.partNumber) {
         operations.push({ action: '卸', component });
       }
     }
 
     // Find components to add
-    for (const [key, component] of targetMap.entries()) {
-      if (!currentMap.has(key)) {
+    for (const [slot, component] of targetSlotMap.entries()) {
+      if (!currentSlotMap.has(slot) || currentSlotMap.get(slot)?.partNumber !== component.partNumber) {
         operations.push({ action: '装', component });
       }
     }
     
-    // Find components to swap (remove old, add new in same slot)
-    for (const [key, currentComponent] of currentMap.entries()) {
-        const targetComponent = targetMap.get(key);
-        // This logic handles a swap as a separate case. If a component with a different partNumber is in the same slot.
-        if(targetComponent && currentComponent.partNumber !== targetComponent.partNumber) {
-            // It's a swap, which means one is removed, one is added.
-            // Check if we already added these operations.
-            const hasRemoveOp = operations.some(op => op.action === '卸' && op.component.slot === currentComponent.slot && op.component.partNumber === currentComponent.partNumber);
-            const hasAddOp = operations.some(op => op.action === '装' && op.component.slot === targetComponent.slot && op.component.partNumber === targetComponent.partNumber);
-            
-            if (!hasRemoveOp) {
-                operations.push({ action: '卸', component: currentComponent });
-            }
-            if (!hasAddOp) {
-                 operations.push({ action: '装', component: targetComponent });
-            }
+    return operations.sort((a, b) => {
+        // Sort by action: '卸' comes before '装'
+        if (a.action !== b.action) {
+            return a.action === '卸' ? -1 : 1;
         }
-    }
-
-
-    return operations.sort((a,b) => a.component.slot.localeCompare(b.component.slot));
+        // Then sort by slot
+        return a.component.slot.localeCompare(b.component.slot);
+    });
   }, [device.currentConfig, device.targetConfig]);
 
 
@@ -279,14 +269,6 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
     });
     router.push('/');
   }
-
-  // Fallback icon for actions
-  const ArrowDown = (props: React.SVGProps<SVGSVGElement>) => (
-    <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 5v14"/>
-      <path d="m19 12-7 7-7-7"/>
-    </svg>
-  );
 
   return (
     <Card>
