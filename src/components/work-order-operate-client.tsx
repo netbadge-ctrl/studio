@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import type { WorkOrder, Component, Device, SOPStep } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,7 +9,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { Lightbulb, LightbulbOff, QrCode, Layers, Server as ServerIcon, HardDrive, MemoryStick, Cpu, ArrowRight, Network } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Lightbulb, LightbulbOff, QrCode, Layers, Server as ServerIcon, HardDrive, MemoryStick, Cpu, ArrowRight, Network, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
@@ -116,15 +117,6 @@ function DeviceOperation({ device }: { device: Device }) {
 
   return (
     <div className="space-y-6 mt-4">
-       <div className="flex items-start gap-3">
-            <QrCode className="h-5 w-5 text-primary mt-1" />
-            <div>
-                <h4 className="font-semibold">验证</h4>
-                 <p className="text-xs text-muted-foreground mb-2">扫描设备SN码进行验证: {device.serialNumber}</p>
-                <Button variant="outline" size="sm" className="mt-1">扫描序列号</Button>
-            </div>
-        </div>
-
       <div className='flex-wrap gap-2 flex'>
           <Button size="sm" variant={locatorLight === 'flashing' ? 'default' : 'outline'} onClick={() => setLocatorLight('flashing')}>
               {locatorLight === 'flashing' ? <Lightbulb className="mr-2" /> : <LightbulbOff className="mr-2" />}
@@ -193,12 +185,40 @@ function DeviceOperation({ device }: { device: Device }) {
 }
 
 export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) {
-  const defaultOpen = workOrder.devices.length > 0 ? [workOrder.devices[0].id] : [];
   const { toast } = useToast();
   const router = useRouter();
+  const [openAccordionItems, setOpenAccordionItems] = useState<string[]>([]);
+  const [serialNumberInput, setSerialNumberInput] = useState('');
+  const deviceRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
+
+  const handleFindDevice = () => {
+    if (!serialNumberInput) return;
+
+    const device = workOrder.devices.find(d => d.serialNumber.toLowerCase() === serialNumberInput.toLowerCase());
+
+    if (device) {
+      setOpenAccordionItems(prev => [...new Set([...prev, device.id])]);
+      
+      setTimeout(() => {
+        const element = deviceRefs.current[device.id];
+        element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);
+
+      toast({
+        title: "定位成功",
+        description: `已展开设备 ${device.serialNumber}`,
+      });
+    } else {
+      toast({
+        variant: 'destructive',
+        title: "未找到设备",
+        description: `序列号 "${serialNumberInput}" 不在此工单中。`,
+      });
+    }
+  };
 
   const handleCompleteWorkOrder = () => {
-    // Here you would typically handle the state update and API call
     toast({
       title: "工单已完成",
       description: "工单已成功标记为“已完成”。",
@@ -219,23 +239,47 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
             </div>
         </CardHeader>
         <CardContent>
+           <div className="p-4 border rounded-lg bg-muted/50 mb-6">
+                <Label htmlFor="serial-number-input" className="font-semibold flex items-center gap-2 mb-2">
+                    <QrCode className="h-5 w-5" />
+                    扫描或输入设备序列号
+                </Label>
+                <div className="flex gap-2">
+                    <Input 
+                        id="serial-number-input" 
+                        placeholder="例如: SN-A7B3C9D1E5"
+                        value={serialNumberInput}
+                        onChange={(e) => setSerialNumberInput(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleFindDevice()}
+                    />
+                    <Button onClick={handleFindDevice}><Search className="mr-2 h-4 w-4" /> 查找</Button>
+                </div>
+            </div>
+
           {workOrder.devices.length > 0 ? (
-             <Accordion type="multiple" defaultValue={defaultOpen} className="w-full space-y-2">
+             <Accordion 
+                type="multiple" 
+                value={openAccordionItems} 
+                onValueChange={setOpenAccordionItems}
+                className="w-full space-y-2"
+              >
               {workOrder.devices.map(device => (
-                  <AccordionItem value={device.id} key={device.id} className="border-b-0 rounded-lg border bg-card text-card-foreground shadow-sm data-[state=open]:shadow-md">
-                      <AccordionTrigger className="px-4 py-3 hover:no-underline text-base">
-                          <div className="flex items-center gap-3">
-                              {getDeviceIcon(device.type)}
-                              <div className='text-left'>
-                                  <p className='font-semibold'>{device.type} ({device.model})</p>
-                                  <p className="text-xs font-normal text-muted-foreground font-code">{device.serialNumber}</p>
-                              </div>
-                          </div>
-                      </AccordionTrigger>
-                      <AccordionContent className="px-4 pb-4">
-                         <DeviceOperation device={device} />
-                      </AccordionContent>
-                  </AccordionItem>
+                  <div key={device.id} ref={el => (deviceRefs.current[device.id] = el)}>
+                    <AccordionItem value={device.id} className="border-b-0 rounded-lg border bg-card text-card-foreground shadow-sm data-[state=open]:shadow-md">
+                        <AccordionTrigger className="px-4 py-3 hover:no-underline text-base">
+                            <div className="flex items-center gap-3">
+                                {getDeviceIcon(device.type)}
+                                <div className='text-left'>
+                                    <p className='font-semibold'>{device.type} ({device.model})</p>
+                                    <p className="text-xs font-normal text-muted-foreground font-code">{device.serialNumber}</p>
+                                </div>
+                            </div>
+                        </AccordionTrigger>
+                        <AccordionContent className="px-4 pb-4">
+                          <DeviceOperation device={device} />
+                        </AccordionContent>
+                    </AccordionItem>
+                  </div>
               ))}
             </Accordion>
           ) : (
