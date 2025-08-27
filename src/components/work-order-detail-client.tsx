@@ -33,6 +33,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+
 const getStatusClass = (status: WorkOrder['status']) => {
   switch (status) {
     case '已完成':
@@ -89,7 +90,14 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
       });
     });
     const components = Array.from(componentsMap.values());
-    return components.sort((a,b) => a.type.localeCompare(b.type));
+    
+    // Sort consistently to avoid hydration mismatch
+    return components.sort((a, b) => {
+        if (a.type !== b.type) {
+            return a.type.localeCompare(b.type);
+        }
+        return a.partNumber.localeCompare(b.partNumber);
+    });
   }, [workOrder.devices]);
 
   return (
