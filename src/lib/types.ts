@@ -7,8 +7,9 @@ export type Component = {
   type: 'SATA' | 'SSD' | '内存' | '网卡' | 'CPU' | 'PSU';
   manufacturer: string;
   model: string;
-  quantity: number;
-  partNumber: string; // 可以是部件号、SKU或盒子编号
+  quantity: 1; // Quantity is always 1, representing a single component in a slot
+  partNumber: string; // Can be part number, SKU, or box number
+  slot: string; // The physical slot where the component is installed
 };
 
 export type SOPStep = {
@@ -18,7 +19,7 @@ export type SOPStep = {
 };
 
 export type Device = {
-  id: string;
+  id:string;
   type: '服务器' | '交换机' | '存储设备';
   model: string;
   serialNumber: string;

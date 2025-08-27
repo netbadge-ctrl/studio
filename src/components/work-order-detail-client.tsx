@@ -66,37 +66,48 @@ const getDeviceIcon = (type: WorkOrder['devices'][0]['type']) => {
 export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
 
   const requiredComponents = React.useMemo(() => {
-    const componentsMap = new Map<string, ComponentType & { model: string }>();
+    const componentsMap = new Map<string, { component: ComponentType, quantity: number }>();
 
     workOrder.devices.forEach((device) => {
-      device.targetConfig.forEach((targetComp) => {
-        const currentComp = device.currentConfig.find(
-          (c) => c.partNumber === targetComp.partNumber
-        );
-        const currentQty = currentComp ? currentComp.quantity : 0;
-        const requiredQty = targetComp.quantity - currentQty;
+      const targetComponents = new Map<string, number>();
+      device.targetConfig.forEach(c => {
+        targetComponents.set(c.partNumber, (targetComponents.get(c.partNumber) || 0) + 1);
+      });
 
+      const currentComponents = new Map<string, number>();
+      device.currentConfig.forEach(c => {
+        currentComponents.set(c.partNumber, (currentComponents.get(c.partNumber) || 0) + 1);
+      });
+      
+      const allPartNumbers = new Set([...targetComponents.keys(), ...currentComponents.keys()]);
+
+      allPartNumbers.forEach(partNumber => {
+        const targetQty = targetComponents.get(partNumber) || 0;
+        const currentQty = currentComponents.get(partNumber) || 0;
+        const requiredQty = targetQty - currentQty;
+        
         if (requiredQty > 0) {
-          const existing = componentsMap.get(targetComp.partNumber);
-          if (existing) {
-            existing.quantity += requiredQty;
-          } else {
-            componentsMap.set(targetComp.partNumber, {
-              ...targetComp,
-              quantity: requiredQty,
-            });
-          }
+           const componentInfo = device.targetConfig.find(c => c.partNumber === partNumber) || device.currentConfig.find(c => c.partNumber === partNumber);
+           if(componentInfo) {
+              const existing = componentsMap.get(partNumber);
+              if (existing) {
+                existing.quantity += requiredQty;
+              } else {
+                componentsMap.set(partNumber, { component: componentInfo, quantity: requiredQty });
+              }
+           }
         }
       });
     });
+
     const components = Array.from(componentsMap.values());
     
     // Sort consistently to avoid hydration mismatch
     return components.sort((a, b) => {
-        if (a.type !== b.type) {
-            return a.type.localeCompare(b.type);
+        if (a.component.type !== b.component.type) {
+            return a.component.type.localeCompare(b.component.type);
         }
-        return a.partNumber.localeCompare(b.partNumber);
+        return a.component.partNumber.localeCompare(b.component.partNumber);
     });
   }, [workOrder.devices]);
 
@@ -169,14 +180,14 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
             {requiredComponents.length > 0 ? (
               <div className="p-4 bg-muted/50 rounded-lg">
                 <ul className="space-y-4">
-                  {requiredComponents.map((comp) => (
+                  {requiredComponents.map(({ component: comp, quantity }) => (
                     <li key={comp.partNumber} className="grid grid-cols-[1fr_auto] items-start gap-x-4">
                       <div>
                          <p className='font-semibold leading-tight'>{comp.model}</p>
                          <p className='text-xs text-muted-foreground'>{comp.type} / {comp.manufacturer}</p>
                       </div>
                       <div className='flex flex-col items-end'>
-                        <span className="font-bold text-primary text-lg">x {comp.quantity}</span>
+                        <span className="font-bold text-primary text-lg">x {quantity}</span>
                          <p className='text-xs font-mono text-muted-foreground mt-1'>库位: {comp.partNumber}</p>
                       </div>
                     </li>

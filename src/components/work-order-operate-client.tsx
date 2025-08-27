@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import type { WorkOrder, Component, Device, SOPStep } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -10,7 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Layers, Server as ServerIcon, HardDrive, MemoryStick, Cpu, ArrowRight, Network, Search, Video, Image as ImageIcon, QrCode } from 'lucide-react';
+import { Layers, Server as ServerIcon, HardDrive, MemoryStick, Cpu, ArrowRight, Network, Search, Video, Image as ImageIcon, QrCode, ArrowLeft, ArrowUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
@@ -101,19 +101,48 @@ function SOPList({ sop, deviceId }: { sop: SOPStep[], deviceId: string }) {
 }
 
 function DeviceOperation({ device }: { device: Device }) {
-  const allComponents = [...device.currentConfig, ...device.targetConfig];
-  const uniqueKeys = Array.from(new Set(allComponents.map(c => c.partNumber)));
-  
-  const comparisonData = uniqueKeys.map(key => {
-    const current = device.currentConfig.find(c => c.partNumber === key);
-    const target = device.targetConfig.find(c => c.partNumber === key);
-    return {
-      type: current?.type || target?.type,
-      model: current?.model || target?.model,
-      currentQty: current?.quantity || 0,
-      targetQty: target?.quantity || 0,
-    };
-  }).filter(item => item.type);
+  const operationDetails = useMemo(() => {
+    const operations: { action: '装' | '卸', component: Component }[] = [];
+    const currentMap = new Map(device.currentConfig.map(c => [`${c.partNumber}-${c.slot}`, c]));
+    const targetMap = new Map(device.targetConfig.map(c => [`${c.partNumber}-${c.slot}`, c]));
+
+    // Find components to remove
+    for (const [key, component] of currentMap.entries()) {
+      if (!targetMap.has(key)) {
+        operations.push({ action: '卸', component });
+      }
+    }
+
+    // Find components to add
+    for (const [key, component] of targetMap.entries()) {
+      if (!currentMap.has(key)) {
+        operations.push({ action: '装', component });
+      }
+    }
+    
+    // Find components to swap (remove old, add new in same slot)
+    for (const [key, currentComponent] of currentMap.entries()) {
+        const targetComponent = targetMap.get(key);
+        // This logic handles a swap as a separate case. If a component with a different partNumber is in the same slot.
+        if(targetComponent && currentComponent.partNumber !== targetComponent.partNumber) {
+            // It's a swap, which means one is removed, one is added.
+            // Check if we already added these operations.
+            const hasRemoveOp = operations.some(op => op.action === '卸' && op.component.slot === currentComponent.slot && op.component.partNumber === currentComponent.partNumber);
+            const hasAddOp = operations.some(op => op.action === '装' && op.component.slot === targetComponent.slot && op.component.partNumber === targetComponent.partNumber);
+            
+            if (!hasRemoveOp) {
+                operations.push({ action: '卸', component: currentComponent });
+            }
+            if (!hasAddOp) {
+                 operations.push({ action: '装', component: targetComponent });
+            }
+        }
+    }
+
+
+    return operations.sort((a,b) => a.component.slot.localeCompare(b.component.slot));
+  }, [device.currentConfig, device.targetConfig]);
+
 
   return (
     <div className="space-y-6 mt-4">
@@ -163,40 +192,39 @@ function DeviceOperation({ device }: { device: Device }) {
         </CardContent>
       </Card>
 
-      {comparisonData.length > 0 && (
+      {operationDetails.length > 0 && (
         <Card>
             <CardHeader>
-                <CardTitle className='text-xl'>配置对比</CardTitle>
-                <CardDescription>检查当前配置和目标配置之间的变更。</CardDescription>
+                <CardTitle className='text-xl'>配件操作明细</CardTitle>
+                <CardDescription>根据下表完成配件的安装与卸载。</CardDescription>
             </CardHeader>
             <CardContent>
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead>组件</TableHead>
-                            <TableHead className="text-center">当前</TableHead>
-                            <TableHead className="text-center">目标</TableHead>
+                            <TableHead>配件</TableHead>
+                            <TableHead>槽位</TableHead>
+                            <TableHead className="text-right">操作</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {comparisonData.map((item, index) => (
-                            <TableRow key={index} className={cn(item.currentQty !== item.targetQty && "bg-yellow-50/50")}>
+                        {operationDetails.map(({ action, component }, index) => (
+                            <TableRow key={index} className={cn(action === '装' ? 'bg-green-50/50' : 'bg-red-50/50')}>
                                 <TableCell>
                                     <div className="flex items-center gap-2">
-                                        {getComponentIcon(item.type!)}
+                                        {getComponentIcon(component.type)}
                                         <div>
-                                            <p className="font-medium text-xs sm:text-sm">{item.type}</p>
-                                            <p className="text-xs text-muted-foreground font-code hidden sm:block">{item.model}</p>
+                                            <p className="font-medium text-xs sm:text-sm">{component.model}</p>
+                                            <p className="text-xs text-muted-foreground">{component.type}</p>
                                         </div>
                                     </div>
                                 </TableCell>
-                                <TableCell className="text-center font-medium">{item.currentQty}</TableCell>
-                                <TableCell className={cn("text-center font-bold", item.currentQty !== item.targetQty && "text-accent-foreground")}>
-                                  <div className="flex items-center justify-center gap-1 sm:gap-2">
-                                    {item.currentQty < item.targetQty && <ArrowRight className="h-4 w-4 text-green-500"/>}
-                                    {item.currentQty > item.targetQty && <ArrowRight className="h-4 w-4 text-red-500 transform rotate-180"/>}
-                                    {item.targetQty}
-                                  </div>
+                                <TableCell className="font-mono text-xs sm:text-sm">{component.slot}</TableCell>
+                                <TableCell className="text-right">
+                                  <Badge variant={action === '装' ? 'default' : 'destructive'} className='whitespace-nowrap'>
+                                     {action === '装' ? <ArrowUp className="mr-1 h-3 w-3" /> : <ArrowDown className="mr-1 h-3 w-3" />}
+                                     {action}
+                                  </Badge>
                                 </TableCell>
                             </TableRow>
                         ))}
@@ -251,6 +279,14 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
     });
     router.push('/');
   }
+
+  // Fallback icon for actions
+  const ArrowDown = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 5v14"/>
+      <path d="m19 12-7 7-7-7"/>
+    </svg>
+  );
 
   return (
     <Card>
