@@ -21,7 +21,8 @@ export function MainNav() {
   const pathname = usePathname();
 
   const navLinks = (
-    <>
+    // Wrap buttons in a div to ensure SheetClose has a single valid child element.
+    <div>
       <Button asChild variant="ghost" size="sm" className={cn("w-full justify-start text-muted-foreground", {"text-primary font-semibold bg-accent": pathname === '/'})}>
         <Link href="/" className="flex items-center gap-2">
           <GanttChartSquare className="h-4 w-4" /> 我的任务
@@ -32,7 +33,7 @@ export function MainNav() {
           <User className="h-4 w-4" /> 主管仪表盘
         </Link>
       </Button>
-    </>
+    </div>
   );
 
   return (
