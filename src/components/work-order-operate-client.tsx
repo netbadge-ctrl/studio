@@ -269,8 +269,8 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
                               <div className="flex items-center gap-3">
                                   {getDeviceIcon(device.type)}
                                   <div className='text-left'>
-                                      <p className='font-semibold'>{device.type} ({device.model})</p>
-                                      <p className="text-xs font-normal text-muted-foreground font-code">{device.serialNumber}</p>
+                                      <p className="text-sm font-semibold font-code">{device.serialNumber}</p>
+                                      <p className='text-xs text-muted-foreground'>{device.type} ({device.model})</p>
                                   </div>
                               </div>
                           </AccordionTrigger>
