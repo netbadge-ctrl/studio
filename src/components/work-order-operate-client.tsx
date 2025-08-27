@@ -10,10 +10,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Lightbulb, LightbulbOff, QrCode, Layers, Server as ServerIcon, HardDrive, MemoryStick, Cpu, ArrowRight, Network, Search } from 'lucide-react';
+import { Layers, Server as ServerIcon, HardDrive, MemoryStick, Cpu, ArrowRight, Network, Search, Video, Image as ImageIcon, QrCode } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import Image from 'next/image';
 
 
 const getStatusClass = (status: WorkOrder["status"]) => {
@@ -99,8 +101,6 @@ function SOPList({ sop, deviceId }: { sop: SOPStep[], deviceId: string }) {
 }
 
 function DeviceOperation({ device }: { device: Device }) {
-  const [locatorLight, setLocatorLight] = useState<'off' | 'flashing' | 'on'>('off');
-  
   const allComponents = [...device.currentConfig, ...device.targetConfig];
   const uniqueKeys = Array.from(new Set(allComponents.map(c => c.partNumber)));
   
@@ -117,16 +117,41 @@ function DeviceOperation({ device }: { device: Device }) {
 
   return (
     <div className="space-y-6 mt-4">
-      <div className='flex-wrap gap-2 flex'>
-          <Button size="sm" variant={locatorLight === 'flashing' ? 'default' : 'outline'} onClick={() => setLocatorLight('flashing')}>
-              {locatorLight === 'flashing' ? <Lightbulb className="mr-2" /> : <LightbulbOff className="mr-2" />}
-              闪灯
-          </Button>
-            <Button size="sm" variant={locatorLight === 'on' ? 'default' : 'outline'} onClick={() => setLocatorLight('on')}>
-              {locatorLight === 'on' ? <Lightbulb className="mr-2" /> : <LightbulbOff className="mr-2" />}
-              开灯
-          </Button>
-      </div>
+       <Card>
+        <CardHeader>
+            <CardTitle className='text-xl'>可视化指南</CardTitle>
+            <CardDescription>查看图片或视频以获取操作指导。</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Tabs defaultValue="image" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="image"><ImageIcon className="mr-2" /> 图片指引</TabsTrigger>
+              <TabsTrigger value="video"><Video className="mr-2" /> 视频教程</TabsTrigger>
+            </TabsList>
+            <TabsContent value="image" className="mt-4">
+              <div className="aspect-video bg-muted rounded-lg flex items-center justify-center">
+                 <Image 
+                    src="https://picsum.photos/600/400"
+                    alt="操作指引图片"
+                    width={600}
+                    height={400}
+                    data-ai-hint="server maintenance"
+                    className="rounded-lg object-cover"
+                  />
+              </div>
+            </TabsContent>
+            <TabsContent value="video" className="mt-4">
+              <div className="aspect-video bg-muted rounded-lg flex items-center justify-center">
+                <video
+                    src="https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                    controls
+                    className="w-full h-full rounded-lg"
+                 />
+              </div>
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>
@@ -294,3 +319,5 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
     </Card>
   )
 }
+
+    
