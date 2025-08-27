@@ -115,7 +115,7 @@ export function GetPartsDialog({
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead>组件</TableHead>
+                            <TableHead>组件型号</TableHead>
                             <TableHead>数量</TableHead>
                             <TableHead>领取位置</TableHead>
                         </TableRow>
@@ -123,9 +123,9 @@ export function GetPartsDialog({
                     <TableBody>
                         {suggestion.suggestedLocations.map((item, index) => (
                             <TableRow key={index}>
-                                <TableCell className='text-xs'>
+                                <TableCell>
                                     <p className='font-medium'>{item.model}</p>
-                                    <p className='text-muted-foreground font-mono'>{item.partNumber}</p>
+                                    <p className='text-xs text-muted-foreground font-mono'>部件号: {item.partNumber}</p>
                                 </TableCell>
                                 <TableCell>{item.quantity}</TableCell>
                                 <TableCell className='font-medium'>{item.location}</TableCell>

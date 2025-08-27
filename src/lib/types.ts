@@ -8,7 +8,7 @@ export type Component = {
   manufacturer: string;
   model: string;
   quantity: number;
-  partNumber: string;
+  partNumber: string; // 可以是部件号、SKU或盒子编号
 };
 
 export type SOPStep = {

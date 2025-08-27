@@ -13,7 +13,7 @@ import {z} from 'genkit';
 
 const SuggestStockLocationsInputSchema = z.object({
   components: z.array(z.object({
-    partNumber: z.string(),
+    partNumber: z.string().describe('组件的部件号或盒子编号。'),
     model: z.string(),
     quantity: z.number(),
   })).describe('所需服务器组件及其数量的列表。'),
@@ -32,7 +32,7 @@ export type SuggestStockLocationsInput = z.infer<typeof SuggestStockLocationsInp
 
 const SuggestStockLocationsOutputSchema = z.object({
   suggestedLocations: z.array(z.object({
-    partNumber: z.string().describe('组件的部件号。'),
+    partNumber: z.string().describe('组件的部件号/盒子编号。'),
     model: z.string().describe('组件的型号。'),
     quantity: z.number().describe('建议领取的数量。'),
     location: z.string().describe('建议的领取位置。'),
@@ -59,7 +59,7 @@ const prompt = ai.definePrompt({
 
 **需求组件列表:**
 {{#each components}}
-- 部件号: {{this.partNumber}}, 型号: {{this.model}}, 数量: {{this.quantity}}
+- 型号: {{this.model}}, 部件号/盒子号: {{this.partNumber}}, 数量: {{this.quantity}}
 {{/each}}
 
 **库存位置标准:**

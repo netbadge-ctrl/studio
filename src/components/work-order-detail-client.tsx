@@ -162,18 +162,21 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
             </h3>
             {requiredComponents.length > 0 ? (
               <div className="p-4 bg-muted/50 rounded-lg">
-                <ul className="space-y-3 text-sm">
+                <ul className="space-y-4">
                   {requiredComponents.map((comp) => (
-                    <li key={comp.partNumber} className="grid grid-cols-[1fr_auto] items-center gap-x-4">
-                      <div className='flex flex-col'>
-                         <span className='font-medium'>{comp.type} - {comp.manufacturer} {comp.model}</span>
-                         <span className='text-xs text-muted-foreground font-mono'>{comp.partNumber}</span>
+                    <li key={comp.partNumber} className="grid grid-cols-[1fr_auto] items-start gap-x-4">
+                      <div>
+                         <p className='font-semibold leading-tight'>{comp.model}</p>
+                         <p className='text-xs text-muted-foreground'>{comp.type} / {comp.manufacturer}</p>
                       </div>
-                      <span className="font-medium text-primary text-base">x {comp.quantity}</span>
+                      <div className='flex flex-col items-end'>
+                        <span className="font-bold text-primary text-lg">x {comp.quantity}</span>
+                        <span className='text-xs font-mono text-muted-foreground mt-1 bg-background px-2 py-0.5 rounded border'>{comp.partNumber}</span>
+                      </div>
                     </li>
                   ))}
                 </ul>
-                <Button className="mt-4 w-full" onClick={() => setGetPartsDialogOpen(true)}>
+                <Button className="mt-6 w-full" onClick={() => setGetPartsDialogOpen(true)}>
                   AI 建议领取位置
                 </Button>
               </div>
