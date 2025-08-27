@@ -41,15 +41,6 @@ export const workOrders: WorkOrder[] = [
           { type: "SSD", manufacturer: "Samsung", model: "PM883 480GB", quantity: 1, partNumber: "SSD-480G-S-PM883", slot: "Disk 0" },
           { type: "SSD", manufacturer: "Samsung", model: "PM883 480GB", quantity: 1, partNumber: "SSD-480G-S-PM883", slot: "Disk 1" },
         ],
-        sop: [
-          { step: 1, action: "验证服务器序列号", completed: false },
-          { step: 2, action: "安全停机并断开电源", completed: false },
-          { step: 3, action: "移除 A1-A4 槽位的 16GB 内存条", completed: false },
-          { step: 4, action: "在 A1-A4 槽位安装新的 32GB 内存条", completed: false },
-          { step: 5, action: "重新连接电源并启动服务器", completed: false },
-          { step: 6, action: "进入 BIOS/UEFI 确认内存识别正确", completed: false },
-          { step: 7, action: "将工单状态标记为“已完成”", completed: false },
-        ]
       },
     ],
   },
@@ -89,14 +80,6 @@ export const workOrders: WorkOrder[] = [
             { type: "网卡", manufacturer: "Mellanox", model: "CX-5 25GbE", quantity: 1, partNumber: "NIC-MEL-CX5", slot: "PCIe 1" },
             { type: "网卡", manufacturer: "Mellanox", model: "CX-5 25GbE", quantity: 1, partNumber: "NIC-MEL-CX5", slot: "PCIe 2" },
         ],
-        sop: [
-          { step: 1, action: "将服务器安装到指定机架位置", completed: true },
-          { step: 2, action: "安装 2 个 CPU", completed: true },
-          { step: 3, action: "安装 8 条内存", completed: false },
-          { step: 4, action: "安装 4 个 NVMe SSD", completed: false },
-          { step: 5, action: "安装 2 个网卡", completed: false },
-          { step: 6, action: "连接电源线和网络线", completed: false },
-        ]
       },
       {
         id: "dev-006",
@@ -110,12 +93,6 @@ export const workOrders: WorkOrder[] = [
         },
         currentConfig: [],
         targetConfig: [],
-        sop: [
-           { step: 1, action: "将交换机安装到指定机架位置", completed: true },
-           { step: 2, action: "连接上行链路", completed: false },
-           { step: 3, action: "连接服务器 SN-F2G8H4I6J1", completed: false },
-           { step: 4, action: "配置 VLAN", completed: false },
-        ]
       }
     ],
   },
@@ -138,7 +115,6 @@ export const workOrders: WorkOrder[] = [
             },
             currentConfig: [],
             targetConfig: [],
-            sop: []
         }
     ],
   },
@@ -183,7 +159,6 @@ export const workOrders: WorkOrder[] = [
           { type: "SSD", manufacturer: "Samsung", model: "PM883 960GB", quantity: 1, partNumber: "SSD-960G-S-PM883", slot: "Bay 11" },
           { type: "SSD", manufacturer: "Samsung", model: "PM883 960GB", quantity: 1, partNumber: "SSD-960G-S-PM883", slot: "Bay 12" },
         ],
-        sop: []
       },
     ],
   },
@@ -213,10 +188,6 @@ export const workOrders: WorkOrder[] = [
             { type: "内存", manufacturer: "Crucial", model: "DDR4 16GB 2133MHz", quantity: 1, partNumber: "MEM-16G-2133-C", slot: "B2" },
         ],
         targetConfig: [],
-        sop: [
-          { step: 1, action: "下架服务器", completed: false },
-          { step: 2, action: "擦除数据", completed: false },
-        ]
       },
       {
         id: "dev-007",
@@ -237,10 +208,6 @@ export const workOrders: WorkOrder[] = [
             { type: "内存", manufacturer: "Crucial", model: "DDR4 16GB 2133MHz", quantity: 1, partNumber: "MEM-16G-2133-C", slot: "B2" },
         ],
         targetConfig: [],
-        sop: [
-          { step: 1, action: "下架服务器", completed: false },
-          { step: 2, action: "擦除数据", completed: false },
-        ]
       },
     ],
   },
@@ -269,7 +236,6 @@ export const workOrders: WorkOrder[] = [
           { type: "内存", manufacturer: "Samsung", model: "DDR4 32GB 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A1" },
           { type: "SSD", manufacturer: "Intel", model: "P5510 3.84TB NVMe", quantity: 1, partNumber: "SSD-3.84T-I-P5510", slot: "NVMe 0" },
         ],
-        sop: [{ step: 1, action: "上架并连接电源", completed: false }, { step: 2, action: "配置 iDRAC", completed: false }]
       },
       {
         id: "dev-009",
@@ -284,7 +250,6 @@ export const workOrders: WorkOrder[] = [
           { type: "内存", manufacturer: "Samsung", model: "DDR4 32GB 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A1" },
           { type: "SSD", manufacturer: "Intel", model: "P5510 3.84TB NVMe", quantity: 1, partNumber: "SSD-3.84T-I-P5510", slot: "NVMe 0" },
         ],
-        sop: [{ step: 1, action: "上架并连接电源", completed: false }, { step: 2, action: "配置 iDRAC", completed: false }]
       },
       {
         id: "dev-010",
@@ -299,7 +264,6 @@ export const workOrders: WorkOrder[] = [
           { type: "内存", manufacturer: "HPE", model: "DDR4 32GB 2933MHz", quantity: 1, partNumber: "MEM-32G-2933-H", slot: "A1" },
           { type: "SATA", manufacturer: "HPE", model: "1.2TB SAS 10K", quantity: 1, partNumber: "HDD-1.2T-H-10K", slot: "Bay 1" },
         ],
-        sop: [{ step: 1, action: "上架并连接电源", completed: false }, { step: 2, action: "配置 iLO", completed: false }]
       },
       {
         id: "dev-011",
@@ -309,7 +273,6 @@ export const workOrders: WorkOrder[] = [
         location: { module: "C1", rack: "R01", uPosition: 22 },
         currentConfig: [],
         targetConfig: [],
-        sop: [{ step: 1, action: "安装到ToR位置", completed: false }, { step: 2, action: "连接上行和服务器", completed: false }]
       },
       {
         id: "dev-012",
@@ -319,7 +282,6 @@ export const workOrders: WorkOrder[] = [
         location: { module: "C1", rack: "R02", uPosition: 22 },
         currentConfig: [],
         targetConfig: [],
-        sop: [{ step: 1, action: "安装到ToR位置", completed: false }, { step: 2, action: "连接上行和服务器", completed: false }]
       },
       {
         id: "dev-013",
@@ -334,7 +296,6 @@ export const workOrders: WorkOrder[] = [
           { type: "SSD", manufacturer: "NetApp", model: "960GB SSD", quantity: 1, partNumber: "SSD-960G-N", slot: "Disk 3" },
           { type: "SSD", manufacturer: "NetApp", model: "960GB SSD", quantity: 1, partNumber: "SSD-960G-N", slot: "Disk 4" },
         ],
-        sop: [{ step: 1, action: "上架并配置存储", completed: false }]
       }
     ]
   }

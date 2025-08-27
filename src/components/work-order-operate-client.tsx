@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef, useMemo } from 'react';
-import type { WorkOrder, Component, Device, SOPStep } from '@/lib/types';
+import type { WorkOrder, Component, Device } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -37,57 +37,6 @@ const getDeviceIcon = (type: Device['type']) => {
         case '存储设备': return <HardDrive {...props} />;
         default: return <Layers {...props} />;
     }
-}
-
-function SOPList({ sop, deviceId }: { sop: SOPStep[], deviceId: string }) {
-  const [steps, setSteps] = useState(sop);
-
-  const handleStepToggle = (step: number) => {
-    setSteps(prevSteps => 
-      prevSteps.map(s => 
-        s.step === step ? { ...s, completed: !s.completed } : s
-      )
-    );
-  };
-  
-  if (steps.length === 0) {
-    return <p className="text-sm text-muted-foreground">此设备没有标准作业程序。</p>;
-  }
-
-  const completedCount = steps.filter(s => s.completed).length;
-  const totalCount = steps.length;
-  const progress = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
-
-  return (
-    <div className="space-y-4">
-       <div>
-        <div className="flex justify-between items-center mb-1">
-          <Label>进度</Label>
-          <span className="text-xs font-medium">{completedCount} / {totalCount}</span>
-        </div>
-        <div className="w-full bg-muted rounded-full h-2">
-          <div className="bg-primary h-2 rounded-full" style={{ width: `${progress}%` }}></div>
-        </div>
-      </div>
-      <div className="space-y-3">
-        {steps.map(step => (
-          <div key={step.step} className="flex items-center space-x-3">
-            <Checkbox 
-              id={`sop-${deviceId}-${step.step}`}
-              checked={step.completed}
-              onCheckedChange={() => handleStepToggle(step.step)}
-            />
-            <Label 
-              htmlFor={`sop-${deviceId}-${step.step}`}
-              className={cn("text-sm font-normal", step.completed && "line-through text-muted-foreground")}
-            >
-              {step.action}
-            </Label>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
 }
 
 function DeviceOperation({ device }: { device: Device }) {
@@ -154,16 +103,6 @@ function DeviceOperation({ device }: { device: Device }) {
               </div>
             </TabsContent>
           </Tabs>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-            <CardTitle className='text-xl'>操作步骤 (SOP)</CardTitle>
-            <CardDescription>请按顺序完成以下步骤。</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <SOPList sop={device.sop} deviceId={device.id} />
         </CardContent>
       </Card>
 
