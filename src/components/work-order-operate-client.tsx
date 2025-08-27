@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Layers, Server as ServerIcon, HardDrive, MemoryStick, Cpu, ArrowUp, ArrowDown, Network, Video, Image as ImageIcon, QrCode } from 'lucide-react';
+import { Layers, Server as ServerIcon, HardDrive, MemoryStick, Cpu, ArrowUp, ArrowDown, Network, Video, Image as ImageIcon, QrCode, CheckCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
@@ -184,6 +184,14 @@ function DeviceOperation({ device }: { device: Device }) {
               </CardContent>
           </Card>
         )}
+         <Card className="bg-green-50 border-green-200 text-green-900">
+          <CardContent className="p-4 flex items-center gap-4">
+            <CheckCircle className="h-6 w-6 text-green-600" />
+            <div>
+              <p className="font-semibold">硬件改配完成，开始带外配置</p>
+            </div>
+          </CardContent>
+        </Card>
       </div>
       <ScanPartDialog
         isOpen={isScanPartDialogOpen}
