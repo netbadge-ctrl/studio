@@ -71,7 +71,9 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
   const requiredComponents = React.useMemo(() => {
     const componentsMap = new Map<string, { component: ComponentType, model: string, quantity: number }>();
 
-    workOrder.devices.forEach((device) => {
+    const sortedDevices = [...workOrder.devices].sort((a, b) => a.id.localeCompare(b.id));
+
+    sortedDevices.forEach((device) => {
       const targetComponents = new Map<string, number>();
       device.targetConfig.forEach(c => {
         targetComponents.set(c.partNumber, (targetComponents.get(c.partNumber) || 0) + 1);
@@ -82,7 +84,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
         currentComponents.set(c.partNumber, (currentComponents.get(c.partNumber) || 0) + 1);
       });
       
-      const allPartNumbers = new Set([...targetComponents.keys(), ...currentComponents.keys()]);
+      const allPartNumbers = Array.from(new Set([...targetComponents.keys(), ...currentComponents.keys()])).sort();
 
       allPartNumbers.forEach(partNumber => {
         const targetQty = targetComponents.get(partNumber) || 0;
