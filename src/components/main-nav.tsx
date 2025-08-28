@@ -28,7 +28,7 @@ export function MainNav() {
           <GanttChartSquare className="h-4 w-4" /> 我的任务
         </Link>
       </Button>
-      <Button asChild variant="ghost" size="sm" className={cn("w-full justify-start text-muted-foreground", {"text-primary font-semibold bg-accent": pathname === '/leader-dashboard'})}>
+      <Button asChild variant="ghost" size="sm" className={cn("w-full justify-start text-muted-foreground", {"text-primary font-semibold bg-accent": pathname.includes('/leader-dashboard')})}>
         <Link href="/leader-dashboard" className="flex items-center gap-2">
           <User className="h-4 w-4" /> 主管仪表盘
         </Link>
@@ -43,7 +43,7 @@ export function MainNav() {
         <span className="font-bold hidden sm:inline-block">数据中心运维</span>
       </Link>
       <nav className="hidden md:flex items-center gap-2 mx-auto">
-        {navLinks}
+        {/* The consolidated component will handle view switching, so these links might be redundant or could be repurposed to control the state of the main component. For now, they are visually present but might not navigate in a traditional sense. */}
       </nav>
       <div className="ml-auto flex items-center gap-2">
       <DropdownMenu>

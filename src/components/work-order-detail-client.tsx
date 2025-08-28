@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import type { WorkOrder, Component as ComponentType } from '@/lib/types';
-import Link from 'next/link';
+// import Link from 'next/link';
 import {
   Card,
   CardContent,
@@ -105,6 +105,14 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
     return Array.from(componentsMap.values()).sort((a, b) => a.model.localeCompare(b.model));
   }, [workOrder.devices]);
 
+  const handleNavigate = (e: React.MouseEvent) => {
+      e.preventDefault();
+      // This is a hacky way to communicate navigation without a router.
+      // In a real app, this would be a callback function.
+      const event = new CustomEvent('navigateTo', { detail: { target: `/work-orders/${workOrder.id}/operate` } });
+      window.dispatchEvent(event);
+  }
+
   return (
     <>
       <Card>
@@ -198,11 +206,9 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
           </div>
         </CardContent>
         <CardFooter className="flex-col items-stretch gap-2 md:flex-row-reverse">
-          <Button asChild size="lg">
-            <Link href={`/work-orders/${workOrder.id}/operate`}>
+          <Button onClick={handleNavigate} size="lg">
               开始操作
               <ArrowRight />
-            </Link>
           </Button>
         </CardFooter>
       </Card>

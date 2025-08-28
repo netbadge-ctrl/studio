@@ -9,7 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Layers, Server as ServerIcon, HardDrive, MemoryStick, Cpu, ArrowUp, ArrowDown, Network, Video, Image as ImageIcon, QrCode, CheckCircle, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Image from 'next/image';
 import { ScanDeviceDialog } from './scan-device-dialog';
@@ -251,7 +251,7 @@ function DeviceOperation({
 
 export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) {
   const { toast } = useToast();
-  const router = useRouter();
+  // const router = useRouter();
   const [openAccordionItem, setOpenAccordionItem] = useState<string>('');
   const [isScanDeviceDialogOpen, setIsScanDeviceDialogOpen] = useState(false);
   const deviceRefs = useRef<Record<string, HTMLDivElement | null>>({});
@@ -299,7 +299,11 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
       description: "工单已成功标记为“已完成”。",
       variant: 'default',
     });
-    router.push('/');
+    // In a real app with a router, you would navigate away.
+    // Here, we can perhaps navigate back to the main dashboard.
+    // router.push('/');
+    const event = new CustomEvent('navigateTo', { detail: { target: `/` } });
+    window.dispatchEvent(event);
   }
 
   const devicesWithStatus = workOrder.devices.map(d => ({
@@ -337,8 +341,8 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
                               <div className="flex items-center gap-3 w-full">
                                   {getDeviceIcon(device.type)}
                                   <div className='text-left flex-grow'>
-                                      <p className="text-sm font-semibold font-code">{device.serialNumber}</p>
-                                      <p className='text-xs text-muted-foreground'>{device.location.rack} / U{device.location.uPosition}</p>
+                                      <p className="text-sm font-semibold">{device.model}</p>
+                                      <p className='text-xs text-muted-foreground font-mono'>{device.serialNumber}</p>
                                   </div>
                                   <Badge className={cn("whitespace-nowrap text-xs", getStatusBadgeClass(device.status))}>
                                      {device.status}
