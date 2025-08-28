@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation'
 import { Building, User, GanttChartSquare, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
@@ -80,6 +80,10 @@ export function MainNav() {
                 </Button>
             </SheetTrigger>
             <SheetContent side="left">
+                <SheetHeader className="sr-only">
+                  <SheetTitle>导航</SheetTitle>
+                  <SheetDescription>应用主导航菜单</SheetDescription>
+                </SheetHeader>
                 <nav className="grid gap-4 text-lg font-medium mt-8">
                   <SheetClose asChild>
                     {navLinks}
