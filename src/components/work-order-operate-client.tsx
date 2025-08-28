@@ -338,7 +338,7 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
                                   {getDeviceIcon(device.type)}
                                   <div className='text-left flex-grow'>
                                       <p className="text-sm font-semibold font-code">{device.serialNumber}</p>
-                                      <p className='text-xs text-muted-foreground'>{device.type} ({device.model})</p>
+                                      <p className='text-xs text-muted-foreground'>{device.location.rack} / U{device.location.uPosition}</p>
                                   </div>
                                   <Badge className={cn("whitespace-nowrap text-xs", getStatusBadgeClass(device.status))}>
                                      {device.status}
