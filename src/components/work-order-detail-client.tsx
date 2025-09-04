@@ -66,7 +66,7 @@ const getDeviceIcon = (type: WorkOrder['devices'][0]['type']) => {
 
 export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
   const requiredComponents = React.useMemo(() => {
-    const componentsMap = new Map<string, { component: ComponentType, model: string, quantity: number }>();
+    const componentsMap = new Map<string, { component: ComponentType, quantity: number }>();
 
     const sortedDevices = [...workOrder.devices].sort((a, b) => a.id.localeCompare(b.id));
 
@@ -95,7 +95,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
               if (existing) {
                 existing.quantity += requiredQty;
               } else {
-                componentsMap.set(partNumber, { component: componentInfo, model: componentInfo.model, quantity: requiredQty });
+                componentsMap.set(partNumber, { component: componentInfo, quantity: requiredQty });
               }
            }
         }
@@ -161,8 +161,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
                         {device.serialNumber}
                       </TableCell>
                       <TableCell className="font-mono text-xs">
-                        {device.location.module} / {device.location.rack} / U
-                        {device.location.uPosition}
+                        {device.location.rack} / U{device.location.uPosition}
                       </TableCell>
                     </TableRow>
                   ))}
@@ -182,12 +181,12 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
               <div className="p-4 bg-muted/50 rounded-lg border">
                 <ul className="space-y-4">
                   {requiredComponents.map(({ component: comp, quantity }) => (
-                    <li key={comp.partNumber} className="grid grid-cols-[1fr_auto] items-start gap-x-4">
-                      <div>
+                    <li key={comp.partNumber} className="flex items-start justify-between gap-x-4">
+                      <div className="flex-grow">
                          <p className='font-semibold leading-tight'>{comp.model}</p>
                          <p className='text-xs text-muted-foreground'>{comp.type} / {comp.manufacturer}</p>
                       </div>
-                      <div className='flex flex-col items-end'>
+                      <div className='flex flex-col items-end flex-shrink-0'>
                         <span className="font-bold text-primary text-lg">x {quantity}</span>
                          <p className='text-xs font-mono text-muted-foreground mt-1'>仓库盒号: {comp.partNumber}</p>
                       </div>
