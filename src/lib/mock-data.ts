@@ -48,7 +48,7 @@ const rawWorkOrders: WorkOrder[] = [
   },
   {
     id: "wo-002",
-    title: "安装新 Web 服务器和交换机",
+    title: "安装新 Web 服务器",
     type: "新服务器部署",
     status: "进行中",
     assignedTo: [employees[0], employees[2]],
@@ -84,43 +84,6 @@ const rawWorkOrders: WorkOrder[] = [
             { type: "网卡", manufacturer: "Mellanox", model: "ConnectX-5 25GbE", quantity: 1, partNumber: "NIC-MEL-CX5", slot: "PCIe 2" },
         ],
       },
-      {
-        id: "dev-006",
-        type: "交换机",
-        model: "Cisco Nexus 93180YC-EX",
-        serialNumber: "SN-003",
-        status: "待处理",
-        location: {
-          module: "B2",
-          rack: "R05",
-          uPosition: 24,
-        },
-        currentConfig: [],
-        targetConfig: [],
-      }
-    ],
-  },
-  {
-    id: "wo-003",
-    title: "更换核心网络中的故障交换机",
-    type: "交换机维护",
-    status: "已阻塞",
-    assignedTo: [employees[1]],
-    devices: [
-        {
-            id: "dev-003",
-            type: "交换机",
-            model: "Arista 7050SX-64",
-            serialNumber: "SN-004",
-            status: "待处理",
-            location: {
-                module: "Core",
-                rack: "N01",
-                uPosition: 48,
-            },
-            currentConfig: [],
-            targetConfig: [],
-        }
     ],
   },
   {
@@ -134,7 +97,7 @@ const rawWorkOrders: WorkOrder[] = [
         id: "dev-004",
         type: "服务器",
         model: "Supermicro 2029U-TR4",
-        serialNumber: "SN-005",
+        serialNumber: "SN-003",
         status: "待处理",
         location: {
           module: "C3",
@@ -179,7 +142,7 @@ const rawWorkOrders: WorkOrder[] = [
         id: "dev-005",
         type: "服务器",
         model: "Dell PowerEdge R630",
-        serialNumber: "SN-006",
+        serialNumber: "SN-004",
         status: "待处理",
         location: {
           module: "A1",
@@ -200,7 +163,7 @@ const rawWorkOrders: WorkOrder[] = [
         id: "dev-007",
         type: "服务器",
         model: "Dell PowerEdge R630",
-        serialNumber: "SN-007",
+        serialNumber: "SN-005",
         status: "待处理",
         location: {
           module: "A1",
@@ -230,7 +193,7 @@ const rawWorkOrders: WorkOrder[] = [
         id: "dev-008",
         type: "服务器",
         model: "Dell PowerEdge R650",
-        serialNumber: "SN-008",
+        serialNumber: "SN-006",
         status: "待处理",
         location: { module: "C1", rack: "R01", uPosition: 10 },
         currentConfig: [
@@ -250,7 +213,7 @@ const rawWorkOrders: WorkOrder[] = [
         id: "dev-009",
         type: "服务器",
         model: "Dell PowerEdge R650",
-        serialNumber: "SN-009",
+        serialNumber: "SN-007",
         status: "待处理",
         location: { module: "C1", rack: "R01", uPosition: 11 },
         currentConfig: [],
@@ -265,7 +228,7 @@ const rawWorkOrders: WorkOrder[] = [
         id: "dev-010",
         type: "服务器",
         model: "HPE ProLiant DL360 Gen10",
-        serialNumber: "SN-010",
+        serialNumber: "SN-008",
         status: "待处理",
         location: { module: "C1", rack: "R02", uPosition: 15 },
         currentConfig: [],
@@ -274,41 +237,6 @@ const rawWorkOrders: WorkOrder[] = [
           { type: "CPU", manufacturer: "Intel", model: "Xeon Silver 4214", quantity: 1, partNumber: "CPU-INT-4214", slot: "CPU 2" },
           { type: "内存", manufacturer: "HPE", model: "32GB DDR4 2933MHz", quantity: 1, partNumber: "MEM-32G-2933-H", slot: "A1" },
           { type: "SATA", manufacturer: "HPE", model: "1.2TB 10K SAS HDD", quantity: 1, partNumber: "HDD-1.2T-H-10K", slot: "Bay 1" },
-        ],
-      },
-      {
-        id: "dev-011",
-        type: "交换机",
-        model: "Cisco Nexus 93108TC-EX",
-        serialNumber: "SN-011",
-        status: "待处理",
-        location: { module: "C1", rack: "R01", uPosition: 22 },
-        currentConfig: [],
-        targetConfig: [],
-      },
-      {
-        id: "dev-012",
-        type: "交换机",
-        model: "Cisco Nexus 93108TC-EX",
-        serialNumber: "SN-012",
-        status: "待处理",
-        location: { module: "C1", rack: "R02", uPosition: 22 },
-        currentConfig: [],
-        targetConfig: [],
-      },
-      {
-        id: "dev-013",
-        type: "存储设备",
-        model: "NetApp FAS2750",
-        serialNumber: "SN-013",
-        status: "待处理",
-        location: { module: "C1", rack: "R03", uPosition: 5 },
-        currentConfig: [],
-        targetConfig: [
-          { type: "SSD", manufacturer: "NetApp", model: "960GB SSD", quantity: 1, partNumber: "SSD-960G-N", slot: "Disk 1" },
-          { type: "SSD", manufacturer: "NetApp", model: "960GB SSD", quantity: 1, partNumber: "SSD-960G-N", slot: "Disk 2" },
-          { type: "SSD", manufacturer: "NetApp", model: "960GB SSD", quantity: 1, partNumber: "SSD-960G-N", slot: "Disk 3" },
-          { type: "SSD", manufacturer: "NetApp", model: "960GB SSD", quantity: 1, partNumber: "SSD-960G-N", slot: "Disk 4" },
         ],
       }
     ]

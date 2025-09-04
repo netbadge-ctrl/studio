@@ -16,7 +16,7 @@ export type DeviceStatus = '待处理' | '开始改配' | '配置带外' | '结�
 
 export type Device = {
   id:string;
-  type: '服务器' | '交换机' | '存储设备';
+  type: '服务器';
   model: string;
   serialNumber: string;
   status: DeviceStatus;

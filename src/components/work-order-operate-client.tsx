@@ -31,11 +31,11 @@ const getComponentIcon = (type: Component['type']) => {
 
 const getDeviceIcon = (type: Device['type']) => {
     const props = { className: "h-5 w-5 text-primary" };
-    switch(type) {
-        case '服务器': return <ServerIcon {...props} />;
-        case '交换机': return <Network {...props} />;
-        case '存储设备': return <HardDrive {...props} />;
-        default: return <Layers {...props} />;
+    switch (type) {
+      case '服务器':
+        return <ServerIcon {...props} />;
+      default:
+        return <Layers {...props} />;
     }
 }
 

@@ -55,10 +55,6 @@ const getDeviceIcon = (type: WorkOrder['devices'][0]['type']) => {
   switch (type) {
     case '服务器':
       return <ServerIcon {...props} />;
-    case '交换机':
-      return <Network {...props} />;
-    case '存储设备':
-      return <HardDrive {...props} />;
     default:
       return <Layers {...props} />;
   }
