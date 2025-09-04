@@ -10,7 +10,8 @@ import { ChevronLeft } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { ArrowRight, Server, Wrench, HardDrive } from "lucide-react";
+import { ArrowRight, Server, Wrench, HardDrive, User } from "lucide-react";
+import { Avatar, AvatarFallback } from './ui/avatar';
 
 type View = 
   | { name: 'ENGINEER_DASHBOARD' }
@@ -101,12 +102,22 @@ export function DatacenterOpsDemo({
                             </Badge>
                             </div>
                         </CardHeader>
-                        <CardContent className="flex-grow">
+                        <CardContent className="flex-grow space-y-3">
                             <p className="text-sm text-muted-foreground">
                             需要操作 {order.devices.length} 台设备。
                             </p>
-                            <div className="mt-2 text-xs text-foreground font-mono font-medium">
-                            {order.devices.map(d => d.serialNumber).join(', ')}
+                            <div className="flex items-center gap-2">
+                                <User className="w-4 h-4 text-muted-foreground"/>
+                                <div className="flex items-center -space-x-2">
+                                {order.assignedTo.map(emp => (
+                                    <Avatar key={emp.id} className="h-6 w-6 border">
+                                        <AvatarFallback className="text-xs">{emp.name.charAt(0)}</AvatarFallback>
+                                    </Avatar>
+                                ))}
+                                </div>
+                                <span className="text-xs text-muted-foreground font-medium">
+                                    {order.assignedTo.map(e => e.name).join(', ')}
+                                </span>
                             </div>
                         </CardContent>
                         <CardFooter className="text-xs text-primary group-hover:text-accent-foreground font-medium flex items-center justify-end">
