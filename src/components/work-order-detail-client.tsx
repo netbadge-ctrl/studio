@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from 'react';
@@ -91,7 +92,6 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
            const componentInfo = device.targetConfig.find(c => c.partNumber === partNumber) || device.currentConfig.find(c => c.partNumber === partNumber);
            if(componentInfo) {
               const existing = componentsMap.get(partNumber);
-              const model = `${componentInfo.manufacturer} ${componentInfo.model}`
               if (existing) {
                 existing.quantity += requiredQty;
               } else {
@@ -102,7 +102,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
       });
     });
 
-    return Array.from(componentsMap.values()).sort((a, b) => a.model.localeCompare(b.model));
+    return Array.from(componentsMap.values()).sort((a, b) => a.component.model.localeCompare(b.component.model));
   }, [workOrder.devices]);
 
   const handleNavigate = (e: React.MouseEvent) => {
@@ -144,8 +144,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>设备类型</TableHead>
-                    <TableHead>型号</TableHead>
+                    <TableHead>设备</TableHead>
                     <TableHead>序列号</TableHead>
                     <TableHead>位置</TableHead>
                   </TableRow>
@@ -156,10 +155,8 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
                       <TableCell>
                         <div className="flex items-center gap-2 font-medium">
                           {getDeviceIcon(device.type)}
-                          <span>{device.type}</span>
                         </div>
                       </TableCell>
-                       <TableCell className="text-xs">{device.model}</TableCell>
                       <TableCell className="font-mono text-xs">
                         {device.serialNumber}
                       </TableCell>
@@ -184,10 +181,10 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
             {requiredComponents.length > 0 ? (
               <div className="p-4 bg-muted/50 rounded-lg border">
                 <ul className="space-y-4">
-                  {requiredComponents.map(({ component: comp, quantity, model }) => (
+                  {requiredComponents.map(({ component: comp, quantity }) => (
                     <li key={comp.partNumber} className="grid grid-cols-[1fr_auto] items-start gap-x-4">
                       <div>
-                         <p className='font-semibold leading-tight'>{model}</p>
+                         <p className='font-semibold leading-tight'>{comp.model}</p>
                          <p className='text-xs text-muted-foreground'>{comp.type} / {comp.manufacturer}</p>
                       </div>
                       <div className='flex flex-col items-end'>
