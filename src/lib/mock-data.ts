@@ -20,7 +20,7 @@ const rawWorkOrders: WorkOrder[] = [
         id: "dev-001",
         type: "服务器",
         model: "Dell PowerEdge R740",
-        serialNumber: "SN-A7B3C9D1E5",
+        serialNumber: "SN-001",
         status: "待处理",
         location: {
           module: "A1",
@@ -57,7 +57,7 @@ const rawWorkOrders: WorkOrder[] = [
         id: "dev-002",
         type: "服务器",
         model: "HPE ProLiant DL380 Gen10",
-        serialNumber: "SN-F2G8H4I6J1",
+        serialNumber: "SN-002",
         status: "待处理",
         location: {
           module: "B2",
@@ -88,7 +88,7 @@ const rawWorkOrders: WorkOrder[] = [
         id: "dev-006",
         type: "交换机",
         model: "Cisco Nexus 93180YC-EX",
-        serialNumber: "SN-SW-A9B8C7D6E5",
+        serialNumber: "SN-003",
         status: "待处理",
         location: {
           module: "B2",
@@ -111,7 +111,7 @@ const rawWorkOrders: WorkOrder[] = [
             id: "dev-003",
             type: "交换机",
             model: "Arista 7050SX-64",
-            serialNumber: "SN-K3L9M5N1P7",
+            serialNumber: "SN-004",
             status: "待处理",
             location: {
                 module: "Core",
@@ -134,7 +134,7 @@ const rawWorkOrders: WorkOrder[] = [
         id: "dev-004",
         type: "服务器",
         model: "Supermicro 2029U-TR4",
-        serialNumber: "SN-Q8R4S2T7U3",
+        serialNumber: "SN-005",
         status: "待处理",
         location: {
           module: "C3",
@@ -179,7 +179,7 @@ const rawWorkOrders: WorkOrder[] = [
         id: "dev-005",
         type: "服务器",
         model: "Dell PowerEdge R630",
-        serialNumber: "SN-V6W2X8Y4Z1",
+        serialNumber: "SN-006",
         status: "待处理",
         location: {
           module: "A1",
@@ -200,7 +200,7 @@ const rawWorkOrders: WorkOrder[] = [
         id: "dev-007",
         type: "服务器",
         model: "Dell PowerEdge R630",
-        serialNumber: "SN-V6W2X8Y4Z2",
+        serialNumber: "SN-007",
         status: "待处理",
         location: {
           module: "A1",
@@ -230,7 +230,7 @@ const rawWorkOrders: WorkOrder[] = [
         id: "dev-008",
         type: "服务器",
         model: "Dell PowerEdge R650",
-        serialNumber: "SN-DELL-R650-01",
+        serialNumber: "SN-008",
         status: "待处理",
         location: { module: "C1", rack: "R01", uPosition: 10 },
         currentConfig: [
@@ -250,7 +250,7 @@ const rawWorkOrders: WorkOrder[] = [
         id: "dev-009",
         type: "服务器",
         model: "Dell PowerEdge R650",
-        serialNumber: "SN-DELL-R650-02",
+        serialNumber: "SN-009",
         status: "待处理",
         location: { module: "C1", rack: "R01", uPosition: 11 },
         currentConfig: [],
@@ -265,7 +265,7 @@ const rawWorkOrders: WorkOrder[] = [
         id: "dev-010",
         type: "服务器",
         model: "HPE ProLiant DL360 Gen10",
-        serialNumber: "SN-HPE-DL360-01",
+        serialNumber: "SN-010",
         status: "待处理",
         location: { module: "C1", rack: "R02", uPosition: 15 },
         currentConfig: [],
@@ -280,7 +280,7 @@ const rawWorkOrders: WorkOrder[] = [
         id: "dev-011",
         type: "交换机",
         model: "Cisco Nexus 93108TC-EX",
-        serialNumber: "SN-CIS-93108-01",
+        serialNumber: "SN-011",
         status: "待处理",
         location: { module: "C1", rack: "R01", uPosition: 22 },
         currentConfig: [],
@@ -290,7 +290,7 @@ const rawWorkOrders: WorkOrder[] = [
         id: "dev-012",
         type: "交换机",
         model: "Cisco Nexus 93108TC-EX",
-        serialNumber: "SN-CIS-93108-02",
+        serialNumber: "SN-012",
         status: "待处理",
         location: { module: "C1", rack: "R02", uPosition: 22 },
         currentConfig: [],
@@ -300,7 +300,7 @@ const rawWorkOrders: WorkOrder[] = [
         id: "dev-013",
         type: "存储设备",
         model: "NetApp FAS2750",
-        serialNumber: "SN-NTAP-2750-01",
+        serialNumber: "SN-013",
         status: "待处理",
         location: { module: "C1", rack: "R03", uPosition: 5 },
         currentConfig: [],
@@ -317,5 +317,7 @@ const rawWorkOrders: WorkOrder[] = [
 
 
 export const workOrders: WorkOrder[] = rawWorkOrders;
+
+    
 
     
