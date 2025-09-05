@@ -39,8 +39,8 @@ export function MainNav() {
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-card px-4 md:px-6">
       <Link href="/" className="flex items-center gap-2 text-lg font-semibold text-primary">
-        <Building className="h-6 w-6" />
-        <span className="font-bold hidden sm:inline-block">数据中心运维</span>
+        
+        <span className="font-bold">数据中心运维</span>
       </Link>
       <nav className="hidden md:flex items-center gap-2 mx-auto">
         {/* The consolidated component will handle view switching, so these links might be redundant or could be repurposed to control the state of the main component. For now, they are visually present but might not navigate in a traditional sense. */}
