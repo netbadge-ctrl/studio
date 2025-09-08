@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Layers, Server as ServerIcon, ArrowUp, ArrowDown, Video, Image as ImageIcon, QrCode, CheckCircle, AlertTriangle, Search } from 'lucide-react';
+import { Layers, Server as ServerIcon, ArrowUp, ArrowDown, Video, Image as ImageIcon, QrCode, CheckCircle, AlertTriangle, Search, MoreVertical, FileCheck2, PackagePlus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -15,6 +15,12 @@ import Image from 'next/image';
 import { ScanDeviceDialog } from './scan-device-dialog';
 import { Badge } from '@/components/ui/badge';
 import { partScanner } from '@/lib/part-scanner';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 
 const getDeviceIcon = (type: Device['type']) => {
@@ -114,7 +120,7 @@ function DeviceOperation({
 
   const renderActionButton = () => {
     let mainAction: React.ReactNode = null;
-   
+    
     switch (device.status) {
       case '改配中':
         mainAction = (
@@ -368,11 +374,31 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
       </Card>
       
       <div className="fixed bottom-0 left-0 right-0 bg-card border-t p-4 z-40">
-        <div className="max-w-7xl mx-auto flex items-center gap-4">
+        <div className="max-w-7xl mx-auto flex items-center gap-2">
           <Button variant="outline" size="lg" className="flex-shrink-0" onClick={() => setIsScanDeviceDialogOpen(true)}>
               <QrCode className="mr-2 h-5 w-5" />
               扫描设备
           </Button>
+          
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="lg" className="flex-shrink-0">
+                  <MoreVertical className="mr-2 h-5 w-5" />
+                  更多操作
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56 mb-2">
+              <DropdownMenuItem>
+                <FileCheck2 className="mr-2 h-4 w-4" />
+                <span>批量发起结单检测</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <PackagePlus className="mr-2 h-4 w-4" />
+                <span>增领备件</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
           <Button size="lg" className="flex-grow" onClick={handleCompleteWorkOrder}>
               完成工单
           </Button>
