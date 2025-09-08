@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Layers, Server as ServerIcon, ArrowUp, ArrowDown, Video, Image as ImageIcon, QrCode, CheckCircle, AlertTriangle, Search, MoreVertical, FileCheck2, PackagePlus } from 'lucide-react';
+import { Layers, Server as ServerIcon, ArrowUp, ArrowDown, Video, Image as ImageIcon, QrCode, CheckCircle, AlertTriangle, Search, MoreVertical, FileCheck2, PackagePlus, PackageMinus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -426,6 +426,10 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
               <DropdownMenuItem>
                 <PackagePlus className="mr-2 h-4 w-4" />
                 <span>增领备件</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <PackageMinus className="mr-2 h-4 w-4" />
+                <span>故障件回库</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
