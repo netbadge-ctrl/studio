@@ -158,7 +158,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
                 <CardTitle className="text-lg">
                   设备清单
                 </CardTitle>
-                <CardDescription>请提前准备好线下设备</CardDescription>
+                <CardDescription className="text-muted-foreground">请提前准备好线下设备</CardDescription>
               </div>
             </CardHeader>
             <CardContent>
