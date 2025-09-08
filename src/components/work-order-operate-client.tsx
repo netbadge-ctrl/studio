@@ -56,6 +56,14 @@ const getStatusBadgeClass = (status: DeviceStatus) => {
     }
   };
 
+const formatLocation = (location: NonNullable<Device['location']>) => {
+    const modulePrefix = location.module.includes('北京') ? 'BJ' : 'TJ';
+    const rackNumber = location.rack.replace('R', '').padStart(2, '0');
+    const rackIdentifier = `${modulePrefix}DC01-R${rackNumber}F01-JC-${rackNumber}-1`;
+    return `${rackIdentifier} / U${location.uPosition}`;
+};
+
+
 function DeviceOperation({ 
     device,
     onStatusChange
@@ -342,7 +350,13 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
                                   {getDeviceIcon(device.type)}
                                   <div className='text-left flex-grow'>
                                       <p className="font-mono text-sm font-semibold">{device.serialNumber}</p>
-                                      <p className='text-xs text-muted-foreground'>{device.model}</p>
+                                       <p className="text-xs text-muted-foreground">
+                                        {device.location ? (
+                                            formatLocation(device.location)
+                                        ) : (
+                                            <span className="text-muted-foreground">线下设备</span>
+                                        )}
+                                    </p>
                                   </div>
                                   <Badge className={cn("whitespace-nowrap text-xs", getStatusBadgeClass(device.status))}>
                                      {device.status}
