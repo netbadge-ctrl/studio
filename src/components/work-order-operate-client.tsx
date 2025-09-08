@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Layers, Server as ServerIcon, ArrowUp, ArrowDown, Video, Image as ImageIcon, QrCode, CheckCircle, AlertTriangle } from 'lucide-react';
+import { Layers, Server as ServerIcon, ArrowUp, ArrowDown, Video, Image as ImageIcon, QrCode, CheckCircle, AlertTriangle, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 // import { useRouter } from 'next/navigation';
@@ -39,7 +39,7 @@ const getStatusBadgeClass = (status: DeviceStatus) => {
       case '结单检测':
         return 'bg-green-100 text-green-800 border-green-200';
       case '检测异常':
-        return 'bg-red-100 text-red-800 border-red-200';
+        return 'bg-orange-100 text-orange-800 border-orange-200'; // Changed for better visibility
       default:
         return 'bg-muted text-muted-foreground';
     }
@@ -109,6 +109,58 @@ function DeviceOperation({
       partScanner.off('scan', handleScan);
     };
   }, [operationDetails]);
+
+  const renderActionButton = () => {
+    switch (device.status) {
+      case '开始改配':
+        return (
+          <Button
+            size="lg"
+            className="w-full border-green-600 bg-green-50 text-green-900 hover:bg-green-100 hover:text-green-900"
+            onClick={() => onStatusChange('配置带外')}
+          >
+            <CheckCircle className="mr-2 h-5 w-5" />
+            硬件改配完成，开始带外配置
+          </Button>
+        );
+      case '配置带外':
+        return (
+          <Button
+            size="lg"
+            className="w-full"
+            onClick={() => onStatusChange('结单检测')}
+          >
+            完成带外配置
+          </Button>
+        );
+      case '结单检测':
+         return (
+          <Button
+            size="lg"
+            variant="secondary"
+            className="w-full"
+            onClick={() => { /* Logic for final check */ }}
+          >
+            <Search className="mr-2 h-5 w-5" />
+            发起结单检测
+          </Button>
+        );
+      case '检测异常':
+        return (
+           <Button
+              variant="destructive"
+              size="lg"
+              className="w-full bg-orange-500 hover:bg-orange-600"
+              onClick={() => { /* Logic to view issue */ }}
+          >
+              <AlertTriangle className='mr-2 h-5 w-5' />
+              查看结单异常
+          </Button>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <>
@@ -191,37 +243,20 @@ function DeviceOperation({
           </Card>
         )}
         
-        <Button 
-           variant="outline"
-           size="lg"
-           className="w-full border-green-600 bg-green-50 text-green-900 hover:bg-green-100 hover:text-green-900 disabled:opacity-50"
-           onClick={() => onStatusChange('配置带外')}
-           disabled={device.status !== '开始改配'}
-       >
-            <CheckCircle className="mr-2 h-5 w-5" />
-            硬件改配完成，开始带外配置
-        </Button>
-      </div>
-
-      <div className='space-y-4 mt-6'>
-          <Button
-              size="lg"
-              className="w-full"
-              onClick={() => onStatusChange('结单检测')}
-              disabled={device.status !== '配置带外'}
-          >
-              完成带外配置
-          </Button>
-          <Button
-              variant="destructive"
-              size="lg"
-              className="w-full"
-              onClick={() => onStatusChange('检测异常')}
-              disabled={device.status === '结单检测' || device.status === '检测异常'}
-          >
-              <AlertTriangle className='mr-2 h-5 w-5' />
-              标记异常
-          </Button>
+        <div className="space-y-4">
+            {renderActionButton()}
+            {device.status !== '检测异常' && (
+                 <Button
+                    variant="outline"
+                    size="lg"
+                    className="w-full"
+                    onClick={() => onStatusChange('检测异常')}
+                >
+                    <AlertTriangle className='mr-2 h-5 w-5 text-destructive' />
+                    标记异常
+                </Button>
+            )}
+        </div>
       </div>
     </>
   );
@@ -369,7 +404,3 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
     </>
   )
 }
-
-    
-
-    
