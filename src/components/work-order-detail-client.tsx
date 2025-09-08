@@ -132,103 +132,86 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
 
   return (
     <>
-      <Card>
-        <CardHeader>
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
-            <div>
-              <CardTitle className="text-xl md:text-2xl">{workOrder.title}</CardTitle>
-              <CardDescription>
-                工单 #{workOrder.id} - 步骤 1/2: 准备
-              </CardDescription>
-            </div>
-            <Badge
-              className={cn(
-                'text-base whitespace-nowrap w-fit',
-                getStatusClass(workOrder.status)
-              )}
-            >
-              {workOrder.status}
-            </Badge>
-          </div>
-        </CardHeader>
-        <CardContent className="grid md:grid-cols-2 gap-6">
-          <Card>
-            <CardHeader className="px-4 py-2 bg-muted/50 rounded-t-lg">
-              <CardTitle className='text-base'>设备清单</CardTitle>
-            </CardHeader>
-            <CardContent className="p-4">
-              <ScrollArea className="h-80">
-                <Table>
-                  <TableBody>
-                    {sortedDevices.map((device) => (
-                      <TableRow key={device.id}>
-                        <TableCell className="p-4">
-                          <div className="flex items-center gap-3">
-                            {getDeviceIcon(device.type)}
-                            <div className="flex flex-col">
-                                <p className="font-mono text-sm text-foreground font-semibold">{device.serialNumber}</p>
-                                <p className="font-mono text-xs text-muted-foreground">
-                                   {device.location ? (
-                                        formatLocation(device.location)
-                                    ) : (
-                                        <span className="text-muted-foreground">线下设备</span>
-                                    )}
-                                </p>
-                            </div>
+      <div className='space-y-4'>
+        <Card>
+          <CardHeader className="px-4 py-2 bg-muted/50 rounded-t-lg">
+            <CardTitle className='text-base'>设备清单</CardTitle>
+          </CardHeader>
+          <CardContent className="p-0">
+            <ScrollArea className="h-80">
+              <Table>
+                <TableBody>
+                  {sortedDevices.map((device) => (
+                    <TableRow key={device.id}>
+                      <TableCell className="p-4">
+                        <div className="flex items-center gap-3">
+                          {getDeviceIcon(device.type)}
+                          <div className="flex flex-col">
+                              <p className="font-mono text-sm text-foreground font-semibold">{device.serialNumber}</p>
+                              <p className="font-mono text-xs text-muted-foreground">
+                                 {device.location ? (
+                                      formatLocation(device.location)
+                                  ) : (
+                                      <span className="text-muted-foreground">线下设备</span>
+                                  )}
+                              </p>
                           </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </ScrollArea>
-            </CardContent>
-          </Card>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </ScrollArea>
+          </CardContent>
+        </Card>
 
-          <Card>
-            <CardHeader className="px-4 py-2 bg-muted/50 rounded-t-lg">
-              <CardTitle className='flex justify-between items-center text-base'>
-                <span className="flex items-center gap-2">
-                  <PackageSearch className="h-5 w-5 text-primary" />
-                  所需备件
-                </span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-4">
-              <ScrollArea className="h-80">
-                {requiredComponents.length > 0 ? (
-                  <ul className="space-y-2">
-                    {requiredComponents.map(({ component: comp, quantity }) => (
-                      <li key={comp.partNumber} className="flex items-center justify-between gap-x-4 py-3 border-b last:border-b-0">
-                        <div className="flex-grow">
-                          <p className='font-mono text-sm text-foreground font-semibold'>{comp.model}</p>
-                          <p className='text-xs text-muted-foreground'>{comp.type} / {comp.manufacturer}</p>
-                        </div>
-                        <div className='flex flex-col items-end flex-shrink-0'>
-                           <span className="font-mono text-sm text-foreground font-semibold">x {quantity}</span>
-                          <p className='text-xs font-mono text-muted-foreground mt-1'>仓库盒号: {comp.partNumber}</p>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <div className="flex items-center justify-center h-full">
-                    <p className="text-sm text-muted-foreground text-center py-4">
-                      此工单无需更换或添加备件。
-                    </p>
-                  </div>
-                )}
-              </ScrollArea>
-            </CardContent>
-          </Card>
-        </CardContent>
-        <CardFooter className="flex justify-end pt-6">
-          <Button onClick={handleNavigate} size="lg" className='gap-2'>
+        <Card>
+          <CardHeader className="px-4 py-2 bg-muted/50 rounded-t-lg">
+            <CardTitle className='flex justify-between items-center text-base'>
+              <span className="flex items-center gap-2">
+                <PackageSearch className="h-5 w-5 text-primary" />
+                所需备件
+              </span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-4">
+            <ScrollArea className="h-80">
+              {requiredComponents.length > 0 ? (
+                <ul className="space-y-2">
+                  {requiredComponents.map(({ component: comp, quantity }) => (
+                    <li key={comp.partNumber} className="flex items-center justify-between gap-x-4 py-3 border-b last:border-b-0">
+                      <div className="flex-grow">
+                        <p className='font-mono text-sm text-foreground font-semibold'>{comp.model}</p>
+                        <p className='text-xs text-muted-foreground'>{comp.type} / {comp.manufacturer}</p>
+                      </div>
+                      <div className='flex flex-col items-end flex-shrink-0'>
+                         <span className="font-mono text-sm text-foreground font-semibold">x {quantity}</span>
+                        <p className='text-xs font-mono text-muted-foreground mt-1'>仓库盒号: {comp.partNumber}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <div className="flex items-center justify-center h-full">
+                  <p className="text-sm text-muted-foreground text-center py-4">
+                    此工单无需更换或添加备件。
+                  </p>
+                </div>
+              )}
+            </ScrollArea>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="fixed bottom-0 left-0 right-0 bg-card border-t p-4 z-40">
+        <div className="max-w-7xl mx-auto">
+          <Button onClick={handleNavigate} size="lg" className='gap-2 w-full'>
               开始操作
               <ArrowRight />
           </Button>
-        </CardFooter>
-      </Card>
+        </div>
+      </div>
     </>
   );
 }

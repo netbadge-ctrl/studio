@@ -20,7 +20,7 @@ export default function Home() {
         onBackClick={handleBack}
         backButtonLabel={backButtonLabel}
       />
-      <main className="flex-1 bg-muted/40 p-4 md:p-6">
+      <main className="flex-1 bg-muted/40 p-4 md:p-6 pb-24">
         <div className="max-w-7xl mx-auto">
           <DatacenterOpsDemo 
             initialWorkOrders={workOrders} 
