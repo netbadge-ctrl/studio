@@ -172,11 +172,9 @@ function DeviceOperation({
                                 onAnimationEnd={() => setHighlightedPart(null)}
                                 >
                                   <TableCell>
-                                      <div className="flex items-center gap-2">
-                                          <div>
-                                              <p className="font-medium text-xs sm:text-sm">{component.model}</p>
-                                              <p className="text-xs text-muted-foreground">{component.partNumber}</p>
-                                          </div>
+                                      <div>
+                                          <p className="font-medium text-xs sm:text-sm">{component.model}</p>
+                                          <p className="text-xs text-muted-foreground">{component.partNumber}</p>
                                       </div>
                                   </TableCell>
                                   <TableCell className="text-right">
@@ -374,5 +372,7 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
     </>
   )
 }
+
+    
 
     
