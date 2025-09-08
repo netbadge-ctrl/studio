@@ -180,7 +180,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
               {requiredComponents.length > 0 ? (
                 <ul className="space-y-2">
                   {requiredComponents.map(({ component: comp, quantity }) => (
-                    <li key={comp.partNumber} className="flex items-center justify-between gap-x-4 py-3 border-b last:border-b-0">
+                    <li key={comp.partNumber} className="flex items-center justify-between gap-x-4 py-2 border-b last:border-b-0">
                       <div className="flex-grow">
                         <p className='font-mono text-sm text-foreground font-semibold'>{comp.model}</p>
                         <p className='text-xs text-muted-foreground'>{comp.type} / {comp.manufacturer}</p>
