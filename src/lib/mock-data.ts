@@ -68,6 +68,7 @@ const rawWorkOrders: WorkOrder[] = [
         model: "Dell PowerEdge R740",
         serialNumber: "210619HTCHXHR8000003",
         status: "等待配置",
+        location: { module: "天津武清", rack: "R12", uPosition: 26 },
         currentConfig: [
           { type: "内存", manufacturer: "Hynix", model: "16GB DDR4 2400MHz", quantity: 1, partNumber: "MEM-16G-2400-A", slot: "A1" },
           { type: "SSD", manufacturer: "Samsung", model: "PM883 480GB SSD", quantity: 1, partNumber: "SSD-480G-S-PM883", slot: "Disk 0" },
@@ -103,6 +104,7 @@ const rawWorkOrders: WorkOrder[] = [
         model: "Dell PowerEdge R740",
         serialNumber: "210619HTCHXHR8000005",
         status: "检测异常",
+        location: { module: "天津武清", rack: "R12", uPosition: 28 },
         currentConfig: [
           { type: "内存", manufacturer: "Hynix", model: "16GB DDR4 2400MHz", quantity: 1, partNumber: "MEM-16G-2400-A", slot: "A1" },
           { type: "SSD", manufacturer: "Samsung", model: "PM883 480GB SSD", quantity: 1, partNumber: "SSD-480G-S-PM883", slot: "Disk 0" },
@@ -112,6 +114,32 @@ const rawWorkOrders: WorkOrder[] = [
           { type: "SSD", manufacturer: "Intel", model: "P4510 1TB NVMe SSD", quantity: 1, partNumber: "SSD-1T-I-P4510", slot: "Disk 0" },
           { type: "CPU", manufacturer: "Intel", model: "Xeon Gold 6230", quantity: 1, partNumber: "CPU-INTEL-6230", slot: "CPU 1" },
           { type: "CPU", manufacturer: "Intel", model: "Xeon Gold 6230", quantity: 1, partNumber: "CPU-INTEL-6230", slot: "CPU 2" },
+        ],
+      },
+       {
+        id: "dev-021",
+        type: "服务器",
+        model: "Dell PowerEdge R740",
+        serialNumber: "210619HTCHXHR8000021",
+        status: "改配完成",
+        location: { module: "天津武清", rack: "R12", uPosition: 29 },
+        currentConfig: [
+          { type: "内存", manufacturer: "Samsung", model: "32GB DDR4 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A1" },
+          { type: "内存", manufacturer: "Samsung", model: "32GB DDR4 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A2" },
+          { type: "内存", manufacturer: "Samsung", model: "32GB DDR4 3200MHz", quantity:1, partNumber: "MEM-32G-3200-B", slot: "A3" },
+          { type: "内存", manufacturer: "Samsung", model: "32GB DDR4 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A4" },
+          { type: "SSD", manufacturer: "Intel", model: "P4510 1TB NVMe SSD", quantity: 1, partNumber: "SSD-1T-I-P4510", slot: "Disk 0" },
+          { type: "网卡", manufacturer: "Mellanox", model: "ConnectX-5 25GbE", quantity: 1, partNumber: "NIC-MEL-CX5", slot: "PCIe 1" },
+          { type: "PSU", manufacturer: "Dell", model: "750W Platinum PSU", quantity: 1, partNumber: "PSU-DELL-750W", slot: "PSU 1" }
+        ],
+        targetConfig: [
+          { type: "内存", manufacturer: "Samsung", model: "32GB DDR4 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A1" },
+          { type: "内存", manufacturer: "Samsung", model: "32GB DDR4 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A2" },
+          { type: "内存", manufacturer: "Samsung", model: "32GB DDR4 3200MHz", quantity:1, partNumber: "MEM-32G-3200-B", slot: "A3" },
+          { type: "内存", manufacturer: "Samsung", model: "32GB DDR4 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A4" },
+          { type: "SSD", manufacturer: "Intel", model: "P4510 1TB NVMe SSD", quantity: 1, partNumber: "SSD-1T-I-P4510", slot: "Disk 0" },
+          { type: "网卡", manufacturer: "Mellanox", model: "ConnectX-5 25GbE", quantity: 1, partNumber: "NIC-MEL-CX5", slot: "PCIe 1" },
+          { type: "PSU", manufacturer: "Dell", model: "750W Platinum PSU", quantity: 1, partNumber: "PSU-DELL-750W", slot: "PSU 1" }
         ],
       },
     ],
@@ -130,11 +158,9 @@ const rawWorkOrders: WorkOrder[] = [
         type: "服务器",
         model: "HPE ProLiant DL380 Gen10",
         serialNumber: "210619HTCHXHR8000006",
-        status: "改配完成",
+        status: "待处理",
         location: { module: "北京酒仙桥", rack: "R05", uPosition: 12 },
         currentConfig: [
-          { type: "内存", manufacturer: "Crucial", model: "8GB DDR4 2133MHz", quantity: 1, partNumber: "MEM-8G-2133-C", slot: "A1" },
-          { type: "SATA", manufacturer: "WD", model: "Blue 1TB HDD", quantity: 1, partNumber: "HDD-1T-WD-BLUE", slot: "Bay 1" },
         ],
         targetConfig: [
             { type: "CPU", manufacturer: "Intel", model: "Xeon Silver 4210", quantity: 1, partNumber: "CPU-INT-4210", slot: "CPU 1"},
@@ -153,7 +179,7 @@ const rawWorkOrders: WorkOrder[] = [
         type: "服务器",
         model: "HPE ProLiant DL380 Gen10",
         serialNumber: "210619HTCHXHR8000007",
-        status: "待处理",
+        status: "改配中",
         location: { module: "北京酒仙桥", rack: "R05", uPosition: 13 },
         currentConfig: [],
         targetConfig: [
@@ -168,7 +194,7 @@ const rawWorkOrders: WorkOrder[] = [
         type: "服务器",
         model: "HPE ProLiant DL380 Gen10",
         serialNumber: "210619HTCHXHR8000008",
-        status: "改配中",
+        status: "等待配置",
         location: { module: "北京酒仙桥", rack: "R05", uPosition: 14 },
         currentConfig: [],
         targetConfig: [
@@ -183,7 +209,7 @@ const rawWorkOrders: WorkOrder[] = [
         type: "服务器",
         model: "HPE ProLiant DL380 Gen10",
         serialNumber: "210619HTCHXHR8000009",
-        status: "等待配置",
+        status: "待检测",
         location: { module: "北京酒仙桥", rack: "R05", uPosition: 15 },
         currentConfig: [],
         targetConfig: [
@@ -198,8 +224,29 @@ const rawWorkOrders: WorkOrder[] = [
         type: "服务器",
         model: "HPE ProLiant DL380 Gen10",
         serialNumber: "210619HTCHXHR8000010",
-        status: "待检测",
+        status: "检测异常",
+        location: { module: "北京酒仙桥", rack: "R05", uPosition: 16 },
         currentConfig: [],
+        targetConfig: [
+            { type: "CPU", manufacturer: "Intel", model: "Xeon Silver 4210", quantity: 1, partNumber: "CPU-INT-4210", slot: "CPU 1"},
+            { type: "内存", manufacturer: "Samsung", model: "32GB DDR4 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A1" },
+            { type: "SSD", manufacturer: "Intel", model: "P4510 1TB NVMe SSD", quantity: 1, partNumber: "SSD-1T-I-P4510", slot: "NVMe 0" },
+            { type: "网卡", manufacturer: "Mellanox", model: "ConnectX-5 25GbE", quantity: 1, partNumber: "NIC-MEL-CX5", slot: "PCIe 1" },
+        ],
+      },
+       {
+        id: "dev-022",
+        type: "服务器",
+        model: "HPE ProLiant DL380 Gen10",
+        serialNumber: "210619HTCHXHR8000022",
+        status: "改配完成",
+        location: { module: "北京酒仙桥", rack: "R05", uPosition: 17 },
+        currentConfig: [
+            { type: "CPU", manufacturer: "Intel", model: "Xeon Silver 4210", quantity: 1, partNumber: "CPU-INT-4210", slot: "CPU 1"},
+            { type: "内存", manufacturer: "Samsung", model: "32GB DDR4 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A1" },
+            { type: "SSD", manufacturer: "Intel", model: "P4510 1TB NVMe SSD", quantity: 1, partNumber: "SSD-1T-I-P4510", slot: "NVMe 0" },
+            { type: "网卡", manufacturer: "Mellanox", model: "ConnectX-5 25GbE", quantity: 1, partNumber: "NIC-MEL-CX5", slot: "PCIe 1" },
+        ],
         targetConfig: [
             { type: "CPU", manufacturer: "Intel", model: "Xeon Silver 4210", quantity: 1, partNumber: "CPU-INT-4210", slot: "CPU 1"},
             { type: "内存", manufacturer: "Samsung", model: "32GB DDR4 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A1" },
@@ -223,7 +270,7 @@ const rawWorkOrders: WorkOrder[] = [
         type: "服务器",
         model: "Supermicro 2029U-TR4",
         serialNumber: "210619HTCHXHR8000011",
-        status: "检测异常",
+        status: "待处理",
         location: { module: "北京万国", rack: "R21", uPosition: 3 },
         currentConfig: [
           { type: "SATA", manufacturer: "Seagate", model: "Exos 4TB HDD", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 1" },
@@ -243,7 +290,8 @@ const rawWorkOrders: WorkOrder[] = [
         type: "服务器",
         model: "Supermicro 2029U-TR4",
         serialNumber: "210619HTCHXHR8000012",
-        status: "改配完成",
+        status: "改配中",
+        location: { module: "北京万国", rack: "R21", uPosition: 4 },
         currentConfig: [
           { type: "SATA", manufacturer: "Seagate", model: "Exos 4TB HDD", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 1" },
           { type: "SATA", manufacturer: "Seagate", model: "Exos 4TB HDD", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 2" },
@@ -260,7 +308,7 @@ const rawWorkOrders: WorkOrder[] = [
         type: "服务器",
         model: "Supermicro 2029U-TR4",
         serialNumber: "210619HTCHXHR8000013",
-        status: "待处理",
+        status: "等待配置",
         location: { module: "北京万国", rack: "R21", uPosition: 5 },
         currentConfig: [
           { type: "SATA", manufacturer: "Seagate", model: "Exos 4TB HDD", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 1" },
@@ -277,7 +325,7 @@ const rawWorkOrders: WorkOrder[] = [
         type: "服务器",
         model: "Supermicro 2029U-TR4",
         serialNumber: "210619HTCHXHR8000014",
-        status: "改配中",
+        status: "待检测",
         location: { module: "北京万国", rack: "R21", uPosition: 6 },
         currentConfig: [
           { type: "SATA", manufacturer: "Seagate", model: "Exos 4TB HDD", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 1" },
@@ -294,10 +342,30 @@ const rawWorkOrders: WorkOrder[] = [
         type: "服务器",
         model: "Supermicro 2029U-TR4",
         serialNumber: "210619HTCHXHR8000015",
-        status: "等待配置",
+        status: "检测异常",
         location: { module: "北京万国", rack: "R21", uPosition: 7 },
         currentConfig: [
           { type: "SATA", manufacturer: "Seagate", model: "Exos 4TB HDD", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 1" },
+        ],
+        targetConfig: [
+          { type: "SSD", manufacturer: "Samsung", model: "PM883 960GB SSD", quantity: 1, partNumber: "SSD-960G-S-PM883", slot: "Bay 1" },
+          { type: "CPU", manufacturer: "AMD", model: "Epyc 7542", quantity: 1, partNumber: "CPU-AMD-7542", slot: "CPU 1" },
+          { type: "内存", manufacturer: "Micron", model: "32GB DDR4 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-M", slot: "D1" },
+          { type: "PSU", manufacturer: "Supermicro", model: "1200W Titanium PSU", quantity: 1, partNumber: "PSU-SM-1200W", slot: "PSU 1" },
+        ],
+      },
+       {
+        id: "dev-023",
+        type: "服务器",
+        model: "Supermicro 2029U-TR4",
+        serialNumber: "210619HTCHXHR8000023",
+        status: "改配完成",
+        location: { module: "北京万国", rack: "R21", uPosition: 8 },
+        currentConfig: [
+          { type: "SSD", manufacturer: "Samsung", model: "PM883 960GB SSD", quantity: 1, partNumber: "SSD-960G-S-PM883", slot: "Bay 1" },
+          { type: "CPU", manufacturer: "AMD", model: "Epyc 7542", quantity: 1, partNumber: "CPU-AMD-7542", slot: "CPU 1" },
+          { type: "内存", manufacturer: "Micron", model: "32GB DDR4 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-M", slot: "D1" },
+          { type: "PSU", manufacturer: "Supermicro", model: "1200W Titanium PSU", quantity: 1, partNumber: "PSU-SM-1200W", slot: "PSU 1" },
         ],
         targetConfig: [
           { type: "SSD", manufacturer: "Samsung", model: "PM883 960GB SSD", quantity: 1, partNumber: "SSD-960G-S-PM883", slot: "Bay 1" },
@@ -322,7 +390,7 @@ const rawWorkOrders: WorkOrder[] = [
         type: "服务器",
         model: "Dell PowerEdge R630",
         serialNumber: "210619HTCHXHR8000016",
-        status: "待检测",
+        status: "待处理",
         location: { module: "天津武清", rack: "R18", uPosition: 30 },
         currentConfig: [
             { type: "CPU", manufacturer: "Intel", model: "Xeon E5-2620v3", quantity: 1, partNumber: "CPU-INT-2620V3", slot: "CPU 1"},
@@ -342,7 +410,7 @@ const rawWorkOrders: WorkOrder[] = [
         type: "服务器",
         model: "Dell PowerEdge R630",
         serialNumber: "210619HTCHXHR8000017",
-        status: "检测异常",
+        status: "改配中",
         location: { module: "天津武清", rack: "R18", uPosition: 31 },
         currentConfig: [
             { type: "CPU", manufacturer: "Intel", model: "Xeon E5-2620v3", quantity: 1, partNumber: "CPU-INT-2620V3", slot: "CPU 1"},
@@ -360,7 +428,8 @@ const rawWorkOrders: WorkOrder[] = [
         type: "服务器",
         model: "Dell PowerEdge R630",
         serialNumber: "210619HTCHXHR8000018",
-        status: "改配完成",
+        status: "等待配置",
+        location: { module: "天津武清", rack: "R18", uPosition: 32 },
         currentConfig: [
             { type: "CPU", manufacturer: "Intel", model: "Xeon E5-2620v3", quantity: 1, partNumber: "CPU-INT-2620V3", slot: "CPU 1"},
         ],
@@ -376,7 +445,7 @@ const rawWorkOrders: WorkOrder[] = [
         type: "服务器",
         model: "Dell PowerEdge R630",
         serialNumber: "210619HTCHXHR8000019",
-        status: "待处理",
+        status: "待检测",
         location: { module: "天津武清", rack: "R18", uPosition: 33 },
         currentConfig: [
             { type: "CPU", manufacturer: "Intel", model: "Xeon E5-2620v3", quantity: 1, partNumber: "CPU-INT-2620V3", slot: "CPU 1"},
@@ -393,10 +462,30 @@ const rawWorkOrders: WorkOrder[] = [
         type: "服务器",
         model: "Dell PowerEdge R630",
         serialNumber: "210619HTCHXHR8000020",
-        status: "改配中",
+        status: "检测异常",
         location: { module: "天津武清", rack: "R18", uPosition: 34 },
         currentConfig: [
             { type: "CPU", manufacturer: "Intel", model: "Xeon E5-2620v3", quantity: 1, partNumber: "CPU-INT-2620V3", slot: "CPU 1"},
+        ],
+        targetConfig: [
+            { type: "CPU", manufacturer: "Intel", model: "Xeon E5-2650v4", quantity: 1, partNumber: "CPU-INT-2650V4", slot: "CPU 1"},
+            { type: "内存", manufacturer: "Hynix", model: "32GB DDR4 2933MHz", quantity: 1, partNumber: "MEM-32G-2933-H", slot: "C1" },
+            { type: "SSD", manufacturer: "Intel", model: "P5510 3.84TB NVMe", quantity: 1, partNumber: "SSD-3.84T-I-P5510", slot: "NVMe 3" },
+            { type: "PSU", manufacturer: "Dell", model: "750W Platinum PSU", quantity: 1, partNumber: "PSU-DELL-750W", slot: "PSU 2" },
+        ],
+      },
+      {
+        id: "dev-024",
+        type: "服务器",
+        model: "Dell PowerEdge R630",
+        serialNumber: "210619HTCHXHR8000024",
+        status: "改配完成",
+        location: { module: "天津武清", rack: "R18", uPosition: 35 },
+        currentConfig: [
+            { type: "CPU", manufacturer: "Intel", model: "Xeon E5-2650v4", quantity: 1, partNumber: "CPU-INT-2650V4", slot: "CPU 1"},
+            { type: "内存", manufacturer: "Hynix", model: "32GB DDR4 2933MHz", quantity: 1, partNumber: "MEM-32G-2933-H", slot: "C1" },
+            { type: "SSD", manufacturer: "Intel", model: "P5510 3.84TB NVMe", quantity: 1, partNumber: "SSD-3.84T-I-P5510", slot: "NVMe 3" },
+            { type: "PSU", manufacturer: "Dell", model: "750W Platinum PSU", quantity: 1, partNumber: "PSU-DELL-750W", slot: "PSU 2" },
         ],
         targetConfig: [
             { type: "CPU", manufacturer: "Intel", model: "Xeon E5-2650v4", quantity: 1, partNumber: "CPU-INT-2650V4", slot: "CPU 1"},
@@ -411,6 +500,8 @@ const rawWorkOrders: WorkOrder[] = [
 
 
 export const workOrders: WorkOrder[] = rawWorkOrders;
+
+    
 
     
 
