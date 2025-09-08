@@ -363,16 +363,20 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
               <p className="text-sm text-muted-foreground text-center py-8">此工单没有关联的设备。</p>
             )}
           </CardContent>
-           <CardFooter className="flex-col sm:flex-row sm:justify-between gap-2">
-              <Button variant="outline" size="lg" className="w-full sm:w-auto" onClick={() => setIsScanDeviceDialogOpen(true)}>
-                  <QrCode className="mr-2 h-5 w-5" />
-                  扫描设备
-              </Button>
-              <Button size="lg" className="w-full sm:w-auto" onClick={handleCompleteWorkOrder}>
-                  完成工单
-              </Button>
-          </CardFooter>
       </Card>
+      
+      <div className="fixed bottom-0 left-0 right-0 bg-card border-t p-4 z-40">
+        <div className="max-w-7xl mx-auto flex items-center gap-4">
+          <Button variant="outline" size="lg" className="flex-shrink-0" onClick={() => setIsScanDeviceDialogOpen(true)}>
+              <QrCode className="mr-2 h-5 w-5" />
+              扫描设备
+          </Button>
+          <Button size="lg" className="flex-grow" onClick={handleCompleteWorkOrder}>
+              完成工单
+          </Button>
+        </div>
+      </div>
+
       <ScanDeviceDialog 
         isOpen={isScanDeviceDialogOpen}
         setIsOpen={setIsScanDeviceDialogOpen}
