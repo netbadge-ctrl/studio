@@ -176,7 +176,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
                           <div className="flex items-center gap-3">
                             {getDeviceIcon(device.type)}
                             <div className="flex flex-col">
-                                <p className="font-mono text-sm text-foreground">{device.serialNumber}</p>
+                                <p className="font-mono text-sm text-foreground font-semibold">{device.serialNumber}</p>
                                 <p className="font-mono text-xs text-muted-foreground">
                                    {device.location ? (
                                         formatLocation(device.location)
