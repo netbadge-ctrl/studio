@@ -75,7 +75,6 @@ export function LeaderDashboardClient({
             <TableHeader>
               <TableRow>
                 <TableHead>标题</TableHead>
-                <TableHead>类型</TableHead>
                 <TableHead>状态</TableHead>
                 <TableHead>分配给</TableHead>
                 <TableHead className="text-right">操作</TableHead>
@@ -85,7 +84,6 @@ export function LeaderDashboardClient({
               {workOrders.map((order) => (
                 <TableRow key={order.id}>
                   <TableCell className="font-medium">{order.title}</TableCell>
-                  <TableCell>{order.type}</TableCell>
                   <TableCell>
                     <Badge className={cn("whitespace-nowrap", getStatusClass(order.status))}>
                       {order.status}
