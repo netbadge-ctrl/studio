@@ -168,11 +168,6 @@ export function DatacenterOpsDemo({
     const LeaderDashboard = () => {
          return (
             <div>
-                <header className="flex justify-between items-center mb-6">
-                    <p className="text-muted-foreground">
-                        监控并分配所有工单。
-                    </p>
-                </header>
                 <div>
                     <LeaderDashboardClient initialWorkOrders={workOrders} employees={employees} />
                 </div>
