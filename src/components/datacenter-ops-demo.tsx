@@ -87,7 +87,7 @@ export function DatacenterOpsDemo({
                 onTitleChange("我的工单");
                 break;
             case 'LEADER_DASHBOARD':
-                onTitleChange("主管仪表盘");
+                onTitleChange("主管分配工单");
                 break;
             case 'WORK_ORDER_DETAIL':
                 onTitleChange(`工单详情 #${view.workOrderId}`);

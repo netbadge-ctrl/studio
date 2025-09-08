@@ -7,7 +7,7 @@ import { workOrders, employees } from "@/lib/mock-data";
 import { CardDescription } from '@/components/ui/card';
 
 export default function LeaderDashboardPage() {
-  const [title, setTitle] = useState("分配工单");
+  const [title, setTitle] = useState("主管分配工单");
   const [showBackButton, setShowBackButton] = useState(false);
   const [backButtonLabel, setBackButtonLabel] = useState('');
   const [handleBack, setHandleBack] = useState(() => () => {});
