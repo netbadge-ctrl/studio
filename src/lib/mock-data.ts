@@ -15,7 +15,7 @@ const rawWorkOrders: WorkOrder[] = [
     type: "服务器改造",
     status: "已分配",
     initiator: employees[1],
-    createdAt: "2024-05-20",
+    createdAt: "2024-05-20 10:30",
     assignedTo: [employees[0]],
     devices: [
       // Device 1 (original, modified for '卸' and '装')
@@ -25,7 +25,7 @@ const rawWorkOrders: WorkOrder[] = [
         model: "Dell PowerEdge R740",
         serialNumber: "SN-001",
         status: "待处理",
-        location: { module: "A1", rack: "R12", uPosition: 24 },
+        location: { module: "天津武清", rack: "R12", uPosition: 24 },
         currentConfig: [
           { type: "内存", manufacturer: "Hynix", model: "16GB DDR4 2400MHz", quantity: 1, partNumber: "MEM-16G-2400-A", slot: "A1" },
           { type: "内存", manufacturer: "Hynix", model: "16GB DDR4 2400MHz", quantity: 1, partNumber: "MEM-16G-2400-A", slot: "A2" },
@@ -48,7 +48,7 @@ const rawWorkOrders: WorkOrder[] = [
         model: "Dell PowerEdge R740",
         serialNumber: "SN-002",
         status: "待处理",
-        location: { module: "A1", rack: "R12", uPosition: 25 },
+        location: { module: "天津武清", rack: "R12", uPosition: 25 },
         currentConfig: [
           { type: "内存", manufacturer: "Hynix", model: "16GB DDR4 2400MHz", quantity: 1, partNumber: "MEM-16G-2400-A", slot: "A1" },
           { type: "内存", manufacturer: "Hynix", model: "16GB DDR4 2400MHz", quantity: 1, partNumber: "MEM-16G-2400-A", slot: "A2" },
@@ -66,7 +66,7 @@ const rawWorkOrders: WorkOrder[] = [
         model: "Dell PowerEdge R740",
         serialNumber: "SN-003",
         status: "待处理",
-        location: { module: "A1", rack: "R12", uPosition: 26 },
+        location: { module: "天津武清", rack: "R12", uPosition: 26 },
         currentConfig: [
           { type: "内存", manufacturer: "Hynix", model: "16GB DDR4 2400MHz", quantity: 1, partNumber: "MEM-16G-2400-A", slot: "A1" },
           { type: "SSD", manufacturer: "Samsung", model: "PM883 480GB SSD", quantity: 1, partNumber: "SSD-480G-S-PM883", slot: "Disk 0" },
@@ -82,7 +82,7 @@ const rawWorkOrders: WorkOrder[] = [
         model: "Dell PowerEdge R740",
         serialNumber: "SN-004",
         status: "待处理",
-        location: { module: "A1", rack: "R12", uPosition: 27 },
+        location: { module: "天津武清", rack: "R12", uPosition: 27 },
         currentConfig: [
           { type: "内存", manufacturer: "Hynix", model: "16GB DDR4 2400MHz", quantity: 1, partNumber: "MEM-16G-2400-A", slot: "A1" },
           { type: "SSD", manufacturer: "Samsung", model: "PM883 480GB SSD", quantity: 1, partNumber: "SSD-480G-S-PM883", slot: "Disk 0" },
@@ -98,7 +98,7 @@ const rawWorkOrders: WorkOrder[] = [
         model: "Dell PowerEdge R740",
         serialNumber: "SN-005",
         status: "待处理",
-        location: { module: "A1", rack: "R12", uPosition: 28 },
+        location: { module: "天津武清", rack: "R12", uPosition: 28 },
         currentConfig: [
           { type: "内存", manufacturer: "Hynix", model: "16GB DDR4 2400MHz", quantity: 1, partNumber: "MEM-16G-2400-A", slot: "A1" },
           { type: "SSD", manufacturer: "Samsung", model: "PM883 480GB SSD", quantity: 1, partNumber: "SSD-480G-S-PM883", slot: "Disk 0" },
@@ -116,7 +116,7 @@ const rawWorkOrders: WorkOrder[] = [
     type: "新服务器部署",
     status: "进行中",
     initiator: employees[3],
-    createdAt: "2024-05-18",
+    createdAt: "2024-05-18 09:00",
     assignedTo: [employees[0], employees[2]],
     devices: [
        // Device 1 (modified for '卸' and '装')
@@ -126,7 +126,7 @@ const rawWorkOrders: WorkOrder[] = [
         model: "HPE ProLiant DL380 Gen10",
         serialNumber: "SN-006",
         status: "待处理",
-        location: { module: "B2", rack: "R05", uPosition: 12 },
+        location: { module: "北京酒仙桥", rack: "R05", uPosition: 12 },
         currentConfig: [ // Added temporary/old components to be removed
           { type: "内存", manufacturer: "Crucial", model: "8GB DDR4 2133MHz", quantity: 1, partNumber: "MEM-8G-2133-C", slot: "A1" },
           { type: "SATA", manufacturer: "WD", model: "Blue 1TB HDD", quantity: 1, partNumber: "HDD-1T-WD-BLUE", slot: "Bay 1" },
@@ -150,7 +150,7 @@ const rawWorkOrders: WorkOrder[] = [
         model: "HPE ProLiant DL380 Gen10",
         serialNumber: "SN-007",
         status: "待处理",
-        location: { module: "B2", rack: "R05", uPosition: 13 },
+        location: { module: "北京酒仙桥", rack: "R05", uPosition: 13 },
         currentConfig: [],
         targetConfig: [
             { type: "CPU", manufacturer: "Intel", model: "Xeon Silver 4210", quantity: 1, partNumber: "CPU-INT-4210", slot: "CPU 1"},
@@ -165,7 +165,7 @@ const rawWorkOrders: WorkOrder[] = [
         model: "HPE ProLiant DL380 Gen10",
         serialNumber: "SN-008",
         status: "待处理",
-        location: { module: "B2", rack: "R05", uPosition: 14 },
+        location: { module: "北京酒仙桥", rack: "R05", uPosition: 14 },
         currentConfig: [],
         targetConfig: [
             { type: "CPU", manufacturer: "Intel", model: "Xeon Silver 4210", quantity: 1, partNumber: "CPU-INT-4210", slot: "CPU 1"},
@@ -180,7 +180,7 @@ const rawWorkOrders: WorkOrder[] = [
         model: "HPE ProLiant DL380 Gen10",
         serialNumber: "SN-009",
         status: "待处理",
-        location: { module: "B2", rack: "R05", uPosition: 15 },
+        location: { module: "北京酒仙桥", rack: "R05", uPosition: 15 },
         currentConfig: [],
         targetConfig: [
             { type: "CPU", manufacturer: "Intel", model: "Xeon Silver 4210", quantity: 1, partNumber: "CPU-INT-4210", slot: "CPU 1"},
@@ -195,7 +195,7 @@ const rawWorkOrders: WorkOrder[] = [
         model: "HPE ProLiant DL380 Gen10",
         serialNumber: "SN-010",
         status: "待处理",
-        location: { module: "B2", rack: "R05", uPosition: 16 },
+        location: { module: "北京酒仙桥", rack: "R05", uPosition: 16 },
         currentConfig: [],
         targetConfig: [
             { type: "CPU", manufacturer: "Intel", model: "Xeon Silver 4210", quantity: 1, partNumber: "CPU-INT-4210", slot: "CPU 1"},
@@ -210,10 +210,10 @@ const rawWorkOrders: WorkOrder[] = [
     id: "wo-004",
     title: "为 Prometheus 集群升级存储",
     type: "服务器改造",
-    status: "已完成",
+    status: "已分配",
     initiator: employees[2],
-    createdAt: "2024-05-15",
-    assignedTo: [employees[3]],
+    createdAt: "2024-05-15 16:45",
+    assignedTo: [employees[0], employees[3]],
     devices: [
       // Device 1 (modified for '卸' and '装')
       {
@@ -222,7 +222,7 @@ const rawWorkOrders: WorkOrder[] = [
         model: "Supermicro 2029U-TR4",
         serialNumber: "SN-011",
         status: "待处理",
-        location: { module: "C3", rack: "R21", uPosition: 3 },
+        location: { module: "北京万国", rack: "R21", uPosition: 3 },
         currentConfig: [
           { type: "SATA", manufacturer: "Seagate", model: "Exos 4TB HDD", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 1" },
           { type: "SATA", manufacturer: "Seagate", model: "Exos 4TB HDD", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 2" },
@@ -240,7 +240,7 @@ const rawWorkOrders: WorkOrder[] = [
         model: "Supermicro 2029U-TR4",
         serialNumber: "SN-012",
         status: "待处理",
-        location: { module: "C3", rack: "R21", uPosition: 4 },
+        location: { module: "北京万国", rack: "R21", uPosition: 4 },
         currentConfig: [
           { type: "SATA", manufacturer: "Seagate", model: "Exos 4TB HDD", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 1" },
           { type: "SATA", manufacturer: "Seagate", model: "Exos 4TB HDD", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 2" },
@@ -255,7 +255,7 @@ const rawWorkOrders: WorkOrder[] = [
         model: "Supermicro 2029U-TR4",
         serialNumber: "SN-013",
         status: "待处理",
-        location: { module: "C3", rack: "R21", uPosition: 5 },
+        location: { module: "北京万国", rack: "R21", uPosition: 5 },
         currentConfig: [
           { type: "SATA", manufacturer: "Seagate", model: "Exos 4TB HDD", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 1" },
         ],
@@ -270,7 +270,7 @@ const rawWorkOrders: WorkOrder[] = [
         model: "Supermicro 2029U-TR4",
         serialNumber: "SN-014",
         status: "待处理",
-        location: { module: "C3", rack: "R21", uPosition: 6 },
+        location: { module: "北京万国", rack: "R21", uPosition: 6 },
         currentConfig: [
           { type: "SATA", manufacturer: "Seagate", model: "Exos 4TB HDD", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 1" },
         ],
@@ -284,7 +284,7 @@ const rawWorkOrders: WorkOrder[] = [
         model: "Supermicro 2029U-TR4",
         serialNumber: "SN-015",
         status: "待处理",
-        location: { module: "C3", rack: "R21", uPosition: 7 },
+        location: { module: "北京万国", rack: "R21", uPosition: 7 },
         currentConfig: [
           { type: "SATA", manufacturer: "Seagate", model: "Exos 4TB HDD", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 1" },
         ],
@@ -300,7 +300,7 @@ const rawWorkOrders: WorkOrder[] = [
     type: "服务器改造",
     status: "待处理",
     initiator: employees[1],
-    createdAt: "2024-05-22",
+    createdAt: "2024-05-22 11:00",
     assignedTo: [],
     devices: [
        // Device 1 (modified for '卸' and '装')
@@ -310,7 +310,7 @@ const rawWorkOrders: WorkOrder[] = [
         model: "Dell PowerEdge R630",
         serialNumber: "SN-016",
         status: "待处理",
-        location: { module: "A1", rack: "R18", uPosition: 30 },
+        location: { module: "天津武清", rack: "R18", uPosition: 30 },
         currentConfig: [
             { type: "CPU", manufacturer: "Intel", model: "Xeon E5-2620v3", quantity: 1, partNumber: "CPU-INT-2620V3", slot: "CPU 1"},
             { type: "内存", manufacturer: "Crucial", model: "16GB DDR4 2133MHz", quantity: 1, partNumber: "MEM-16G-2133-C", slot: "A1" },
@@ -329,7 +329,7 @@ const rawWorkOrders: WorkOrder[] = [
         model: "Dell PowerEdge R630",
         serialNumber: "SN-017",
         status: "待处理",
-        location: { module: "A1", rack: "R18", uPosition: 31 },
+        location: { module: "天津武清", rack: "R18", uPosition: 31 },
         currentConfig: [
             { type: "CPU", manufacturer: "Intel", model: "Xeon E5-2620v3", quantity: 1, partNumber: "CPU-INT-2620V3", slot: "CPU 1"},
             { type: "内存", manufacturer: "Crucial", model: "16GB DDR4 2133MHz", quantity: 1, partNumber: "MEM-16G-2133-C", slot: "A1" },
@@ -346,7 +346,7 @@ const rawWorkOrders: WorkOrder[] = [
         model: "Dell PowerEdge R630",
         serialNumber: "SN-018",
         status: "待处理",
-        location: { module: "A1", rack: "R18", uPosition: 32 },
+        location: { module: "天津武清", rack: "R18", uPosition: 32 },
         currentConfig: [
             { type: "CPU", manufacturer: "Intel", model: "Xeon E5-2620v3", quantity: 1, partNumber: "CPU-INT-2620V3", slot: "CPU 1"},
         ],
@@ -361,7 +361,7 @@ const rawWorkOrders: WorkOrder[] = [
         model: "Dell PowerEdge R630",
         serialNumber: "SN-019",
         status: "待处理",
-        location: { module: "A1", rack: "R18", uPosition: 33 },
+        location: { module: "天津武清", rack: "R18", uPosition: 33 },
         currentConfig: [
             { type: "CPU", manufacturer: "Intel", model: "Xeon E5-2620v3", quantity: 1, partNumber: "CPU-INT-2620V3", slot: "CPU 1"},
         ],
@@ -375,7 +375,7 @@ const rawWorkOrders: WorkOrder[] = [
         model: "Dell PowerEdge R630",
         serialNumber: "SN-020",
         status: "待处理",
-        location: { module: "A1", rack: "R18", uPosition: 34 },
+        location: { module: "天津武清", rack: "R18", uPosition: 34 },
         currentConfig: [
             { type: "CPU", manufacturer: "Intel", model: "Xeon E5-2620v3", quantity: 1, partNumber: "CPU-INT-2620V3", slot: "CPU 1"},
         ],

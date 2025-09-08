@@ -11,7 +11,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { ArrowRight, Server, Wrench, HardDrive, User, Calendar, Building2, UserSquare } from "lucide-react";
-import { Avatar, AvatarFallback } from './ui/avatar';
 
 type View = 
   | { name: 'ENGINEER_DASHBOARD' }
@@ -96,35 +95,30 @@ export function DatacenterOpsDemo({
                         <Card className="h-full flex flex-col transition-all duration-200 group-hover:shadow-lg group-hover:-translate-y-1">
                         <CardHeader>
                             <div className="flex justify-between items-start">
-                                <CardTitle className="text-lg font-bold pr-4">{order.title}</CardTitle>
+                                <CardTitle className="text-lg font-bold pr-4">{`[${order.id}] ${order.title}`}</CardTitle>
                                 <Badge className={cn("whitespace-nowrap text-xs flex-shrink-0", getStatusClass(order.status))}>
                                     {order.status}
                                 </Badge>
                             </div>
                         </CardHeader>
                         <CardContent className="flex-grow space-y-4">
-                           <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm text-muted-foreground">
-                                <div className="flex items-center gap-2">
-                                    <Building2 className="h-4 w-4" />
-                                    <span>{getModulesForOrder(order)}</span>
-                                </div>
+                           <div className="grid grid-cols-1 gap-2 text-sm text-muted-foreground">
                                 <div className="flex items-center gap-2">
                                     <UserSquare className="h-4 w-4" />
                                     <span>{order.initiator.name}</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <Calendar className="h-4 w-4" />
+                                    <Calendar className="h-4 w-4 ml-auto" />
                                     <span>{order.createdAt}</span>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <User className="h-4 w-4" />
+                                    <Building2 className="h-4 w-4" />
+                                    <span>{getModulesForOrder(order)}</span>
+                                    <User className="h-4 w-4 ml-auto" />
                                     <span>{order.assignedTo.map(e => e.name).join(', ')}</span>
                                 </div>
                            </div>
                         </CardContent>
-                        <CardFooter className="text-xs text-primary group-hover:text-accent-foreground font-medium flex items-center justify-end">
-                            查看详情
-                            <ArrowRight className="ml-2 h-3 w-3 transition-transform group-hover:translate-x-1" />
+                        <CardFooter className="flex items-center justify-end">
+                            <ArrowRight className="h-4 w-4 text-primary transition-transform group-hover:translate-x-1" />
                         </CardFooter>
                         </Card>
                     </div>
