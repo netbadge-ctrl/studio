@@ -168,7 +168,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
 
         <Card>
           <CardHeader className="px-4 py-2 bg-muted/50 rounded-t-lg">
-            <div className="flex items-baseline gap-2">
+            <div className="flex items-center gap-2">
                 <CardTitle className='flex items-center gap-2 text-base'>
                     <PackageSearch className="h-5 w-5 text-primary" />
                     所需备件
