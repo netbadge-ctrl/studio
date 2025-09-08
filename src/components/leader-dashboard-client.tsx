@@ -1,7 +1,8 @@
+
 "use client";
 
 import * as React from "react";
-import type { WorkOrder, Employee } from "@/lib/types";
+import type { WorkOrder, Employee, EmployeeWithStats } from "@/lib/types";
 import {
   Table,
   TableBody,
@@ -10,7 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { AssignWorkOrderDialog } from "./assign-work-order-dialog";
@@ -67,6 +68,25 @@ export function LeaderDashboardClient({
     );
   };
 
+  const employeesWithStats = React.useMemo((): EmployeeWithStats[] => {
+    const today = new Date().toISOString().slice(0, 10);
+    return employees.map(emp => {
+      const stats = workOrders.reduce((acc, order) => {
+        const isAssigned = order.assignedTo.some(a => a.id === emp.id);
+        if (isAssigned) {
+          if (order.status === '进行中' || order.status === '已分配') {
+            acc.activeOrders += 1;
+          } else if (order.status === '已完成' && order.completedAt?.startsWith(today)) {
+            acc.completedToday += 1;
+          }
+        }
+        return acc;
+      }, { activeOrders: 0, completedToday: 0 });
+      
+      return { ...emp, ...stats };
+    });
+  }, [employees, workOrders]);
+
   return (
     <>
       <Card>
@@ -122,7 +142,7 @@ export function LeaderDashboardClient({
           isOpen={isDialogOpen}
           setIsOpen={setIsDialogOpen}
           workOrder={selectedOrder}
-          employees={employees}
+          employees={employeesWithStats}
           onAssign={handleAssignment}
         />
       )}

@@ -8,6 +8,10 @@ export const employees: Employee[] = [
   { id: "emp-004", name: "戴安娜" },
 ];
 
+const today = new Date();
+const todayString = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
+
+
 const rawWorkOrders: WorkOrder[] = [
   {
     id: "000001",
@@ -260,9 +264,10 @@ const rawWorkOrders: WorkOrder[] = [
     id: "000003",
     title: "为 Prometheus 集群升级存储",
     type: "服务器改造",
-    status: "已分配",
+    status: "已完成",
     initiator: employees[2],
     createdAt: "2024-05-15 16:45",
+    completedAt: `${todayString} 11:00`,
     assignedTo: [employees[0], employees[3]],
     devices: [
       {
@@ -270,7 +275,7 @@ const rawWorkOrders: WorkOrder[] = [
         type: "服务器",
         model: "Supermicro 2029U-TR4",
         serialNumber: "210619HTCHXHR8000011",
-        status: "待处理",
+        status: "改配完成",
         location: { module: "北京万国", rack: "R21", uPosition: 3 },
         currentConfig: [
           { type: "SATA", manufacturer: "Seagate", model: "Exos 4TB HDD", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 1" },
@@ -290,7 +295,7 @@ const rawWorkOrders: WorkOrder[] = [
         type: "服务器",
         model: "Supermicro 2029U-TR4",
         serialNumber: "210619HTCHXHR8000012",
-        status: "改配中",
+        status: "改配完成",
         location: { module: "北京万国", rack: "R21", uPosition: 4 },
         currentConfig: [
           { type: "SATA", manufacturer: "Seagate", model: "Exos 4TB HDD", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 1" },
@@ -308,7 +313,7 @@ const rawWorkOrders: WorkOrder[] = [
         type: "服务器",
         model: "Supermicro 2029U-TR4",
         serialNumber: "210619HTCHXHR8000013",
-        status: "等待配置",
+        status: "改配完成",
         location: { module: "北京万国", rack: "R21", uPosition: 5 },
         currentConfig: [
           { type: "SATA", manufacturer: "Seagate", model: "Exos 4TB HDD", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 1" },
@@ -325,7 +330,7 @@ const rawWorkOrders: WorkOrder[] = [
         type: "服务器",
         model: "Supermicro 2029U-TR4",
         serialNumber: "210619HTCHXHR8000014",
-        status: "待检测",
+        status: "改配完成",
         location: { module: "北京万国", rack: "R21", uPosition: 6 },
         currentConfig: [
           { type: "SATA", manufacturer: "Seagate", model: "Exos 4TB HDD", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 1" },
@@ -342,7 +347,7 @@ const rawWorkOrders: WorkOrder[] = [
         type: "服务器",
         model: "Supermicro 2029U-TR4",
         serialNumber: "210619HTCHXHR8000015",
-        status: "检测异常",
+        status: "改配完成",
         location: { module: "北京万国", rack: "R21", uPosition: 7 },
         currentConfig: [
           { type: "SATA", manufacturer: "Seagate", model: "Exos 4TB HDD", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 1" },
@@ -495,6 +500,28 @@ const rawWorkOrders: WorkOrder[] = [
         ],
       },
     ],
+  },
+  {
+    id: "000005",
+    title: "紧急修复交换机故障",
+    type: "交换机维护",
+    status: "已完成",
+    initiator: employees[3],
+    createdAt: "2024-05-23 09:00",
+    completedAt: `${todayString} 14:30`,
+    assignedTo: [employees[1]],
+    devices: [],
+  },
+  {
+    id: "000006",
+    title: "例行数据中心巡检",
+    type: "服务器改造",
+    status: "已完成",
+    initiator: employees[2],
+    createdAt: "2024-05-23 10:00",
+    completedAt: `${todayString} 16:00`,
+    assignedTo: [employees[1]],
+    devices: [],
   },
 ];
 

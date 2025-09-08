@@ -38,4 +38,10 @@ export type WorkOrder = {
   devices: Device[];
   initiator: Employee;
   createdAt: string;
+  completedAt?: string; // e.g., "2024-05-23 14:00"
+};
+
+export type EmployeeWithStats = Employee & {
+  activeOrders: number;
+  completedToday: number;
 };
