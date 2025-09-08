@@ -341,8 +341,8 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
                               <div className="flex items-center gap-3 w-full">
                                   {getDeviceIcon(device.type)}
                                   <div className='text-left flex-grow'>
-                                      <p className="text-sm font-semibold">{device.model}</p>
-                                      <p className='text-xs text-muted-foreground font-mono'>{device.serialNumber}</p>
+                                      <p className="font-mono text-sm font-semibold">{device.serialNumber}</p>
+                                      <p className='text-xs text-muted-foreground'>{device.model}</p>
                                   </div>
                                   <Badge className={cn("whitespace-nowrap text-xs", getStatusBadgeClass(device.status))}>
                                      {device.status}
