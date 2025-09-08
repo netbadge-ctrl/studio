@@ -23,7 +23,7 @@ const rawWorkOrders: WorkOrder[] = [
         id: "dev-001",
         type: "服务器",
         model: "Dell PowerEdge R740",
-        serialNumber: "SN-001",
+        serialNumber: "210619HTCHXHR8000001",
         status: "待处理",
         location: { module: "天津武清", rack: "R12", uPosition: 24 },
         currentConfig: [
@@ -46,7 +46,7 @@ const rawWorkOrders: WorkOrder[] = [
         id: "dev-002",
         type: "服务器",
         model: "Dell PowerEdge R740",
-        serialNumber: "SN-002",
+        serialNumber: "210619HTCHXHR8000002",
         status: "待处理",
         location: { module: "天津武清", rack: "R12", uPosition: 25 },
         currentConfig: [
@@ -64,7 +64,7 @@ const rawWorkOrders: WorkOrder[] = [
         id: "dev-003",
         type: "服务器",
         model: "Dell PowerEdge R740",
-        serialNumber: "SN-003",
+        serialNumber: "210619HTCHXHR8000003",
         status: "待处理",
         currentConfig: [
           { type: "内存", manufacturer: "Hynix", model: "16GB DDR4 2400MHz", quantity: 1, partNumber: "MEM-16G-2400-A", slot: "A1" },
@@ -79,7 +79,7 @@ const rawWorkOrders: WorkOrder[] = [
         id: "dev-004",
         type: "服务器",
         model: "Dell PowerEdge R740",
-        serialNumber: "SN-004",
+        serialNumber: "210619HTCHXHR8000004",
         status: "待处理",
         location: { module: "天津武清", rack: "R12", uPosition: 27 },
         currentConfig: [
@@ -95,7 +95,7 @@ const rawWorkOrders: WorkOrder[] = [
         id: "dev-005",
         type: "服务器",
         model: "Dell PowerEdge R740",
-        serialNumber: "SN-005",
+        serialNumber: "210619HTCHXHR8000005",
         status: "待处理",
         currentConfig: [
           { type: "内存", manufacturer: "Hynix", model: "16GB DDR4 2400MHz", quantity: 1, partNumber: "MEM-16G-2400-A", slot: "A1" },
@@ -122,7 +122,7 @@ const rawWorkOrders: WorkOrder[] = [
         id: "dev-006",
         type: "服务器",
         model: "HPE ProLiant DL380 Gen10",
-        serialNumber: "SN-006",
+        serialNumber: "210619HTCHXHR8000006",
         status: "待处理",
         location: { module: "北京酒仙桥", rack: "R05", uPosition: 12 },
         currentConfig: [ // Added temporary/old components to be removed
@@ -146,7 +146,7 @@ const rawWorkOrders: WorkOrder[] = [
         id: "dev-007",
         type: "服务器",
         model: "HPE ProLiant DL380 Gen10",
-        serialNumber: "SN-007",
+        serialNumber: "210619HTCHXHR8000007",
         status: "待处理",
         location: { module: "北京酒仙桥", rack: "R05", uPosition: 13 },
         currentConfig: [],
@@ -161,7 +161,7 @@ const rawWorkOrders: WorkOrder[] = [
         id: "dev-008",
         type: "服务器",
         model: "HPE ProLiant DL380 Gen10",
-        serialNumber: "SN-008",
+        serialNumber: "210619HTCHXHR8000008",
         status: "待处理",
         location: { module: "北京酒仙桥", rack: "R05", uPosition: 14 },
         currentConfig: [],
@@ -176,7 +176,7 @@ const rawWorkOrders: WorkOrder[] = [
         id: "dev-009",
         type: "服务器",
         model: "HPE ProLiant DL380 Gen10",
-        serialNumber: "SN-009",
+        serialNumber: "210619HTCHXHR8000009",
         status: "待处理",
         location: { module: "北京酒仙桥", rack: "R05", uPosition: 15 },
         currentConfig: [],
@@ -191,7 +191,7 @@ const rawWorkOrders: WorkOrder[] = [
         id: "dev-010",
         type: "服务器",
         model: "HPE ProLiant DL380 Gen10",
-        serialNumber: "SN-010",
+        serialNumber: "210619HTCHXHR8000010",
         status: "待处理",
         currentConfig: [],
         targetConfig: [
@@ -217,7 +217,7 @@ const rawWorkOrders: WorkOrder[] = [
         id: "dev-011",
         type: "服务器",
         model: "Supermicro 2029U-TR4",
-        serialNumber: "SN-011",
+        serialNumber: "210619HTCHXHR8000011",
         status: "待处理",
         location: { module: "北京万国", rack: "R21", uPosition: 3 },
         currentConfig: [
@@ -235,7 +235,7 @@ const rawWorkOrders: WorkOrder[] = [
         id: "dev-012",
         type: "服务器",
         model: "Supermicro 2029U-TR4",
-        serialNumber: "SN-012",
+        serialNumber: "210619HTCHXHR8000012",
         status: "待处理",
         currentConfig: [
           { type: "SATA", manufacturer: "Seagate", model: "Exos 4TB HDD", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 1" },
@@ -249,7 +249,7 @@ const rawWorkOrders: WorkOrder[] = [
         id: "dev-013",
         type: "服务器",
         model: "Supermicro 2029U-TR4",
-        serialNumber: "SN-013",
+        serialNumber: "210619HTCHXHR8000013",
         status: "待处理",
         location: { module: "北京万国", rack: "R21", uPosition: 5 },
         currentConfig: [
@@ -264,7 +264,7 @@ const rawWorkOrders: WorkOrder[] = [
         id: "dev-014",
         type: "服务器",
         model: "Supermicro 2029U-TR4",
-        serialNumber: "SN-014",
+        serialNumber: "210619HTCHXHR8000014",
         status: "待处理",
         location: { module: "北京万国", rack: "R21", uPosition: 6 },
         currentConfig: [
@@ -278,7 +278,7 @@ const rawWorkOrders: WorkOrder[] = [
         id: "dev-015",
         type: "服务器",
         model: "Supermicro 2029U-TR4",
-        serialNumber: "SN-015",
+        serialNumber: "210619HTCHXHR8000015",
         status: "待处理",
         location: { module: "北京万国", rack: "R21", uPosition: 7 },
         currentConfig: [
@@ -304,7 +304,7 @@ const rawWorkOrders: WorkOrder[] = [
         id: "dev-016",
         type: "服务器",
         model: "Dell PowerEdge R630",
-        serialNumber: "SN-016",
+        serialNumber: "210619HTCHXHR8000016",
         status: "待处理",
         location: { module: "天津武清", rack: "R18", uPosition: 30 },
         currentConfig: [
@@ -323,7 +323,7 @@ const rawWorkOrders: WorkOrder[] = [
         id: "dev-017",
         type: "服务器",
         model: "Dell PowerEdge R630",
-        serialNumber: "SN-017",
+        serialNumber: "210619HTCHXHR8000017",
         status: "待处理",
         location: { module: "天津武清", rack: "R18", uPosition: 31 },
         currentConfig: [
@@ -340,7 +340,7 @@ const rawWorkOrders: WorkOrder[] = [
         id: "dev-018",
         type: "服务器",
         model: "Dell PowerEdge R630",
-        serialNumber: "SN-018",
+        serialNumber: "210619HTCHXHR8000018",
         status: "待处理",
         currentConfig: [
             { type: "CPU", manufacturer: "Intel", model: "Xeon E5-2620v3", quantity: 1, partNumber: "CPU-INT-2620V3", slot: "CPU 1"},
@@ -354,7 +354,7 @@ const rawWorkOrders: WorkOrder[] = [
         id: "dev-019",
         type: "服务器",
         model: "Dell PowerEdge R630",
-        serialNumber: "SN-019",
+        serialNumber: "210619HTCHXHR8000019",
         status: "待处理",
         location: { module: "天津武清", rack: "R18", uPosition: 33 },
         currentConfig: [
@@ -368,7 +368,7 @@ const rawWorkOrders: WorkOrder[] = [
         id: "dev-020",
         type: "服务器",
         model: "Dell PowerEdge R630",
-        serialNumber: "SN-020",
+        serialNumber: "210619HTCHXHR8000020",
         status: "待处理",
         location: { module: "天津武清", rack: "R18", uPosition: 34 },
         currentConfig: [
