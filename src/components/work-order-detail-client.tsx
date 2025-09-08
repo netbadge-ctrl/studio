@@ -74,12 +74,12 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
 
       if (aIsOnline && !bIsOnline) return 1;
       if (!aIsOnline && bIsOnline) return -1;
-      if (!aIsOnline && !bIsOnline) return a.serialNumber.localeCompare(b.serialNumber);
-
-      // Both online, sort by location
-      const locA = formatLocation(a.location!);
-      const locB = formatLocation(b.location!);
-      return locA.localeCompare(locB);
+      
+      if(a.location && b.location) {
+        return formatLocation(a.location).localeCompare(formatLocation(b.location));
+      }
+      
+      return a.serialNumber.localeCompare(b.serialNumber);
     });
   }, [workOrder.devices]);
 
@@ -166,8 +166,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>设备</TableHead>
-                      <TableHead>位置</TableHead>
+                      <TableHead>设备与位置</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -176,17 +175,17 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
                         <TableCell>
                           <div className="flex items-center gap-3">
                             {getDeviceIcon(device.type)}
-                            <div>
+                            <div className="flex flex-col">
                                 <p className="font-mono text-sm text-foreground">{device.serialNumber}</p>
+                                <p className="font-mono text-xs text-muted-foreground">
+                                   {device.location ? (
+                                        formatLocation(device.location)
+                                    ) : (
+                                        <span className="text-muted-foreground">线下设备</span>
+                                    )}
+                                </p>
                             </div>
                           </div>
-                        </TableCell>
-                        <TableCell className="font-mono text-xs">
-                           {device.location ? (
-                                formatLocation(device.location)
-                            ) : (
-                                <span className="text-muted-foreground">线下设备</span>
-                            )}
                         </TableCell>
                       </TableRow>
                     ))}
