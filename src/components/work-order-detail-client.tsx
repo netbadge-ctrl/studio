@@ -59,20 +59,22 @@ const getDeviceIcon = (type: WorkOrder['devices'][0]['type']) => {
 const formatLocation = (location: NonNullable<WorkOrder['devices'][0]['location']>) => {
     const modulePrefix = location.module.includes('北京') ? 'BJ' : 'TJ';
     const rackNumber = location.rack.replace('R', '').padStart(2, '0');
-    const uPosition = `U${location.uPosition.toString().padStart(2, '0')}`;
     
     // Construct a consistent, yet dynamic rack identifier based on the mock data
     const rackIdentifier = `${modulePrefix}DC01-R${rackNumber}F01-JC-${rackNumber}-1`;
 
-    return `${rackIdentifier} / ${uPosition}`;
+    return `${rackIdentifier} / U${location.uPosition}`;
 };
 
 export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
   const sortedDevices = React.useMemo(() => {
     return [...workOrder.devices].sort((a, b) => {
-      if (!a.location && b.location) return -1; // a (offline) comes first
-      if (a.location && !b.location) return 1;  // b (offline) comes first
-      if (!a.location && !b.location) return a.serialNumber.localeCompare(b.serialNumber); // both offline, sort by SN
+      const aIsOnline = !!a.location;
+      const bIsOnline = !!b.location;
+
+      if (aIsOnline && !bIsOnline) return 1;
+      if (!aIsOnline && bIsOnline) return -1;
+      if (!aIsOnline && !bIsOnline) return a.serialNumber.localeCompare(b.serialNumber);
 
       // Both online, sort by location
       const locA = formatLocation(a.location!);
@@ -152,9 +154,12 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
         <CardContent className="grid md:grid-cols-2 gap-6">
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">
-                设备清单
-              </CardTitle>
+              <div className="flex items-baseline gap-2">
+                <CardTitle className="text-lg">
+                  设备清单
+                </CardTitle>
+                <CardDescription>请提前准备好线下设备</CardDescription>
+              </div>
             </CardHeader>
             <CardContent>
               <ScrollArea className="h-96">
