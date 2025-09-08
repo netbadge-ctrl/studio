@@ -168,13 +168,13 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
 
         <Card>
           <CardHeader className="px-4 py-2 bg-muted/50 rounded-t-lg">
-            <CardTitle className='flex justify-between items-center text-base'>
-              <span className="flex items-center gap-2">
-                <PackageSearch className="h-5 w-5 text-primary" />
-                所需备件
-              </span>
-            </CardTitle>
-            <CardDescription className="text-xs pt-1">请按备件清单领取备件</CardDescription>
+            <div className="flex items-baseline gap-2">
+                <CardTitle className='flex items-center gap-2 text-base'>
+                    <PackageSearch className="h-5 w-5 text-primary" />
+                    所需备件
+                </CardTitle>
+                <CardDescription className="text-xs text-muted-foreground">请按备件清单领取备件</CardDescription>
+            </div>
           </CardHeader>
           <CardContent className="p-4">
             <ScrollArea className="h-80">
