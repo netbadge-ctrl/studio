@@ -144,7 +144,7 @@ export function DatacenterOpsDemo({
                     <div onClick={() => handleOrderClick(order)} key={order.id} className="group cursor-pointer">
                         <Card className="flex flex-col transition-all duration-200 group-hover:shadow-lg group-hover:-translate-y-1">
                         <CardHeader>
-                            <CardTitle className="text-lg font-bold pr-4">{`[${order.id}] ${order.title}`}</CardTitle>
+                            <CardTitle className="text-base font-semibold pr-4">{`[${order.id}] ${order.title}`}</CardTitle>
                         </CardHeader>
                         <CardContent className="flex-grow space-y-4">
                            <div className="grid grid-cols-1 gap-3 text-sm text-muted-foreground">
