@@ -177,22 +177,23 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
             </div>
           </CardHeader>
           <CardContent className="p-4">
-            <ScrollArea>
               {requiredComponents.length > 0 ? (
-                <ul className="space-y-2 max-h-80 overflow-y-auto">
-                  {requiredComponents.map(({ component: comp, quantity }) => (
-                    <li key={comp.partNumber} className="flex items-center justify-between gap-x-4 py-2 border-b last:border-b-0">
-                      <div className="flex-grow">
-                        <p className='font-mono text-sm text-foreground font-semibold'>{comp.model}</p>
-                        <p className='text-xs text-muted-foreground'>{comp.type} / {comp.manufacturer}</p>
-                      </div>
-                      <div className='flex flex-col items-end flex-shrink-0'>
-                         <span className="font-mono text-sm text-foreground font-semibold">x {quantity}</span>
-                        <p className='text-xs font-mono text-muted-foreground mt-1'>仓库盒号: {comp.partNumber}</p>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
+                <ScrollArea className="max-h-80">
+                  <ul className="space-y-2 pr-4">
+                    {requiredComponents.map(({ component: comp, quantity }) => (
+                      <li key={comp.partNumber} className="flex items-center justify-between gap-x-4 py-2 border-b last:border-b-0">
+                        <div className="flex-grow">
+                          <p className='font-mono text-sm text-foreground font-semibold'>{comp.model}</p>
+                          <p className='text-xs text-muted-foreground'>{comp.type} / {comp.manufacturer}</p>
+                        </div>
+                        <div className='flex flex-col items-end flex-shrink-0'>
+                           <span className="font-mono text-sm text-foreground font-semibold">x {quantity}</span>
+                          <p className='text-xs font-mono text-muted-foreground mt-1'>仓库盒号: {comp.partNumber}</p>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </ScrollArea>
               ) : (
                 <div className="flex items-center justify-center h-full">
                   <p className="text-sm text-muted-foreground text-center py-4">
@@ -200,7 +201,6 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
                   </p>
                 </div>
               )}
-            </ScrollArea>
           </CardContent>
         </Card>
       </div>
