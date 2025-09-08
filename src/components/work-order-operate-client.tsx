@@ -114,8 +114,7 @@ function DeviceOperation({
 
   const renderActionButton = () => {
     let mainAction: React.ReactNode = null;
-    let secondaryAction: React.ReactNode = null;
-
+   
     switch (device.status) {
       case '改配中':
         mainAction = (
@@ -149,29 +148,14 @@ function DeviceOperation({
         );
         break;
     }
-    
-    if (['改配中', '等待配置', '待检测'].includes(device.status)) {
-        secondaryAction = (
-            <Button
-                variant="outline"
-                size="lg"
-                className="w-full"
-                onClick={() => onStatusChange('检测异常')}
-            >
-                <AlertTriangle className='mr-2 h-5 w-5 text-destructive' />
-                标记异常
-            </Button>
-        )
-    }
 
-    if (!mainAction && !secondaryAction) {
+    if (!mainAction) {
         return null;
     }
 
     return (
         <div className="space-y-4">
             {mainAction}
-            {secondaryAction}
         </div>
     )
   };
