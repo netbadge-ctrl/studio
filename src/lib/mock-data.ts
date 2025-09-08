@@ -36,9 +36,11 @@ const rawWorkOrders: WorkOrder[] = [
         targetConfig: [
           { type: "内存", manufacturer: "Samsung", model: "32GB DDR4 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A1" },
           { type: "内存", manufacturer: "Samsung", model: "32GB DDR4 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A2" },
-          { type: "内存", manufacturer: "Samsung", model: "32GB DDR4 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A3" },
+          { type: "内存", manufacturer: "Samsung", model: "32GB DDR4 3200MHz", quantity:1, partNumber: "MEM-32G-3200-B", slot: "A3" },
           { type: "内存", manufacturer: "Samsung", model: "32GB DDR4 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A4" },
           { type: "SSD", manufacturer: "Intel", model: "P4510 1TB NVMe SSD", quantity: 1, partNumber: "SSD-1T-I-P4510", slot: "Disk 0" },
+          { type: "网卡", manufacturer: "Mellanox", model: "ConnectX-5 25GbE", quantity: 1, partNumber: "NIC-MEL-CX5", slot: "PCIe 1" },
+          { type: "PSU", manufacturer: "Dell", model: "750W Platinum PSU", quantity: 1, partNumber: "PSU-DELL-750W", slot: "PSU 1" }
         ],
       },
        // Cloned devices to meet the 5+ requirement
@@ -228,6 +230,9 @@ const rawWorkOrders: WorkOrder[] = [
           { type: "SSD", manufacturer: "Samsung", model: "PM883 960GB SSD", quantity: 1, partNumber: "SSD-960G-S-PM883", slot: "Bay 1" },
           { type: "SSD", manufacturer: "Samsung", model: "PM883 960GB SSD", quantity: 1, partNumber: "SSD-960G-S-PM883", slot: "Bay 2" },
           { type: "SSD", manufacturer: "Samsung", model: "PM883 960GB SSD", quantity: 1, partNumber: "SSD-960G-S-PM883", slot: "Bay 3" },
+          { type: "内存", manufacturer: "Hynix", model: "16GB DDR4 2400MHz", quantity: 1, partNumber: "MEM-16G-2400-A", slot: "B1" },
+          { type: "网卡", manufacturer: "Intel", model: "X520-DA2 10GbE", quantity: 1, partNumber: "NIC-INT-X520", slot: "PCIe 3" },
+          { type: "PSU", manufacturer: "Supermicro", model: "1000W Titanium PSU", quantity: 1, partNumber: "PSU-SM-1000W", slot: "PSU 2" },
         ],
       },
       // Cloned devices
@@ -316,6 +321,8 @@ const rawWorkOrders: WorkOrder[] = [
             { type: "CPU", manufacturer: "Intel", model: "Xeon E5-2650v4", quantity: 1, partNumber: "CPU-INT-2650V4", slot: "CPU 2"},
             { type: "内存", manufacturer: "Samsung", model: "32GB DDR4 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A1" },
             { type: "内存", manufacturer: "Samsung", model: "32GB DDR4 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A2" },
+            { type: "SSD", manufacturer: "Intel", model: "P4510 1TB NVMe SSD", quantity: 1, partNumber: "SSD-1T-I-P4510", slot: "NVMe 0" },
+            { type: "网卡", manufacturer: "Mellanox", model: "ConnectX-5 25GbE", quantity: 1, partNumber: "NIC-MEL-CX5", slot: "PCIe 1" },
         ],
       },
        // Device 2 (modified for '卸' and '装')
@@ -384,3 +391,5 @@ const rawWorkOrders: WorkOrder[] = [
 
 
 export const workOrders: WorkOrder[] = rawWorkOrders;
+
+    
