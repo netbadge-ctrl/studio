@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Layers, Server as ServerIcon, HardDrive, MemoryStick, Cpu, ArrowUp, ArrowDown, Network, Video, Image as ImageIcon, QrCode, CheckCircle, AlertTriangle } from 'lucide-react';
+import { Layers, Server as ServerIcon, ArrowUp, ArrowDown, Video, Image as ImageIcon, QrCode, CheckCircle, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 // import { useRouter } from 'next/navigation';
@@ -147,10 +147,7 @@ function DeviceOperation({
         {operationDetails.length > 0 && (
           <Card>
               <CardHeader>
-                  <div>
-                    <CardTitle className='text-xl'>配件操作明细</CardTitle>
-                    <CardDescription>根据下表完成配件的安装与卸载。</CardDescription>
-                  </div>
+                  <CardTitle className='text-xl'>配件按照下表操作</CardTitle>
               </CardHeader>
               <CardContent>
                   <Table>
