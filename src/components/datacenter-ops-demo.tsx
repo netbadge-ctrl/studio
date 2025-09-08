@@ -99,10 +99,7 @@ export function DatacenterOpsDemo({
         
         return (
             <div>
-                 <header className="flex justify-between items-center mb-6">
-                    <p className="text-muted-foreground">
-                        以下是分配给您的任务。
-                    </p>
+                 <header className="flex justify-end items-center mb-6">
                     <Button onClick={() => navigateTo({ name: 'LEADER_DASHBOARD' })}>切换到主管视图</Button>
                 </header>
                 <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-2">
