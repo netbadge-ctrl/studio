@@ -60,6 +60,8 @@ const rawWorkOrders: WorkOrder[] = [
           { type: "内存", manufacturer: "Samsung", model: "32GB DDR4 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A1" },
           { type: "内存", manufacturer: "Samsung", model: "32GB DDR4 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A2" },
           { type: "SSD", manufacturer: "Intel", model: "P4510 1TB NVMe SSD", quantity: 1, partNumber: "SSD-1T-I-P4510", slot: "Disk 0" },
+          { type: "CPU", manufacturer: "Intel", model: "Xeon Gold 6248R", quantity: 1, partNumber: "CPU-INTEL-6248R", slot: "CPU 1" },
+          { type: "PSU", manufacturer: "Dell", model: "1100W Platinum PSU", quantity: 1, partNumber: "PSU-DELL-1100W", slot: "PSU 1" },
         ],
       },
       {
@@ -75,6 +77,8 @@ const rawWorkOrders: WorkOrder[] = [
         targetConfig: [
           { type: "内存", manufacturer: "Samsung", model: "32GB DDR4 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A1" },
           { type: "SSD", manufacturer: "Intel", model: "P4510 1TB NVMe SSD", quantity: 1, partNumber: "SSD-1T-I-P4510", slot: "Disk 0" },
+          { type: "网卡", manufacturer: "Intel", model: "X710-DA2 10GbE", quantity: 1, partNumber: "NIC-INTEL-X710", slot: "PCIe 2" },
+          { type: "CPU", manufacturer: "Intel", model: "Xeon Gold 5218R", quantity: 1, partNumber: "CPU-INTEL-5218R", slot: "CPU 1" },
         ],
       },
       {
@@ -91,6 +95,8 @@ const rawWorkOrders: WorkOrder[] = [
         targetConfig: [
           { type: "内存", manufacturer: "Samsung", model: "32GB DDR4 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A1" },
           { type: "SSD", manufacturer: "Intel", model: "P4510 1TB NVMe SSD", quantity: 1, partNumber: "SSD-1T-I-P4510", slot: "Disk 0" },
+          { type: "网卡", manufacturer: "Broadcom", model: "BCM57414 25GbE", quantity: 1, partNumber: "NIC-BCM-57414", slot: "PCIe 1" },
+          { type: "PSU", manufacturer: "Dell", model: "750W Platinum PSU", quantity: 1, partNumber: "PSU-DELL-750W", slot: "PSU 2" },
         ],
       },
       {
@@ -106,6 +112,8 @@ const rawWorkOrders: WorkOrder[] = [
         targetConfig: [
           { type: "内存", manufacturer: "Samsung", model: "32GB DDR4 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A1" },
           { type: "SSD", manufacturer: "Intel", model: "P4510 1TB NVMe SSD", quantity: 1, partNumber: "SSD-1T-I-P4510", slot: "Disk 0" },
+          { type: "CPU", manufacturer: "Intel", model: "Xeon Gold 6230", quantity: 1, partNumber: "CPU-INTEL-6230", slot: "CPU 1" },
+          { type: "CPU", manufacturer: "Intel", model: "Xeon Gold 6230", quantity: 1, partNumber: "CPU-INTEL-6230", slot: "CPU 2" },
         ],
       },
     ],
@@ -248,6 +256,9 @@ const rawWorkOrders: WorkOrder[] = [
         ],
         targetConfig: [
           { type: "SSD", manufacturer: "Samsung", model: "PM883 960GB SSD", quantity: 1, partNumber: "SSD-960G-S-PM883", slot: "Bay 1" },
+          { type: "CPU", manufacturer: "AMD", model: "Epyc 7282", quantity: 1, partNumber: "CPU-AMD-7282", slot: "CPU 1" },
+          { type: "内存", manufacturer: "Micron", model: "32GB DDR4 2933MHz", quantity: 1, partNumber: "MEM-32G-2933-M", slot: "A1" },
+          { type: "网卡", manufacturer: "Chelsio", model: "T6225-CR 25GbE", quantity: 1, partNumber: "NIC-CHEL-T6225", slot: "PCIe 1" },
         ],
       },
        {
@@ -263,6 +274,8 @@ const rawWorkOrders: WorkOrder[] = [
         targetConfig: [
           { type: "SSD", manufacturer: "Samsung", model: "PM883 960GB SSD", quantity: 1, partNumber: "SSD-960G-S-PM883", slot: "Bay 1" },
           { type: "SSD", manufacturer: "Samsung", model: "PM883 960GB SSD", quantity: 1, partNumber: "SSD-960G-S-PM883", slot: "Bay 2" },
+          { type: "CPU", manufacturer: "AMD", model: "Epyc 7302", quantity: 1, partNumber: "CPU-AMD-7302", slot: "CPU 1" },
+          { type: "内存", manufacturer: "Micron", model: "16GB DDR4 2933MHz", quantity: 1, partNumber: "MEM-16G-2933-M", slot: "B1" },
         ],
       },
        {
@@ -277,6 +290,9 @@ const rawWorkOrders: WorkOrder[] = [
         ],
         targetConfig: [
           { type: "SSD", manufacturer: "Samsung", model: "PM883 960GB SSD", quantity: 1, partNumber: "SSD-960G-S-PM883", slot: "Bay 1" },
+          { type: "CPU", manufacturer: "AMD", model: "Epyc 7402", quantity: 1, partNumber: "CPU-AMD-7402", slot: "CPU 1" },
+          { type: "内存", manufacturer: "Micron", model: "64GB DDR4 3200MHz", quantity: 1, partNumber: "MEM-64G-3200-M", slot: "C1" },
+          { type: "网卡", manufacturer: "Intel", model: "E810-CQDA2 100GbE", quantity: 1, partNumber: "NIC-INTEL-E810", slot: "PCIe 2" },
         ],
       },
        {
@@ -291,6 +307,9 @@ const rawWorkOrders: WorkOrder[] = [
         ],
         targetConfig: [
           { type: "SSD", manufacturer: "Samsung", model: "PM883 960GB SSD", quantity: 1, partNumber: "SSD-960G-S-PM883", slot: "Bay 1" },
+          { type: "CPU", manufacturer: "AMD", model: "Epyc 7542", quantity: 1, partNumber: "CPU-AMD-7542", slot: "CPU 1" },
+          { type: "内存", manufacturer: "Micron", model: "32GB DDR4 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-M", slot: "D1" },
+          { type: "PSU", manufacturer: "Supermicro", model: "1200W Titanium PSU", quantity: 1, partNumber: "PSU-SM-1200W", slot: "PSU 1" },
         ],
       },
     ],
@@ -340,6 +359,8 @@ const rawWorkOrders: WorkOrder[] = [
         targetConfig: [
             { type: "CPU", manufacturer: "Intel", model: "Xeon E5-2650v4", quantity: 1, partNumber: "CPU-INT-2650V4", slot: "CPU 1"},
             { type: "内存", manufacturer: "Samsung", model: "32GB DDR4 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A1" },
+            { type: "网卡", manufacturer: "Mellanox", model: "ConnectX-6 100GbE", quantity: 1, partNumber: "NIC-MEL-CX6", slot: "PCIe 2" },
+            { type: "SSD", manufacturer: "Samsung", model: "PM9A3 960GB NVMe", quantity: 1, partNumber: "SSD-960G-S-PM9A3", slot: "NVMe 1" },
         ],
       },
       // Cloned devices
@@ -355,6 +376,8 @@ const rawWorkOrders: WorkOrder[] = [
         targetConfig: [
             { type: "CPU", manufacturer: "Intel", model: "Xeon E5-2650v4", quantity: 1, partNumber: "CPU-INT-2650V4", slot: "CPU 1"},
             { type: "内存", manufacturer: "Samsung", model: "32GB DDR4 3200MHz", quantity: 1, partNumber: "MEM-32G-3200-B", slot: "A1" },
+            { type: "PSU", manufacturer: "Dell", model: "495W Platinum PSU", quantity: 1, partNumber: "PSU-DELL-495W", slot: "PSU 1" },
+            { type: "SSD", manufacturer: "Kioxia", model: "CD6 800GB NVMe", quantity: 1, partNumber: "SSD-800G-K-CD6", slot: "NVMe 0" },
         ],
       },
       {
@@ -369,6 +392,9 @@ const rawWorkOrders: WorkOrder[] = [
         ],
         targetConfig: [
             { type: "CPU", manufacturer: "Intel", model: "Xeon E5-2650v4", quantity: 1, partNumber: "CPU-INT-2650V4", slot: "CPU 1"},
+            { type: "内存", manufacturer: "Samsung", model: "64GB DDR4 3200MHz", quantity: 1, partNumber: "MEM-64G-3200-S", slot: "B1" },
+            { type: "网卡", manufacturer: "Intel", model: "X520-DA2 10GbE", quantity: 1, partNumber: "NIC-INT-X520", slot: "PCIe 1" },
+            { type: "SSD", manufacturer: "Micron", model: "7400 Pro 960GB NVMe", quantity: 1, partNumber: "SSD-960G-M-7400P", slot: "NVMe 2" },
         ],
       },
       {
@@ -383,6 +409,9 @@ const rawWorkOrders: WorkOrder[] = [
         ],
         targetConfig: [
             { type: "CPU", manufacturer: "Intel", model: "Xeon E5-2650v4", quantity: 1, partNumber: "CPU-INT-2650V4", slot: "CPU 1"},
+            { type: "内存", manufacturer: "Hynix", model: "32GB DDR4 2933MHz", quantity: 1, partNumber: "MEM-32G-2933-H", slot: "C1" },
+            { type: "SSD", manufacturer: "Intel", model: "P5510 3.84TB NVMe", quantity: 1, partNumber: "SSD-3.84T-I-P5510", slot: "NVMe 3" },
+            { type: "PSU", manufacturer: "Dell", model: "750W Platinum PSU", quantity: 1, partNumber: "PSU-DELL-750W", slot: "PSU 2" },
         ],
       },
     ],

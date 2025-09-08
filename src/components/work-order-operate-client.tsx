@@ -7,10 +7,9 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Layers, Server as ServerIcon, ArrowUp, ArrowDown, Video, Image as ImageIcon, QrCode, CheckCircle, AlertTriangle, Search } from 'lucide-react';
+import { Layers, Server as ServerIcon, ArrowUp, ArrowDown, Video, Image as ImageIcon, QrCode, CheckCircle, AlertTriangle, Search, GanttChartSquare } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
-// import { useRouter } from 'next/navigation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Image from 'next/image';
 import { ScanDeviceDialog } from './scan-device-dialog';
@@ -32,14 +31,16 @@ const getStatusBadgeClass = (status: DeviceStatus) => {
     switch (status) {
       case '待处理':
         return 'bg-gray-100 text-gray-800 border-gray-200';
-      case '开始改配':
+      case '改配中':
         return 'bg-blue-100 text-primary border-blue-200';
-      case '配置带外':
+      case '等待配置':
         return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case '结单检测':
+      case '待检测':
+        return 'bg-purple-100 text-purple-800 border-purple-200';
+      case '改配完成':
         return 'bg-green-100 text-green-800 border-green-200';
       case '检测异常':
-        return 'bg-orange-100 text-orange-800 border-orange-200'; // Changed for better visibility
+        return 'bg-orange-100 text-orange-800 border-orange-200';
       default:
         return 'bg-muted text-muted-foreground';
     }
@@ -112,34 +113,34 @@ function DeviceOperation({
 
   const renderActionButton = () => {
     switch (device.status) {
-      case '开始改配':
+      case '改配中':
         return (
           <Button
             size="lg"
             className="w-full border-green-600 bg-green-50 text-green-900 hover:bg-green-100 hover:text-green-900"
-            onClick={() => onStatusChange('配置带外')}
+            onClick={() => onStatusChange('等待配置')}
           >
             <CheckCircle className="mr-2 h-5 w-5" />
             硬件改配完成，开始带外配置
           </Button>
         );
-      case '配置带外':
+      case '等待配置':
         return (
           <Button
             size="lg"
             className="w-full"
-            onClick={() => onStatusChange('结单检测')}
+            onClick={() => onStatusChange('待检测')}
           >
             完成带外配置
           </Button>
         );
-      case '结单检测':
+      case '待检测':
          return (
           <Button
             size="lg"
             variant="secondary"
             className="w-full"
-            onClick={() => { /* Logic for final check */ }}
+            onClick={() => onStatusChange('改配完成')}
           >
             <Search className="mr-2 h-5 w-5" />
             发起结单检测
@@ -154,7 +155,7 @@ function DeviceOperation({
               onClick={() => { /* Logic to view issue */ }}
           >
               <AlertTriangle className='mr-2 h-5 w-5' />
-              查看结单异常
+              查看异常
           </Button>
         );
       default:
@@ -223,7 +224,7 @@ function DeviceOperation({
                                   <TableCell>
                                       <div>
                                           <p className="font-medium text-xs sm:text-sm">{component.model}</p>
-                                          <p className="text-xs text-muted-foreground">{component.partNumber}</p>
+                                          <p className="text-xs text-muted-foreground font-mono">{component.partNumber}</p>
                                       </div>
                                   </TableCell>
                                   <TableCell className="text-right">
@@ -264,7 +265,6 @@ function DeviceOperation({
 
 export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) {
   const { toast } = useToast();
-  // const router = useRouter();
   const [openAccordionItem, setOpenAccordionItem] = useState<string>('');
   const [isScanDeviceDialogOpen, setIsScanDeviceDialogOpen] = useState(false);
   const deviceRefs = useRef<Record<string, HTMLDivElement | null>>({});
@@ -285,7 +285,7 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
     if (device) {
       setOpenAccordionItem(device.id);
       if (deviceStatuses[device.id] === '待处理') {
-        handleStatusChange(device.id, '开始改配');
+        handleStatusChange(device.id, '改配中');
       }
       
       setTimeout(() => {
@@ -312,9 +312,6 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
       description: "工单已成功标记为“已完成”。",
       variant: 'default',
     });
-    // In a real app with a router, you would navigate away.
-    // Here, we can perhaps navigate back to the main dashboard.
-    // router.push('/');
     const event = new CustomEvent('navigateTo', { detail: { target: `/` } });
     window.dispatchEvent(event);
   }

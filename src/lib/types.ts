@@ -12,7 +12,7 @@ export type Component = {
   slot: string; // The physical slot where the component is installed
 };
 
-export type DeviceStatus = '待处理' | '开始改配' | '配置带外' | '结单检测' | '检测异常';
+export type DeviceStatus = '待处理' | '改配中' | '等待配置' | '待检测' | '检测异常' | '改配完成';
 
 export type Device = {
   id:string;
