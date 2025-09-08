@@ -10,7 +10,7 @@ import { ChevronLeft } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { ArrowRight, Server, Wrench, HardDrive, User } from "lucide-react";
+import { ArrowRight, Server, Wrench, HardDrive, User, Calendar, Building2, UserSquare } from "lucide-react";
 import { Avatar, AvatarFallback } from './ui/avatar';
 
 type View = 
@@ -71,6 +71,12 @@ export function DatacenterOpsDemo({
         const myWorkOrders = workOrders.filter((wo) =>
             wo.assignedTo.some((e) => e.id === "emp-001")
         );
+
+        const getModulesForOrder = (order: WorkOrder) => {
+            const modules = new Set(order.devices.map(d => d.location.module));
+            return Array.from(modules).join(', ');
+        }
+        
         return (
             <div>
                  <header className="flex justify-between items-center">
@@ -84,41 +90,37 @@ export function DatacenterOpsDemo({
                     </div>
                     <Button onClick={() => navigateTo({ name: 'LEADER_DASHBOARD' })}>切换到主管视图</Button>
                 </header>
-                <div className="grid gap-4 mt-6 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-4 mt-6 sm:grid-cols-1 lg:grid-cols-2">
                     {myWorkOrders.map((order) => (
                     <div onClick={() => navigateTo({ name: 'WORK_ORDER_DETAIL', workOrderId: order.id })} key={order.id} className="group cursor-pointer">
                         <Card className="h-full flex flex-col transition-all duration-200 group-hover:shadow-lg group-hover:-translate-y-1">
                         <CardHeader>
                             <div className="flex justify-between items-start">
-                            <div className="space-y-1">
-                                <CardTitle className="text-base font-bold">{order.title}</CardTitle>
-                                <CardDescription className="flex items-center gap-2 text-xs">
-                                {getTypeIcon(order.type)}
-                                {order.type}
-                                </CardDescription>
-                            </div>
-                            <Badge className={cn("whitespace-nowrap text-xs", getStatusClass(order.status))}>
-                                {order.status}
-                            </Badge>
+                                <CardTitle className="text-lg font-bold pr-4">{order.title}</CardTitle>
+                                <Badge className={cn("whitespace-nowrap text-xs flex-shrink-0", getStatusClass(order.status))}>
+                                    {order.status}
+                                </Badge>
                             </div>
                         </CardHeader>
-                        <CardContent className="flex-grow space-y-3">
-                            <p className="text-sm text-muted-foreground">
-                            需要操作 {order.devices.length} 台设备。
-                            </p>
-                            <div className="flex items-center gap-2">
-                                <User className="w-4 h-4 text-muted-foreground"/>
-                                <div className="flex items-center -space-x-2">
-                                {order.assignedTo.map(emp => (
-                                    <Avatar key={emp.id} className="h-6 w-6 border">
-                                        <AvatarFallback className="text-xs">{emp.name.charAt(0)}</AvatarFallback>
-                                    </Avatar>
-                                ))}
+                        <CardContent className="flex-grow space-y-4">
+                           <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm text-muted-foreground">
+                                <div className="flex items-center gap-2">
+                                    <Building2 className="h-4 w-4" />
+                                    <span>{getModulesForOrder(order)}</span>
                                 </div>
-                                <span className="text-xs text-muted-foreground font-medium">
-                                    {order.assignedTo.map(e => e.name).join(', ')}
-                                </span>
-                            </div>
+                                <div className="flex items-center gap-2">
+                                    <UserSquare className="h-4 w-4" />
+                                    <span>{order.initiator.name}</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <Calendar className="h-4 w-4" />
+                                    <span>{order.createdAt}</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <User className="h-4 w-4" />
+                                    <span>{order.assignedTo.map(e => e.name).join(', ')}</span>
+                                </div>
+                           </div>
                         </CardContent>
                         <CardFooter className="text-xs text-primary group-hover:text-accent-foreground font-medium flex items-center justify-end">
                             查看详情

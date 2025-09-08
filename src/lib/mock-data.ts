@@ -14,6 +14,8 @@ const rawWorkOrders: WorkOrder[] = [
     title: "升级 Hyperion-01 集群内存",
     type: "服务器改造",
     status: "已分配",
+    initiator: employees[1],
+    createdAt: "2024-05-20",
     assignedTo: [employees[0]],
     devices: [
       // Device 1 (original, modified for '卸' and '装')
@@ -113,6 +115,8 @@ const rawWorkOrders: WorkOrder[] = [
     title: "部署新 Web 服务器集群",
     type: "新服务器部署",
     status: "进行中",
+    initiator: employees[3],
+    createdAt: "2024-05-18",
     assignedTo: [employees[0], employees[2]],
     devices: [
        // Device 1 (modified for '卸' and '装')
@@ -207,6 +211,8 @@ const rawWorkOrders: WorkOrder[] = [
     title: "为 Prometheus 集群升级存储",
     type: "服务器改造",
     status: "已完成",
+    initiator: employees[2],
+    createdAt: "2024-05-15",
     assignedTo: [employees[3]],
     devices: [
       // Device 1 (modified for '卸' and '装')
@@ -293,6 +299,8 @@ const rawWorkOrders: WorkOrder[] = [
     title: "整合 Rhea 集群并升级",
     type: "服务器改造",
     status: "待处理",
+    initiator: employees[1],
+    createdAt: "2024-05-22",
     assignedTo: [],
     devices: [
        // Device 1 (modified for '卸' and '装')

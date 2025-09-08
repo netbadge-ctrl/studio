@@ -36,4 +36,6 @@ export type WorkOrder = {
   status: '待处理' | '已分配' | '进行中' | '已完成' | '已阻塞';
   assignedTo: Employee[];
   devices: Device[];
+  initiator: Employee;
+  createdAt: string;
 };
