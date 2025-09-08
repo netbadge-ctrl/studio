@@ -82,6 +82,7 @@ function DeviceOperation({
     onStatusChange: (status: DeviceStatus) => void;
 }) {
   const [highlightedPart, setHighlightedPart] = useState<string | null>(null);
+  const [isImageFullscreen, setIsImageFullscreen] = useState(false);
 
   const operationDetails = useMemo(() => {
     const operations: { action: '装' | '卸', component: Component }[] = [];
@@ -190,9 +191,12 @@ function DeviceOperation({
                 <TabsTrigger value="video"><Video className="mr-2" /> 视频教程</TabsTrigger>
               </TabsList>
               <TabsContent value="image" className="mt-4">
-                <div className="aspect-video bg-muted rounded-lg flex items-center justify-center relative overflow-hidden">
+                <div 
+                  className="aspect-video bg-muted rounded-lg flex items-center justify-center relative overflow-hidden cursor-pointer"
+                  onClick={() => setIsImageFullscreen(true)}
+                >
                   <Image 
-                      src="https://t10.baidu.com/it/u=4241972780,3175495119&fm=199&app=68&f=JPEG?w=750&h=891&s=CFA12BC514878EEB0C00E1040300B043"
+                      src="https://t10.baidu.com/it/u=4241972780,3175495119&fm=199&app=68&f=JPEG?w=750&h=891&s=CFA12BC51478EEB0C00E1040300B043"
                       alt="操作指引图片"
                       fill
                       data-ai-hint="server motherboard"
@@ -262,6 +266,21 @@ function DeviceOperation({
         
         {renderActionButton()}
       </div>
+      
+      {isImageFullscreen && (
+        <div 
+          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4 cursor-pointer"
+          onClick={() => setIsImageFullscreen(false)}
+        >
+          <Image 
+            src="https://t10.baidu.com/it/u=4241972780,3175495119&fm=199&app=68&f=JPEG?w=750&h=891&s=CFA12BC51478EEB0C00E1040300B043"
+            alt="操作指引图片 - 全屏"
+            width={1200}
+            height={1200}
+            className="max-w-full max-h-full object-contain"
+          />
+        </div>
+      )}
     </>
   );
 }
