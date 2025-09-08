@@ -1,3 +1,4 @@
+
 "use client"
 
 import React, { useState, useEffect } from 'react';
@@ -98,7 +99,12 @@ export function DatacenterOpsDemo({
                 const previousViewForOperate = workOrders.find(wo => wo.id === view.workOrderId)?.assignedTo.some(e => e.id === "emp-001") ? 'ENGINEER_DASHBOARD' : 'LEADER_DASHBOARD';
                 onTitleChange(`工单操作 #${view.workOrderId}`);
                 backLabel = '返回准备页';
-                backView = { name: 'WORK_ORDER_DETAIL', workOrderId: view.workOrderId, previousView: previousViewForOperate };
+                if (currentWorkOrder?.status === '已完成') {
+                  backLabel = '返回我的工单';
+                  backView = { name: 'ENGINEER_DASHBOARD' };
+                } else {
+                  backView = { name: 'WORK_ORDER_DETAIL', workOrderId: view.workOrderId, previousView: previousViewForOperate };
+                }
                 break;
             default:
                 onTitleChange("数据中心运维");
@@ -107,7 +113,7 @@ export function DatacenterOpsDemo({
         setBackButtonLabel(backLabel);
         setHandleBack(() => () => navigateTo(backView));
 
-    }, [view, onTitleChange, setShowBackButton, setBackButtonLabel, setHandleBack, workOrders]);
+    }, [view, onTitleChange, setShowBackButton, setBackButtonLabel, setHandleBack, workOrders, currentWorkOrder]);
     
     const EngineerDashboard = () => {
         const myWorkOrders = workOrders.filter((wo) =>
@@ -122,12 +128,20 @@ export function DatacenterOpsDemo({
             );
             return Array.from(modules).join(', ');
         }
+
+        const handleOrderClick = (order: WorkOrder) => {
+          if (order.status === '已完成') {
+            navigateTo({ name: 'WORK_ORDER_OPERATE', workOrderId: order.id });
+          } else {
+            navigateTo({ name: 'WORK_ORDER_DETAIL', workOrderId: order.id, previousView: 'ENGINEER_DASHBOARD' });
+          }
+        };
         
         return (
             <div>
                 <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-2">
                     {myWorkOrders.map((order) => (
-                    <div onClick={() => navigateTo({ name: 'WORK_ORDER_DETAIL', workOrderId: order.id, previousView: 'ENGINEER_DASHBOARD' })} key={order.id} className="group cursor-pointer">
+                    <div onClick={() => handleOrderClick(order)} key={order.id} className="group cursor-pointer">
                         <Card className="flex flex-col transition-all duration-200 group-hover:shadow-lg group-hover:-translate-y-1">
                         <CardHeader>
                             <CardTitle className="text-lg font-bold pr-4">{`[${order.id}] ${order.title}`}</CardTitle>

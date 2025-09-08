@@ -346,6 +346,8 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
     setIsBulkCheckDialogOpen(true);
   }
 
+  const isCompleted = workOrder.status === '已完成';
+
   return (
     <>
       <Card>
@@ -353,7 +355,7 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
                 <div>
                     <CardTitle className="text-xl md:text-2xl">{workOrder.title}</CardTitle>
-                    <CardDescription>工单 #{workOrder.id} - 步骤 2/2: 操作</CardDescription>
+                    <CardDescription>工单 #{workOrder.id} - {isCompleted ? "已完成" : "步骤 2/2: 操作"}</CardDescription>
                 </div>
               </div>
           </CardHeader>
@@ -364,6 +366,7 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
                   collapsible
                   value={openAccordionItem} 
                   onValueChange={(value) => {
+                    if (isCompleted) return;
                     const device = devicesWithStatus.find(d => d.id === value);
                     if (device && device.status === '待处理') {
                         handleStatusChange(device.id, '改配中');
@@ -378,7 +381,7 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
                         value={device.id} 
                         className="border-b-0 rounded-lg border bg-card text-card-foreground shadow-sm transition-all data-[state=open]:shadow-lg data-[state=open]:border-primary"
                       >
-                          <AccordionTrigger className="px-4 py-3 hover:no-underline text-base">
+                          <AccordionTrigger disabled={isCompleted} className="px-4 py-3 hover:no-underline text-base disabled:cursor-not-allowed">
                               <div className="flex items-center gap-3 w-full">
                                   {getDeviceIcon(device.type)}
                                   <div className='text-left flex-grow'>
@@ -410,37 +413,46 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
       
       <div className="fixed bottom-0 left-0 right-0 bg-card border-t p-4 z-40">
         <div className="max-w-7xl mx-auto flex items-center gap-2">
-          <Button variant="outline" size="lg" className="flex-shrink-0" onClick={() => setIsScanDeviceDialogOpen(true)}>
-              <QrCode className="mr-2 h-5 w-5" />
-              扫描设备
-          </Button>
-          
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="lg" className="flex-shrink-0">
-                  <MoreVertical className="mr-2 h-5 w-5" />
-                  更多操作
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56 mb-2">
-              <DropdownMenuItem onSelect={onOpenBulkCheckDialog}>
-                <FileCheck2 className="mr-2 h-4 w-4" />
-                <span>批量发起结单检测</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => setIsRequestPartsDialogOpen(true)}>
-                <PackagePlus className="mr-2 h-4 w-4" />
-                <span>增领备件</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => setIsReturnPartsDialogOpen(true)}>
+          {isCompleted ? (
+              <Button size="lg" className="w-full" onClick={() => setIsReturnPartsDialogOpen(true)}>
                 <PackageMinus className="mr-2 h-4 w-4" />
-                <span>故障件回库</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                故障件回库
+              </Button>
+          ) : (
+            <>
+              <Button variant="outline" size="lg" className="flex-shrink-0" onClick={() => setIsScanDeviceDialogOpen(true)}>
+                  <QrCode className="mr-2 h-5 w-5" />
+                  扫描设备
+              </Button>
+              
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="lg" className="flex-shrink-0">
+                      <MoreVertical className="mr-2 h-5 w-5" />
+                      更多操作
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56 mb-2">
+                  <DropdownMenuItem onSelect={onOpenBulkCheckDialog}>
+                    <FileCheck2 className="mr-2 h-4 w-4" />
+                    <span>批量发起结单检测</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => setIsRequestPartsDialogOpen(true)}>
+                    <PackagePlus className="mr-2 h-4 w-4" />
+                    <span>增领备件</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => setIsReturnPartsDialogOpen(true)}>
+                    <PackageMinus className="mr-2 h-4 w-4" />
+                    <span>故障件回库</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
 
-          <Button size="lg" className="flex-grow" onClick={handleCompleteWorkOrder}>
-              完成工单
-          </Button>
+              <Button size="lg" className="flex-grow" onClick={handleCompleteWorkOrder}>
+                  完成工单
+              </Button>
+            </>
+          )}
         </div>
       </div>
 
