@@ -57,11 +57,14 @@ const getDeviceIcon = (type: WorkOrder['devices'][0]['type']) => {
 };
 
 const formatLocation = (location: NonNullable<WorkOrder['devices'][0]['location']>) => {
-    // A mock function to generate a location string in the desired format.
     const modulePrefix = location.module.includes('北京') ? 'BJ' : 'TJ';
     const rackNumber = location.rack.replace('R', '').padStart(2, '0');
-    const uPosition = location.uPosition.toString().padStart(2, '0');
-    return `${modulePrefix}DC01-R${rackNumber}-U${uPosition}`;
+    const uPosition = `U${location.uPosition.toString().padStart(2, '0')}`;
+    
+    // Construct a consistent, yet dynamic rack identifier based on the mock data
+    const rackIdentifier = `${modulePrefix}DC01-R${rackNumber}F01-JC-${rackNumber}-1`;
+
+    return `${rackIdentifier} / ${uPosition}`;
 };
 
 export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
