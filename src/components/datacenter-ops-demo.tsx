@@ -92,7 +92,7 @@ export function DatacenterOpsDemo({
                 <div className="grid gap-4 mt-6 sm:grid-cols-1 lg:grid-cols-2">
                     {myWorkOrders.map((order) => (
                     <div onClick={() => navigateTo({ name: 'WORK_ORDER_DETAIL', workOrderId: order.id })} key={order.id} className="group cursor-pointer">
-                        <Card className="h-full flex flex-col transition-all duration-200 group-hover:shadow-lg group-hover:-translate-y-1">
+                        <Card className="flex flex-col transition-all duration-200 group-hover:shadow-lg group-hover:-translate-y-1">
                         <CardHeader>
                             <div className="flex justify-between items-start">
                                 <CardTitle className="text-lg font-bold pr-4">{`[${order.id}] ${order.title}`}</CardTitle>
