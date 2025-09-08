@@ -153,8 +153,11 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
         </CardHeader>
         <CardContent className="grid md:grid-cols-2 gap-6">
           <Card>
+            <CardHeader>
+              <CardTitle className='text-lg'>设备清单</CardTitle>
+            </CardHeader>
             <CardContent className="p-0">
-              <ScrollArea className="h-96">
+              <ScrollArea className="h-80">
                 <Table>
                   <TableBody>
                     {sortedDevices.map((device) => (
