@@ -56,6 +56,14 @@ const getDeviceIcon = (type: WorkOrder['devices'][0]['type']) => {
   }
 };
 
+const formatLocation = (location: NonNullable<WorkOrder['devices'][0]['location']>) => {
+    // A mock function to generate a location string in the desired format.
+    const modulePrefix = location.module.includes('北京') ? 'BJ' : 'TJ';
+    const rackNumber = location.rack.replace('R', '').padStart(2, '0');
+    const uPosition = location.uPosition.toString().padStart(2, '0');
+    return `${modulePrefix}DC01-R${rackNumber}-U${uPosition}`;
+};
+
 export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
   const sortedDevices = React.useMemo(() => {
     return [...workOrder.devices].sort((a, b) => {
@@ -64,8 +72,8 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
       if (!a.location && !b.location) return a.serialNumber.localeCompare(b.serialNumber); // both offline, sort by SN
 
       // Both online, sort by location
-      const locA = `${a.location!.module}-${a.location!.rack}-${a.location!.uPosition.toString().padStart(2, '0')}`;
-      const locB = `${b.location!.module}-${b.location!.rack}-${b.location!.uPosition.toString().padStart(2, '0')}`;
+      const locA = formatLocation(a.location!);
+      const locB = formatLocation(b.location!);
       return locA.localeCompare(locB);
     });
   }, [workOrder.devices]);
@@ -168,7 +176,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
                         </TableCell>
                         <TableCell className="font-mono text-xs">
                            {device.location ? (
-                                `${device.location.module}-${device.location.rack}-U${device.location.uPosition}`
+                                formatLocation(device.location)
                             ) : (
                                 <span className="text-muted-foreground">线下设备</span>
                             )}
