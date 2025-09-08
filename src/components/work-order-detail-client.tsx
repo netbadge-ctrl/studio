@@ -154,7 +154,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
         <CardContent className="grid md:grid-cols-2 gap-6">
           <Card>
             <CardHeader className="px-4 py-2 bg-muted/50 rounded-t-lg">
-              <CardTitle className='text-lg'>设备清单</CardTitle>
+              <CardTitle className='text-base'>设备清单</CardTitle>
             </CardHeader>
             <CardContent className="p-4">
               <ScrollArea className="h-80">
@@ -187,7 +187,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
 
           <Card>
             <CardHeader className="px-4 py-2 bg-muted/50 rounded-t-lg">
-              <CardTitle className='flex justify-between items-center text-lg'>
+              <CardTitle className='flex justify-between items-center text-base'>
                 <span className="flex items-center gap-2">
                   <PackageSearch className="h-5 w-5 text-primary" />
                   所需备件
