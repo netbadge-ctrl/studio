@@ -138,7 +138,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
             <CardTitle className='text-base'>设备清单</CardTitle>
           </CardHeader>
           <CardContent className="p-0">
-            <ScrollArea className="h-80">
+            <ScrollArea className="max-h-80">
               <Table>
                 <TableBody>
                   {sortedDevices.map((device) => (
@@ -177,9 +177,9 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
             </div>
           </CardHeader>
           <CardContent className="p-4">
-            <ScrollArea className="h-80">
+            <ScrollArea>
               {requiredComponents.length > 0 ? (
-                <ul className="space-y-2">
+                <ul className="space-y-2 max-h-80 overflow-y-auto">
                   {requiredComponents.map(({ component: comp, quantity }) => (
                     <li key={comp.partNumber} className="flex items-center justify-between gap-x-4 py-2 border-b last:border-b-0">
                       <div className="flex-grow">
