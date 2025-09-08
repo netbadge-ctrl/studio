@@ -5,8 +5,8 @@ import { MainNav } from "@/components/main-nav";
 import { DatacenterOpsDemo } from "@/components/datacenter-ops-demo";
 import { workOrders, employees } from "@/lib/mock-data";
 
-export default function Home() {
-  const [title, setTitle] = useState("我的工单");
+export default function LeaderDashboardPage() {
+  const [title, setTitle] = useState("主管仪表盘");
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
@@ -17,7 +17,7 @@ export default function Home() {
             initialWorkOrders={workOrders} 
             initialEmployees={employees}
             onTitleChange={setTitle}
-            initialView="ENGINEER_DASHBOARD"
+            initialView="LEADER_DASHBOARD"
           />
         </div>
       </main>

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation'
-import { User, GanttChartSquare, Menu } from 'lucide-react';
+import { User, GanttChartSquare, Menu, LogOut, Settings, UserCircle, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
@@ -28,9 +28,9 @@ export function MainNav({ title }: { title: string }) {
           <GanttChartSquare className="h-4 w-4" /> 我的任务
         </Link>
       </Button>
-      <Button asChild variant="ghost" size="sm" className={cn("w-full justify-start text-muted-foreground", {"text-primary font-semibold bg-accent": pathname.includes('/leader-dashboard')})}>
+      <Button asChild variant="ghost" size="sm" className={cn("w-full justify-start text-muted-foreground", {"text-primary font-semibold bg-accent": pathname === '/leader-dashboard'})}>
         <Link href="/leader-dashboard" className="flex items-center gap-2">
-          <User className="h-4 w-4" /> 主管仪表盘
+          <Users className="h-4 w-4" /> 主管仪表盘
         </Link>
       </Button>
     </div>
@@ -41,9 +41,6 @@ export function MainNav({ title }: { title: string }) {
       <div className="flex items-center gap-2 text-lg font-semibold text-primary">
         <span className="font-bold">{title}</span>
       </div>
-      <nav className="hidden md:flex items-center gap-2 mx-auto">
-        {/* The consolidated component will handle view switching, so these links might be redundant or could be repurposed to control the state of the main component. For now, they are visually present but might not navigate in a traditional sense. */}
-      </nav>
       <div className="ml-auto flex items-center gap-2">
       <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -64,10 +61,37 @@ export function MainNav({ title }: { title: string }) {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>个人资料</DropdownMenuItem>
-            <DropdownMenuItem>设置</DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="#">
+                <UserCircle className="mr-2 h-4 w-4" />
+                <span>个人资料</span>
+              </Link>
+            </DropdownMenuItem>
+             <DropdownMenuItem asChild>
+               <Link href={pathname === '/' ? '/leader-dashboard' : '/'}>
+                 {pathname === '/' ? (
+                    <Users className="mr-2 h-4 w-4" />
+                  ) : (
+                    <GanttChartSquare className="mr-2 h-4 w-4" />
+                  )}
+                  <span>
+                    {pathname === '/' ? '切换到主管视图' : '切换到工程师视图'}
+                  </span>
+               </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="#">
+                <Settings className="mr-2 h-4 w-4" />
+                <span>设置</span>
+              </Link>
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>登出</DropdownMenuItem>
+            <DropdownMenuItem asChild>
+               <Link href="#">
+                <LogOut className="mr-2 h-4 w-4" />
+                <span>登出</span>
+              </Link>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
         

@@ -15,7 +15,7 @@ import { Server, Wrench, HardDrive, User, Calendar, Building2, UserSquare, Layer
 type View = 
   | { name: 'ENGINEER_DASHBOARD' }
   | { name: 'LEADER_DASHBOARD' }
-  | { name: 'WORK_ORDER_DETAIL', workOrderId: string }
+  | { name: 'WORK_ORDER_DETAIL', workOrderId: string, previousView: 'ENGINEER_DASHBOARD' | 'LEADER_DASHBOARD' }
   | { name: 'WORK_ORDER_OPERATE', workOrderId: string };
 
 const getStatusClass = (status: WorkOrder["status"]) => {
@@ -50,12 +50,14 @@ export function DatacenterOpsDemo({
     initialWorkOrders,
     initialEmployees,
     onTitleChange,
+    initialView,
 }: {
     initialWorkOrders: WorkOrder[];
     initialEmployees: Employee[];
     onTitleChange: (title: string) => void;
+    initialView: 'ENGINEER_DASHBOARD' | 'LEADER_DASHBOARD';
 }) {
-    const [view, setView] = useState<View>({ name: 'ENGINEER_DASHBOARD' });
+    const [view, setView] = useState<View>({ name: initialView });
     const [workOrders, setWorkOrders] = useState(initialWorkOrders);
     const employees = initialEmployees;
 
@@ -64,7 +66,6 @@ export function DatacenterOpsDemo({
         : null;
 
     const navigateTo = (newView: View) => {
-        // This is a simple history mechanism. A more robust solution might use a state management library or URL hash.
         setView(newView);
     };
 
@@ -99,12 +100,9 @@ export function DatacenterOpsDemo({
         
         return (
             <div>
-                 <header className="flex justify-end items-center mb-6">
-                    <Button onClick={() => navigateTo({ name: 'LEADER_DASHBOARD' })}>切换到主管视图</Button>
-                </header>
                 <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-2">
                     {myWorkOrders.map((order) => (
-                    <div onClick={() => navigateTo({ name: 'WORK_ORDER_DETAIL', workOrderId: order.id })} key={order.id} className="group cursor-pointer">
+                    <div onClick={() => navigateTo({ name: 'WORK_ORDER_DETAIL', workOrderId: order.id, previousView: 'ENGINEER_DASHBOARD' })} key={order.id} className="group cursor-pointer">
                         <Card className="flex flex-col transition-all duration-200 group-hover:shadow-lg group-hover:-translate-y-1">
                         <CardHeader>
                             <CardTitle className="text-lg font-bold pr-4">{`[${order.id}] ${order.title}`}</CardTitle>
@@ -149,7 +147,6 @@ export function DatacenterOpsDemo({
                     <p className="text-muted-foreground">
                         监控并分配所有工单。
                     </p>
-                     <Button onClick={() => navigateTo({ name: 'ENGINEER_DASHBOARD' })}>切换到工程师视图</Button>
                 </header>
                 <div>
                     <LeaderDashboardClient initialWorkOrders={workOrders} employees={employees} />
@@ -171,12 +168,11 @@ export function DatacenterOpsDemo({
                 return (
                     <div>
                         <div className="mb-4">
-                            <Button onClick={() => navigateTo({ name: 'ENGINEER_DASHBOARD' })} variant="outline" size="sm" className='flex items-center gap-1'>
+                            <Button onClick={() => navigateTo({ name: view.previousView })} variant="outline" size="sm" className='flex items-center gap-1'>
                                 <ChevronLeft className="h-4 w-4" />
-                                返回我的工单
+                                {view.previousView === 'ENGINEER_DASHBOARD' ? '返回我的工单' : '返回主管仪表盘'}
                             </Button>
                         </div>
-                        {/* We need to pass a "navigateToOperate" function to the detail client */}
                         <WorkOrderDetailClient workOrder={currentWorkOrder} />
                     </div>
                 );
@@ -186,7 +182,7 @@ export function DatacenterOpsDemo({
                 return (
                     <div>
                         <div className="mb-4">
-                             <Button onClick={() => navigateTo({ name: 'WORK_ORDER_DETAIL', workOrderId: currentWorkOrder.id })} variant="outline" size="sm" className='flex items-center gap-1'>
+                             <Button onClick={() => navigateTo({ name: 'WORK_ORDER_DETAIL', workOrderId: currentWorkOrder.id, previousView: 'ENGINEER_DASHBOARD' })} variant="outline" size="sm" className='flex items-center gap-1'>
                                 <ChevronLeft className="h-4 w-4" />
                                 返回准备页
                             </Button>
@@ -200,14 +196,14 @@ export function DatacenterOpsDemo({
         }
     };
     
-    // Hack to navigate from detail to operate page, as we removed the router.
-    // In a real app, this would be handled more cleanly with callbacks or context.
     React.useEffect(() => {
         const handleNavigate = (e: Event) => {
             const customEvent = e as CustomEvent;
             if (customEvent.detail.target.includes('/operate')) {
                 const id = customEvent.detail.target.split('/')[2];
                 navigateTo({ name: 'WORK_ORDER_OPERATE', workOrderId: id });
+            } else if (customEvent.detail.target === '/') {
+                navigateTo({ name: 'ENGINEER_DASHBOARD' });
             }
         };
 
