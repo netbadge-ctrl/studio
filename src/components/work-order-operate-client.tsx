@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Layers, Server as ServerIcon, ArrowUp, ArrowDown, Video, Image as ImageIcon, QrCode, CheckCircle, AlertTriangle, Search, GanttChartSquare } from 'lucide-react';
+import { Layers, Server as ServerIcon, ArrowUp, ArrowDown, Video, Image as ImageIcon, QrCode, CheckCircle, AlertTriangle, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -47,6 +47,7 @@ const getStatusBadgeClass = (status: DeviceStatus) => {
   };
 
 const formatLocation = (location: NonNullable<Device['location']>) => {
+    if (!location) return null;
     const modulePrefix = location.module.includes('北京') ? 'BJ' : 'TJ';
     const rackNumber = location.rack.replace('R', '').padStart(2, '0');
     const rackIdentifier = `${modulePrefix}DC01-R${rackNumber}F01-JC-${rackNumber}-1`;
@@ -117,7 +118,7 @@ function DeviceOperation({
         return (
           <Button
             size="lg"
-            className="w-full border-green-600 bg-green-50 text-green-900 hover:bg-green-100 hover:text-green-900"
+            className="w-full"
             onClick={() => onStatusChange('等待配置')}
           >
             <CheckCircle className="mr-2 h-5 w-5" />
@@ -151,7 +152,7 @@ function DeviceOperation({
            <Button
               variant="destructive"
               size="lg"
-              className="w-full bg-orange-500 hover:bg-orange-600"
+              className="w-full"
               onClick={() => { /* Logic to view issue */ }}
           >
               <AlertTriangle className='mr-2 h-5 w-5' />
@@ -159,6 +160,21 @@ function DeviceOperation({
           </Button>
         );
       default:
+        // For '待处理', '改配完成', or any other state, we can show a button to mark as abnormal
+        // or just nothing if it's a terminal state.
+        if (device.status !== '改配完成') {
+             return (
+                 <Button
+                    variant="outline"
+                    size="lg"
+                    className="w-full"
+                    onClick={() => onStatusChange('检测异常')}
+                >
+                    <AlertTriangle className='mr-2 h-5 w-5 text-destructive' />
+                    标记异常
+                </Button>
+            );
+        }
         return null;
     }
   };
@@ -246,17 +262,6 @@ function DeviceOperation({
         
         <div className="space-y-4">
             {renderActionButton()}
-            {device.status !== '检测异常' && (
-                 <Button
-                    variant="outline"
-                    size="lg"
-                    className="w-full"
-                    onClick={() => onStatusChange('检测异常')}
-                >
-                    <AlertTriangle className='mr-2 h-5 w-5 text-destructive' />
-                    标记异常
-                </Button>
-            )}
         </div>
       </div>
     </>
@@ -352,12 +357,8 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
                                   {getDeviceIcon(device.type)}
                                   <div className='text-left flex-grow'>
                                       <p className="font-mono text-sm font-semibold">{device.serialNumber}</p>
-                                       <p className="text-xs text-muted-foreground">
-                                        {device.location ? (
-                                            formatLocation(device.location)
-                                        ) : (
-                                            <span className="text-muted-foreground">线下设备</span>
-                                        )}
+                                      <p className="text-xs text-muted-foreground">
+                                        {formatLocation(device.location) ?? <span className="text-muted-foreground">线下设备</span>}
                                     </p>
                                   </div>
                                   <Badge className={cn("whitespace-nowrap text-xs", getStatusBadgeClass(device.status))}>
