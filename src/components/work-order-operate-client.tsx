@@ -14,7 +14,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Image from 'next/image';
 import { ScanDeviceDialog } from './scan-device-dialog';
 import { Badge } from '@/components/ui/badge';
-import { ScanPartDialog } from './scan-part-dialog';
 import { partScanner } from '@/lib/part-scanner';
 
 
@@ -71,7 +70,6 @@ function DeviceOperation({
     device: Device,
     onStatusChange: (status: DeviceStatus) => void;
 }) {
-  const [isScanPartDialogOpen, setIsScanPartDialogOpen] = useState(false);
   const [highlightedPart, setHighlightedPart] = useState<string | null>(null);
 
   const operationDetails = useMemo(() => {
@@ -167,10 +165,6 @@ function DeviceOperation({
                     <CardTitle className='text-xl'>配件操作明细</CardTitle>
                     <CardDescription>根据下表完成配件的安装与卸载。</CardDescription>
                   </div>
-                  <Button variant="outline" size="sm" onClick={() => setIsScanPartDialogOpen(true)}>
-                    <QrCode className="mr-2 h-4 w-4" />
-                    扫描配件
-                  </Button>
               </CardHeader>
               <CardContent>
                   <Table>
@@ -248,11 +242,6 @@ function DeviceOperation({
               标记异常
           </Button>
       </div>
-     
-      <ScanPartDialog
-        isOpen={isScanPartDialogOpen}
-        setIsOpen={setIsScanPartDialogOpen}
-      />
     </>
   );
 }
