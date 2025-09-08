@@ -46,7 +46,7 @@ const getStatusBadgeClass = (status: DeviceStatus) => {
     }
   };
 
-const formatLocation = (location: NonNullable<Device['location']>) => {
+const formatLocation = (location: Device['location']) => {
     if (!location) return null;
     const modulePrefix = location.module.includes('北京') ? 'BJ' : 'TJ';
     const rackNumber = location.rack.replace('R', '').padStart(2, '0');
@@ -113,70 +113,67 @@ function DeviceOperation({
   }, [operationDetails]);
 
   const renderActionButton = () => {
+    let mainAction: React.ReactNode = null;
+    let secondaryAction: React.ReactNode = null;
+
     switch (device.status) {
       case '改配中':
-        return (
-          <Button
-            size="lg"
-            className="w-full"
-            onClick={() => onStatusChange('等待配置')}
-          >
+        mainAction = (
+          <Button size="lg" className="w-full" onClick={() => onStatusChange('等待配置')}>
             <CheckCircle className="mr-2 h-5 w-5" />
             硬件改配完成，开始带外配置
           </Button>
         );
+        break;
       case '等待配置':
-        return (
-          <Button
-            size="lg"
-            className="w-full"
-            onClick={() => onStatusChange('待检测')}
-          >
+        mainAction = (
+          <Button size="lg" className="w-full" onClick={() => onStatusChange('待检测')}>
             完成带外配置
           </Button>
         );
+        break;
       case '待检测':
-         return (
-          <Button
-            size="lg"
-            variant="secondary"
-            className="w-full"
-            onClick={() => onStatusChange('改配完成')}
-          >
+        mainAction = (
+          <Button size="lg" variant="secondary" className="w-full" onClick={() => onStatusChange('改配完成')}>
             <Search className="mr-2 h-5 w-5" />
             发起结单检测
           </Button>
         );
+        break;
       case '检测异常':
-        return (
-           <Button
-              variant="destructive"
-              size="lg"
-              className="w-full"
-              onClick={() => { /* Logic to view issue */ }}
-          >
-              <AlertTriangle className='mr-2 h-5 w-5' />
-              查看异常
+        mainAction = (
+          <Button variant="destructive" size="lg" className="w-full" onClick={() => { /* Logic to view issue */ }}>
+            <AlertTriangle className='mr-2 h-5 w-5' />
+            查看异常
           </Button>
         );
-      default:
-        // For '待处理', '改配完成', or any other state, we can show a button to mark as abnormal
-        // or just nothing if it's a terminal state.
-        if (device.status !== '改配完成') {
-             return (
-                 <Button
-                    variant="outline"
-                    size="lg"
-                    className="w-full"
-                    onClick={() => onStatusChange('检测异常')}
-                >
-                    <AlertTriangle className='mr-2 h-5 w-5 text-destructive' />
-                    标记异常
-                </Button>
-            );
-        }
+        break;
+    }
+    
+    if (['改配中', '等待配置', '待检测'].includes(device.status)) {
+        secondaryAction = (
+            <Button
+                variant="outline"
+                size="lg"
+                className="w-full"
+                onClick={() => onStatusChange('检测异常')}
+            >
+                <AlertTriangle className='mr-2 h-5 w-5 text-destructive' />
+                标记异常
+            </Button>
+        )
+    }
+
+    if (!mainAction && !secondaryAction) {
         return null;
     }
+
+    return (
+        <div className="space-y-4">
+            {mainAction}
+            {secondaryAction}
+        </div>
+    )
   };
 
   return (
@@ -260,9 +257,7 @@ function DeviceOperation({
           </Card>
         )}
         
-        <div className="space-y-4">
-            {renderActionButton()}
-        </div>
+        {renderActionButton()}
       </div>
     </>
   );
@@ -343,7 +338,13 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
                   type="single"
                   collapsible
                   value={openAccordionItem} 
-                  onValueChange={setOpenAccordionItem}
+                  onValueChange={(value) => {
+                    const device = devicesWithStatus.find(d => d.id === value);
+                    if (device && device.status === '待处理') {
+                        handleStatusChange(device.id, '改配中');
+                    }
+                    setOpenAccordionItem(value);
+                  }}
                   className="w-full space-y-2"
                 >
                 {devicesWithStatus.map(device => (
