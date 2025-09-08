@@ -156,7 +156,7 @@ function DeviceOperation({
 
         {operationDetails.length > 0 && (
           <Card>
-              <CardHeader className="flex flex-row items-center justify-between">
+              <CardHeader>
                   <div>
                     <CardTitle className='text-xl'>配件操作明细</CardTitle>
                     <CardDescription>根据下表完成配件的安装与卸载。</CardDescription>
@@ -167,8 +167,7 @@ function DeviceOperation({
                       <TableHeader>
                           <TableRow>
                               <TableHead>配件</TableHead>
-                              <TableHead>槽位</TableHead>
-                              <TableHead className="text-right">操作</TableHead>
+                              <TableHead className="text-right">位置/操作</TableHead>
                           </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -191,12 +190,14 @@ function DeviceOperation({
                                           </div>
                                       </div>
                                   </TableCell>
-                                  <TableCell className="font-mono text-xs sm:text-sm">{component.slot}</TableCell>
                                   <TableCell className="text-right">
-                                    <Badge variant={action === '装' ? 'default' : 'destructive'} className='whitespace-nowrap'>
-                                      {action === '装' ? <ArrowUp className="mr-1 h-3 w-3" /> : <ArrowDown className="mr-1 h-3 w-3" />}
-                                      {action}
-                                    </Badge>
+                                    <div className='flex flex-col items-end gap-1'>
+                                        <span className='font-mono text-xs sm:text-sm'>{component.slot}</span>
+                                        <Badge variant={action === '装' ? 'default' : 'destructive'} className='whitespace-nowrap'>
+                                          {action === '装' ? <ArrowUp className="mr-1 h-3 w-3" /> : <ArrowDown className="mr-1 h-3 w-3" />}
+                                          {action}
+                                        </Badge>
+                                    </div>
                                   </TableCell>
                               </TableRow>
                           ))}
