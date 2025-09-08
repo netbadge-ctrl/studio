@@ -135,7 +135,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
       <div className='space-y-4'>
         <Card>
           <CardHeader className="px-4 py-2 bg-muted/50 rounded-t-lg">
-            <CardTitle className='text-base'>设备清单</CardTitle>
+            <CardTitle className='text-base'>设备清单 ({workOrder.devices.length} 台)</CardTitle>
           </CardHeader>
           <CardContent className="p-0">
             <ScrollArea className="h-72">
