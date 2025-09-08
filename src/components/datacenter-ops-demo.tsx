@@ -10,7 +10,7 @@ import { ChevronLeft } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { Server, Wrench, HardDrive, User, Calendar, Building2, UserSquare } from "lucide-react";
+import { Server, Wrench, HardDrive, User, Calendar, Building2, UserSquare, Layers } from "lucide-react";
 
 type View = 
   | { name: 'ENGINEER_DASHBOARD' }
@@ -94,30 +94,32 @@ export function DatacenterOpsDemo({
                     <div onClick={() => navigateTo({ name: 'WORK_ORDER_DETAIL', workOrderId: order.id })} key={order.id} className="group cursor-pointer">
                         <Card className="flex flex-col transition-all duration-200 group-hover:shadow-lg group-hover:-translate-y-1">
                         <CardHeader>
-                            <div className="flex justify-between items-start">
-                                <CardTitle className="text-lg font-bold pr-4">{`[${order.id}] ${order.title}`}</CardTitle>
-                                <Badge className={cn("whitespace-nowrap text-xs flex-shrink-0", getStatusClass(order.status))}>
-                                    {order.status}
-                                </Badge>
-                            </div>
+                            <CardTitle className="text-lg font-bold pr-4">{`[${order.id}] ${order.title}`}</CardTitle>
                         </CardHeader>
                         <CardContent className="flex-grow space-y-4">
-                           <div className="grid grid-cols-1 gap-2 text-sm text-muted-foreground">
+                           <div className="grid grid-cols-1 gap-3 text-sm text-muted-foreground">
                                 <div className="flex items-center gap-2">
-                                    <UserSquare className="h-4 w-4" />
+                                    <UserSquare className="h-4 w-4 flex-shrink-0" />
                                     <span>{order.initiator.name}</span>
-                                    <Calendar className="h-4 w-4 ml-auto" />
+                                    <Calendar className="h-4 w-4 ml-auto flex-shrink-0" />
                                     <span>{order.createdAt}</span>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <Building2 className="h-4 w-4" />
-                                    <span>{getModulesForOrder(order)}</span>
-                                    <User className="h-4 w-4 ml-auto" />
-                                    <span>{order.assignedTo.map(e => e.name).join(', ')}</span>
+                                    <Building2 className="h-4 w-4 flex-shrink-0" />
+                                    <span className="flex-grow">{getModulesForOrder(order)}</span>
+                                    <Layers className="h-4 w-4 ml-auto flex-shrink-0" />
+                                    <span>{order.devices.length} 台设备</span>
                                 </div>
                            </div>
                         </CardContent>
-                        <CardFooter className="flex items-center justify-end h-4">
+                        <CardFooter className="flex items-center justify-between text-sm text-muted-foreground pt-4 border-t">
+                            <div className="flex items-center gap-2">
+                                <User className="h-4 w-4" />
+                                <span>{order.assignedTo.map(e => e.name).join(', ')}</span>
+                            </div>
+                            <Badge className={cn("whitespace-nowrap text-xs", getStatusClass(order.status))}>
+                                {order.status}
+                            </Badge>
                         </CardFooter>
                         </Card>
                     </div>
