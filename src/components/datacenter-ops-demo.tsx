@@ -10,7 +10,7 @@ import { ChevronLeft } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { ArrowRight, Server, Wrench, HardDrive, User, Calendar, Building2, UserSquare } from "lucide-react";
+import { Server, Wrench, HardDrive, User, Calendar, Building2, UserSquare } from "lucide-react";
 
 type View = 
   | { name: 'ENGINEER_DASHBOARD' }
@@ -117,8 +117,7 @@ export function DatacenterOpsDemo({
                                 </div>
                            </div>
                         </CardContent>
-                        <CardFooter className="flex items-center justify-end">
-                            <ArrowRight className="h-4 w-4 text-primary transition-transform group-hover:translate-x-1" />
+                        <CardFooter className="flex items-center justify-end h-4">
                         </CardFooter>
                         </Card>
                     </div>

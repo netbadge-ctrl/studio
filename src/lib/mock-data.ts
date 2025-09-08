@@ -10,7 +10,7 @@ export const employees: Employee[] = [
 
 const rawWorkOrders: WorkOrder[] = [
   {
-    id: "wo-001",
+    id: "000001",
     title: "升级 Hyperion-01 集群内存",
     type: "服务器改造",
     status: "已分配",
@@ -111,7 +111,7 @@ const rawWorkOrders: WorkOrder[] = [
     ],
   },
   {
-    id: "wo-002",
+    id: "000002",
     title: "部署新 Web 服务器集群",
     type: "新服务器部署",
     status: "进行中",
@@ -207,7 +207,7 @@ const rawWorkOrders: WorkOrder[] = [
     ],
   },
   {
-    id: "wo-004",
+    id: "000003",
     title: "为 Prometheus 集群升级存储",
     type: "服务器改造",
     status: "已分配",
@@ -295,7 +295,7 @@ const rawWorkOrders: WorkOrder[] = [
     ],
   },
   {
-    id: "wo-005",
+    id: "000004",
     title: "整合 Rhea 集群并升级",
     type: "服务器改造",
     status: "待处理",
