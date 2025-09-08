@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from "react";
@@ -127,11 +128,11 @@ export function RequestPartsDialog({
                         <li key={comp.partNumber} className="flex items-center justify-between gap-4 p-3 bg-muted/50 rounded-md">
                             <div className="flex-grow">
                                 <p className='font-mono text-sm text-foreground font-semibold'>{comp.model}</p>
-                                <p className='text-xs text-muted-foreground'>{comp.partNumber}</p>
+                                <p className='text-xs text-muted-foreground'>仓库盒号: {comp.partNumber}</p>
                             </div>
                             <Button size="sm" variant="outline" onClick={() => handleScan(comp.partNumber)}>
                                 <QrCode className="mr-2 h-4 w-4" />
-                                扫码
+                                扫码坏件
                             </Button>
                         </li>
                         ))}
@@ -147,7 +148,7 @@ export function RequestPartsDialog({
                             <li key={component.partNumber} className="flex items-center justify-between gap-4 p-3 bg-blue-50/50 rounded-md">
                                 <div className="flex-grow">
                                     <p className='font-mono text-sm text-foreground font-semibold'>{component.model}</p>
-                                    <p className='text-xs text-muted-foreground'>{component.partNumber}</p>
+                                    <p className='text-xs text-muted-foreground'>仓库盒号: {component.partNumber}</p>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => updateCount(component.partNumber, -1)}>
