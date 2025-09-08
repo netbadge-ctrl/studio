@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { AssignWorkOrderDialog } from "./assign-work-order-dialog";
@@ -113,7 +113,7 @@ export function LeaderDashboardClient({
                       size="sm"
                       onClick={() => handleOpenDialog(order)}
                     >
-                      分配 / 修改
+                      分配
                     </Button>
                   </TableCell>
                 </TableRow>

@@ -46,7 +46,6 @@ export function MainNav({ title }: { title: string }) {
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-8 w-8 rounded-full">
               <Avatar className="h-9 w-9">
-                <AvatarImage src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="@shadcn" />
                 <AvatarFallback>AJ</AvatarFallback>
               </Avatar>
             </Button>
@@ -97,7 +96,7 @@ export function MainNav({ title }: { title: string }) {
         
         <Sheet>
             <SheetTrigger asChild>
-                <Button variant="outline" size="icon" className="md:hidden">
+                <Button variant="ghost" size="icon" className="md:hidden">
                     <Menu className="h-5 w-5" />
                     <span className="sr-only">切换导航菜单</span>
                 </Button>
