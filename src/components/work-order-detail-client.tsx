@@ -138,7 +138,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
             <CardTitle className='text-base'>设备清单</CardTitle>
           </CardHeader>
           <CardContent className="p-0">
-            <ScrollArea className="max-h-80">
+            <ScrollArea className="h-72">
               <Table>
                 <TableBody>
                   {sortedDevices.map((device) => (
@@ -176,10 +176,10 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
                 <CardDescription className="text-xs text-muted-foreground">请按备件清单领取备件</CardDescription>
             </div>
           </CardHeader>
-          <CardContent className="p-4">
+          <CardContent className="p-0">
               {requiredComponents.length > 0 ? (
-                <ScrollArea className="max-h-80">
-                  <ul className="space-y-2 pr-4">
+                <ScrollArea className="h-72">
+                  <ul className="space-y-2 p-4">
                     {requiredComponents.map(({ component: comp, quantity }) => (
                       <li key={comp.partNumber} className="flex items-center justify-between gap-x-4 py-2 border-b last:border-b-0">
                         <div className="flex-grow">
@@ -195,7 +195,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
                   </ul>
                 </ScrollArea>
               ) : (
-                <div className="flex items-center justify-center h-full">
+                <div className="flex items-center justify-center h-full p-4">
                   <p className="text-sm text-muted-foreground text-center py-4">
                     此工单无需更换或添加备件。
                   </p>
