@@ -178,9 +178,9 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
             <CardContent>
               <ScrollArea className="h-96">
                 {requiredComponents.length > 0 ? (
-                  <ul className="space-y-4">
+                  <ul className="space-y-2">
                     {requiredComponents.map(({ component: comp, quantity }) => (
-                      <li key={comp.partNumber} className="flex items-center justify-between gap-x-4 p-2 rounded-lg bg-muted/50">
+                      <li key={comp.partNumber} className="flex items-center justify-between gap-x-4 py-3 border-b last:border-b-0">
                         <div className="flex-grow">
                           <p className='font-semibold leading-tight whitespace-nowrap'>{comp.model}</p>
                           <p className='text-xs text-muted-foreground'>{comp.type} / {comp.manufacturer}</p>
