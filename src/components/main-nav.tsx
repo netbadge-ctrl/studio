@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation'
-import { User, GanttChartSquare, Menu, LogOut, Settings, UserCircle, Users } from 'lucide-react';
+import { User, GanttChartSquare, Menu, LogOut, Settings, UserCircle, Users, ChevronLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
@@ -17,7 +17,17 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 
-export function MainNav({ title }: { title: string }) {
+export function MainNav({ 
+  title, 
+  showBackButton, 
+  onBackClick,
+  backButtonLabel
+}: { 
+  title: string;
+  showBackButton?: boolean;
+  onBackClick?: () => void;
+  backButtonLabel?: string;
+}) {
   const pathname = usePathname();
 
   const navLinks = (
@@ -38,6 +48,12 @@ export function MainNav({ title }: { title: string }) {
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-card px-4 md:px-6">
+       {showBackButton && (
+         <Button onClick={onBackClick} variant="outline" size="sm" className='flex items-center gap-1'>
+            <ChevronLeft className="h-4 w-4" />
+            {backButtonLabel}
+        </Button>
+       )}
       <div className="flex items-center gap-2 text-lg font-semibold text-primary">
         <span className="font-bold">{title}</span>
       </div>

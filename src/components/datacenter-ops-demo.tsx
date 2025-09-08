@@ -51,11 +51,17 @@ export function DatacenterOpsDemo({
     initialEmployees,
     onTitleChange,
     initialView,
+    setShowBackButton,
+    setBackButtonLabel,
+    setHandleBack,
 }: {
     initialWorkOrders: WorkOrder[];
     initialEmployees: Employee[];
     onTitleChange: (title: string) => void;
     initialView: 'ENGINEER_DASHBOARD' | 'LEADER_DASHBOARD';
+    setShowBackButton: (show: boolean) => void;
+    setBackButtonLabel: (label: string) => void;
+    setHandleBack: (handler: () => void) => void;
 }) {
     const [view, setView] = useState<View>({ name: initialView });
     const [workOrders, setWorkOrders] = useState(initialWorkOrders);
@@ -70,6 +76,12 @@ export function DatacenterOpsDemo({
     };
 
     useEffect(() => {
+        const isDetailPage = view.name === 'WORK_ORDER_DETAIL' || view.name === 'WORK_ORDER_OPERATE';
+        setShowBackButton(isDetailPage);
+
+        let backLabel = '';
+        let backView: View = { name: 'ENGINEER_DASHBOARD' };
+
         switch (view.name) {
             case 'ENGINEER_DASHBOARD':
                 onTitleChange("我的工单");
@@ -79,14 +91,23 @@ export function DatacenterOpsDemo({
                 break;
             case 'WORK_ORDER_DETAIL':
                 onTitleChange(`工单详情 #${view.workOrderId}`);
+                backLabel = view.previousView === 'ENGINEER_DASHBOARD' ? '返回我的工单' : '返回主管仪表盘';
+                backView = { name: view.previousView };
                 break;
             case 'WORK_ORDER_OPERATE':
+                const previousViewForOperate = workOrders.find(wo => wo.id === view.workOrderId)?.assignedTo.some(e => e.id === "emp-001") ? 'ENGINEER_DASHBOARD' : 'LEADER_DASHBOARD';
                 onTitleChange(`工单操作 #${view.workOrderId}`);
+                backLabel = '返回准备页';
+                backView = { name: 'WORK_ORDER_DETAIL', workOrderId: view.workOrderId, previousView: previousViewForOperate };
                 break;
             default:
                 onTitleChange("数据中心运维");
         }
-    }, [view, onTitleChange]);
+
+        setBackButtonLabel(backLabel);
+        setHandleBack(() => () => navigateTo(backView));
+
+    }, [view, onTitleChange, setShowBackButton, setBackButtonLabel, setHandleBack, workOrders]);
     
     const EngineerDashboard = () => {
         const myWorkOrders = workOrders.filter((wo) =>
@@ -165,31 +186,11 @@ export function DatacenterOpsDemo({
 
             case 'WORK_ORDER_DETAIL':
                 if (!currentWorkOrder) return <div>工单未找到</div>;
-                return (
-                    <div>
-                        <div className="mb-4">
-                            <Button onClick={() => navigateTo({ name: view.previousView })} variant="outline" size="sm" className='flex items-center gap-1'>
-                                <ChevronLeft className="h-4 w-4" />
-                                {view.previousView === 'ENGINEER_DASHBOARD' ? '返回我的工单' : '返回主管仪表盘'}
-                            </Button>
-                        </div>
-                        <WorkOrderDetailClient workOrder={currentWorkOrder} />
-                    </div>
-                );
+                return <WorkOrderDetailClient workOrder={currentWorkOrder} />;
 
             case 'WORK_ORDER_OPERATE':
                 if (!currentWorkOrder) return <div>工单未找到</div>;
-                return (
-                    <div>
-                        <div className="mb-4">
-                             <Button onClick={() => navigateTo({ name: 'WORK_ORDER_DETAIL', workOrderId: currentWorkOrder.id, previousView: 'ENGINEER_DASHBOARD' })} variant="outline" size="sm" className='flex items-center gap-1'>
-                                <ChevronLeft className="h-4 w-4" />
-                                返回准备页
-                            </Button>
-                        </div>
-                        <WorkOrderOperateClient workOrder={currentWorkOrder} />
-                    </div>
-                );
+                return <WorkOrderOperateClient workOrder={currentWorkOrder} />;
                 
             default:
                 return <div>未知视图</div>;
