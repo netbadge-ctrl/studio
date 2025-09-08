@@ -153,26 +153,13 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
         </CardHeader>
         <CardContent className="grid md:grid-cols-2 gap-6">
           <Card>
-            <CardHeader>
-              <div className="flex items-baseline gap-2">
-                <CardTitle className="text-lg">
-                  设备清单
-                </CardTitle>
-                <CardDescription className="text-muted-foreground">请提前准备好线下设备</CardDescription>
-              </div>
-            </CardHeader>
-            <CardContent>
+            <CardContent className="p-0">
               <ScrollArea className="h-96">
                 <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>设备与位置</TableHead>
-                    </TableRow>
-                  </TableHeader>
                   <TableBody>
                     {sortedDevices.map((device) => (
                       <TableRow key={device.id}>
-                        <TableCell>
+                        <TableCell className="p-4">
                           <div className="flex items-center gap-3">
                             {getDeviceIcon(device.type)}
                             <div className="flex flex-col">
@@ -215,7 +202,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
                           <p className='text-xs text-muted-foreground'>{comp.type} / {comp.manufacturer}</p>
                         </div>
                         <div className='flex flex-col items-end flex-shrink-0'>
-                          <span className="font-bold text-primary text-lg">x {quantity}</span>
+                          <span className="font-mono text-sm text-foreground font-semibold">x {quantity}</span>
                           <p className='text-xs font-mono text-muted-foreground mt-1'>仓库盒号: {comp.partNumber}</p>
                         </div>
                       </li>
