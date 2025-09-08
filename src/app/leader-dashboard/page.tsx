@@ -22,8 +22,6 @@ export default function LeaderDashboardPage() {
       />
       <main className="flex-1 bg-muted/40 p-4 md:p-6 pb-24">
         <div className="max-w-7xl mx-auto">
-          <div className="mb-4">
-          </div>
           <DatacenterOpsDemo 
             initialWorkOrders={workOrders} 
             initialEmployees={employees}

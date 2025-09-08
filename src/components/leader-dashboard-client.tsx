@@ -70,10 +70,7 @@ export function LeaderDashboardClient({
   return (
     <>
       <Card>
-        <CardHeader>
-          <CardTitle>所有工单</CardTitle>
-        </CardHeader>
-        <CardContent>
+        <CardContent className="p-0">
           <Table>
             <TableHeader>
               <TableRow>

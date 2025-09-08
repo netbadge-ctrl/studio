@@ -167,11 +167,7 @@ export function DatacenterOpsDemo({
 
     const LeaderDashboard = () => {
          return (
-            <div>
-                <div>
-                    <LeaderDashboardClient initialWorkOrders={workOrders} employees={employees} />
-                </div>
-            </div>
+            <LeaderDashboardClient initialWorkOrders={workOrders} employees={employees} />
         )
     }
 
