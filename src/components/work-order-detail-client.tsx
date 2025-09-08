@@ -174,6 +174,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
                 所需备件
               </span>
             </CardTitle>
+            <CardDescription className="text-xs pt-1">请按备件清单领取备件</CardDescription>
           </CardHeader>
           <CardContent className="p-4">
             <ScrollArea className="h-80">
