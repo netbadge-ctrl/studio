@@ -24,7 +24,6 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   PackageSearch,
-  MapPin,
   ArrowRight,
   Server as ServerIcon,
   Layers
@@ -58,6 +57,20 @@ const getDeviceIcon = (type: WorkOrder['devices'][0]['type']) => {
 };
 
 export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
+  const sortedDevices = React.useMemo(() => {
+    return [...workOrder.devices].sort((a, b) => {
+      if (!a.location && b.location) return -1; // a (offline) comes first
+      if (a.location && !b.location) return 1;  // b (offline) comes first
+      if (!a.location && !b.location) return a.serialNumber.localeCompare(b.serialNumber); // both offline, sort by SN
+
+      // Both online, sort by location
+      const locA = `${a.location!.module}-${a.location!.rack}-${a.location!.uPosition.toString().padStart(2, '0')}`;
+      const locB = `${b.location!.module}-${b.location!.rack}-${b.location!.uPosition.toString().padStart(2, '0')}`;
+      return locA.localeCompare(locB);
+    });
+  }, [workOrder.devices]);
+
+
   const requiredComponents = React.useMemo(() => {
     const componentsMap = new Map<string, { component: ComponentType, quantity: number }>();
 
@@ -143,7 +156,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {workOrder.devices.map((device) => (
+                    {sortedDevices.map((device) => (
                       <TableRow key={device.id}>
                         <TableCell>
                           <div className="flex items-center gap-3">
@@ -155,7 +168,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
                         </TableCell>
                         <TableCell className="font-mono text-xs">
                            {device.location ? (
-                                `${device.location.rack} / U${device.location.uPosition}`
+                                `${device.location.module}-${device.location.rack}-U${device.location.uPosition}`
                             ) : (
                                 <span className="text-muted-foreground">线下设备</span>
                             )}
