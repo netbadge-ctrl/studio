@@ -14,9 +14,10 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { QrCode, PlusCircle, MinusCircle, Send } from "lucide-react";
+import { QrCode, Send, XCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
 interface RequestPartsDialogProps {
   isOpen: boolean;
@@ -26,7 +27,7 @@ interface RequestPartsDialogProps {
 
 type PartRequest = {
   component: Component;
-  count: number;
+  serials: string[];
 };
 
 export function RequestPartsDialog({
@@ -40,7 +41,6 @@ export function RequestPartsDialog({
   const availableParts = React.useMemo(() => {
     const partsMap = new Map<string, Component>();
     workOrder.devices.forEach(device => {
-        // Consider both target and current configs for parts that might fail
         const allParts = [...device.currentConfig, ...device.targetConfig];
         allParts.forEach(comp => {
             if (!partsMap.has(comp.partNumber)) {
@@ -54,37 +54,55 @@ export function RequestPartsDialog({
   const handleScan = (partNumber: string) => {
     const component = availableParts.find(p => p.partNumber === partNumber);
     if (!component) return;
+    
+    // Simulate scanning a serial number
+    const serialNumber = window.prompt(`请输入坏件 ${component.model} 的序列号:`);
 
-    setPartRequests(prev => {
-        const newRequests = new Map(prev);
-        const existing = newRequests.get(partNumber);
-        if (existing) {
-            existing.count += 1;
-        } else {
-            newRequests.set(partNumber, { component, count: 1 });
-        }
-        return newRequests;
-    });
-
-    toast({
-      title: "扫码成功",
-      description: `已为 ${component.model} 增加一个故障件。`,
-    });
+    if (serialNumber) {
+        setPartRequests(prev => {
+            const newRequests = new Map(prev);
+            const existing = newRequests.get(partNumber);
+            if (existing) {
+                if (!existing.serials.includes(serialNumber)) {
+                    existing.serials.push(serialNumber);
+                    toast({
+                      title: "扫码成功",
+                      description: `已添加坏件SN: ${serialNumber}`,
+                    });
+                } else {
+                     toast({
+                        variant: "destructive",
+                        title: "重复的序列号",
+                        description: `SN: ${serialNumber} 已经存在于列表中。`,
+                    });
+                }
+            } else {
+                newRequests.set(partNumber, { component, serials: [serialNumber] });
+                 toast({
+                    title: "扫码成功",
+                    description: `已添加坏件SN: ${serialNumber}`,
+                });
+            }
+            return newRequests;
+        });
+    }
   };
   
-  const updateCount = (partNumber: string, delta: number) => {
+  const removeSerial = (partNumber: string, serialToRemove: string) => {
     setPartRequests(prev => {
         const newRequests = new Map(prev);
         const existing = newRequests.get(partNumber);
         if (existing) {
-            const newCount = existing.count + delta;
-            if (newCount > 0) {
-                existing.count = newCount;
-            } else {
+            existing.serials = existing.serials.filter(s => s !== serialToRemove);
+            if (existing.serials.length === 0) {
                 newRequests.delete(partNumber);
             }
         }
         return newRequests;
+    });
+    toast({
+        title: "坏件已移除",
+        description: `SN: ${serialToRemove} 已从列表中删除。`,
     });
   };
 
@@ -103,12 +121,14 @@ export function RequestPartsDialog({
 
     toast({
       title: "申领请求已提交",
-      description: `成功申领 ${partRequests.size} 种备件。`,
+      description: `成功申领 ${Array.from(partRequests.values()).reduce((acc, item) => acc + item.serials.length, 0)} 个备件。`,
     });
     
     setPartRequests(new Map());
     setIsOpen(false);
   };
+  
+  const totalItems = Array.from(partRequests.values()).reduce((acc, item) => acc + item.serials.length, 0);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -143,25 +163,29 @@ export function RequestPartsDialog({
                 <h3 className="font-semibold text-lg">坏件与申领列表</h3>
                 <ScrollArea className="flex-1 border rounded-lg">
                     {partRequests.size > 0 ? (
-                         <ul className="p-4 space-y-2">
-                            {Array.from(partRequests.values()).map(({ component, count }) => (
-                            <li key={component.partNumber} className="flex items-center justify-between gap-4 p-3 bg-blue-50/50 rounded-md">
-                                <div className="flex-grow">
-                                    <p className='font-mono text-sm text-foreground font-semibold'>{component.model}</p>
-                                    <p className='text-xs text-muted-foreground'>仓库盒号: {component.partNumber}</p>
+                         <div className="p-4 space-y-4">
+                            {Array.from(partRequests.values()).map(({ component, serials }) => (
+                            <div key={component.partNumber} className="p-3 bg-blue-50/50 rounded-md">
+                                <div className="flex items-center justify-between gap-4 mb-3">
+                                    <div className="flex-grow">
+                                        <p className='font-mono text-sm text-foreground font-semibold'>{component.model}</p>
+                                        <p className='text-xs text-muted-foreground'>仓库盒号: {component.partNumber}</p>
+                                    </div>
+                                    <Badge variant="secondary">坏件数量: {serials.length}</Badge>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                    <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => updateCount(component.partNumber, -1)}>
-                                        <MinusCircle className="h-5 w-5" />
-                                    </Button>
-                                    <span className="font-bold text-lg w-8 text-center">{count}</span>
-                                     <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => updateCount(component.partNumber, 1)}>
-                                        <PlusCircle className="h-5 w-5" />
-                                    </Button>
-                                </div>
-                            </li>
+                                <ul className="space-y-1 pl-2 border-l-2 border-blue-200">
+                                    {serials.map(sn => (
+                                        <li key={sn} className="flex items-center justify-between text-sm">
+                                            <span className="font-mono text-muted-foreground">{sn}</span>
+                                            <Button size="icon" variant="ghost" className="h-6 w-6 text-muted-foreground hover:text-destructive" onClick={() => removeSerial(component.partNumber, sn)}>
+                                                <XCircle className="h-4 w-4"/>
+                                            </Button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
                             ))}
-                        </ul>
+                        </div>
                     ) : (
                         <div className="h-full flex items-center justify-center">
                             <p className="text-muted-foreground text-center">请从左侧列表扫码添加坏件...</p>
@@ -174,9 +198,9 @@ export function RequestPartsDialog({
             <DialogClose asChild>
                 <Button variant="outline">取消</Button>
             </DialogClose>
-            <Button onClick={handleSubmit} disabled={partRequests.size === 0}>
+            <Button onClick={handleSubmit} disabled={totalItems === 0}>
                 <Send className="mr-2 h-4 w-4" />
-                提交申领 ({Array.from(partRequests.values()).reduce((acc, item) => acc + item.count, 0)}件)
+                提交申领 ({totalItems}件)
             </Button>
         </DialogFooter>
       </DialogContent>
