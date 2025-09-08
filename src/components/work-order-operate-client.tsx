@@ -24,6 +24,16 @@ import {
 import { BulkCheckDialog } from './bulk-check-dialog';
 import { RequestPartsDialog } from './request-parts-dialog';
 import { ReturnPartsDialog } from './return-parts-dialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 
 const getDeviceIcon = (type: Device['type']) => {
@@ -263,6 +273,7 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
   const [isBulkCheckDialogOpen, setIsBulkCheckDialogOpen] = useState(false);
   const [isRequestPartsDialogOpen, setIsRequestPartsDialogOpen] = useState(false);
   const [isReturnPartsDialogOpen, setIsReturnPartsDialogOpen] = useState(false);
+  const [isCompleteConfirmOpen, setIsCompleteConfirmOpen] = useState(false);
   const deviceRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   const [deviceStatuses, setDeviceStatuses] = useState<Record<string, DeviceStatus>>(
@@ -312,14 +323,29 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
   };
 
   const handleCompleteWorkOrder = () => {
+    const uncompletedDevices = devicesWithStatus.filter(d => d.status !== '改配完成');
+    if (uncompletedDevices.length > 0) {
+      toast({
+        variant: "destructive",
+        title: "工单无法完成",
+        description: `还有 ${uncompletedDevices.length} 台设备未完成改配。`,
+      });
+      return;
+    }
+    setIsCompleteConfirmOpen(true);
+  }
+
+  const confirmCompleteWorkOrder = () => {
     toast({
       title: "工单已完成",
       description: "工单已成功标记为“已完成”。",
       variant: 'default',
     });
+    // Here you would typically call an API to update the work order status
+    // For demo purposes, we navigate away.
     const event = new CustomEvent('navigateTo', { detail: { target: `/` } });
     window.dispatchEvent(event);
-  }
+  };
 
   const handleBulkCheck = () => {
     setDeviceStatuses(prev => {
@@ -477,6 +503,20 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
         setIsOpen={setIsReturnPartsDialogOpen}
         workOrder={workOrder}
       />
+       <AlertDialog open={isCompleteConfirmOpen} onOpenChange={setIsCompleteConfirmOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>确认完成工单？</AlertDialogTitle>
+            <AlertDialogDescription>
+              在完成工单前，请确认是否需要增领备件或有故障件需要回库处理。
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>取消</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmCompleteWorkOrder}>确认完成</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   )
 }
