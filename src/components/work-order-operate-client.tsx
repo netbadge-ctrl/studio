@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState, useRef, useMemo, useEffect } from 'react';
@@ -16,17 +17,6 @@ import { ScanDeviceDialog } from './scan-device-dialog';
 import { Badge } from '@/components/ui/badge';
 import { partScanner } from '@/lib/part-scanner';
 
-
-const getComponentIcon = (type: Component['type']) => {
-    const props = { className: "h-4 w-4 text-muted-foreground" };
-    switch(type) {
-        case 'SATA': return <HardDrive {...props} />;
-        case 'SSD': return <HardDrive {...props} />;
-        case '内存': return <MemoryStick {...props} />;
-        case 'CPU': return <Cpu {...props} />;
-        default: return <Layers {...props} />;
-    }
-}
 
 const getDeviceIcon = (type: Device['type']) => {
     const props = { className: "h-5 w-5 text-primary" };
@@ -183,7 +173,6 @@ function DeviceOperation({
                                 >
                                   <TableCell>
                                       <div className="flex items-center gap-2">
-                                          {getComponentIcon(component.type)}
                                           <div>
                                               <p className="font-medium text-xs sm:text-sm">{component.model}</p>
                                               <p className="text-xs text-muted-foreground">{component.partNumber}</p>
@@ -385,3 +374,5 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
     </>
   )
 }
+
+    
