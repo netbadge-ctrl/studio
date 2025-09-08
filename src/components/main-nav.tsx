@@ -1,3 +1,4 @@
+
 "use client"
 
 import Link from 'next/link';
@@ -40,7 +41,7 @@ export function MainNav({
       </Button>
       <Button asChild variant="ghost" size="sm" className={cn("w-full justify-start text-muted-foreground", {"text-primary font-semibold bg-accent": pathname === '/leader-dashboard'})}>
         <Link href="/leader-dashboard" className="flex items-center gap-2">
-          <Users className="h-4 w-4" /> 主管仪表盘
+          <Users className="h-4 w-4" /> 主管分配工单
         </Link>
       </Button>
     </div>
