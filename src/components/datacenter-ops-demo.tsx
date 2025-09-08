@@ -98,11 +98,11 @@ export function DatacenterOpsDemo({
             case 'WORK_ORDER_OPERATE':
                 const previousViewForOperate = workOrders.find(wo => wo.id === view.workOrderId)?.assignedTo.some(e => e.id === "emp-001") ? 'ENGINEER_DASHBOARD' : 'LEADER_DASHBOARD';
                 onTitleChange(`工单操作 #${view.workOrderId}`);
-                backLabel = '返回准备页';
                 if (currentWorkOrder?.status === '已完成') {
                   backLabel = '返回我的工单';
                   backView = { name: 'ENGINEER_DASHBOARD' };
                 } else {
+                  backLabel = '返回准备页';
                   backView = { name: 'WORK_ORDER_DETAIL', workOrderId: view.workOrderId, previousView: previousViewForOperate };
                 }
                 break;
@@ -146,8 +146,8 @@ export function DatacenterOpsDemo({
                         <CardHeader>
                             <CardTitle className="text-base font-semibold pr-4">{`[${order.id}] ${order.title}`}</CardTitle>
                         </CardHeader>
-                        <CardContent className="flex-grow space-y-4">
-                           <div className="grid grid-cols-1 gap-3 text-sm text-muted-foreground">
+                        <CardContent className="space-y-2">
+                           <div className="grid grid-cols-1 gap-3 font-mono text-sm text-muted-foreground">
                                 <div className="flex items-center gap-2">
                                     <UserSquare className="h-4 w-4 flex-shrink-0" />
                                     <span>{order.initiator.name}</span>
