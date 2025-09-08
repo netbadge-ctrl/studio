@@ -124,11 +124,7 @@ function DeviceOperation({
     <>
       <div className="space-y-6 mt-4">
         <Card>
-          <CardHeader>
-              <CardTitle className='text-xl'>可视化指南</CardTitle>
-              <CardDescription>查看图片或视频以获取操作指导。</CardDescription>
-          </CardHeader>
-          <CardContent>
+          <CardContent className="p-4">
             <Tabs defaultValue="image" className="w-full">
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="image"><ImageIcon className="mr-2" /> 图片指引</TabsTrigger>
