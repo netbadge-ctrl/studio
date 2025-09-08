@@ -152,8 +152,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
         <CardContent className="grid md:grid-cols-2 gap-6">
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <Layers className="h-5 w-5 text-primary" />
+              <CardTitle className="text-lg">
                 设备清单
               </CardTitle>
             </CardHeader>
