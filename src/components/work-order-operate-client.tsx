@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { BulkCheckDialog } from './bulk-check-dialog';
 import { RequestPartsDialog } from './request-parts-dialog';
+import { ReturnPartsDialog } from './return-parts-dialog';
 
 
 const getDeviceIcon = (type: Device['type']) => {
@@ -261,6 +262,7 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
   const [isScanDeviceDialogOpen, setIsScanDeviceDialogOpen] = useState(false);
   const [isBulkCheckDialogOpen, setIsBulkCheckDialogOpen] = useState(false);
   const [isRequestPartsDialogOpen, setIsRequestPartsDialogOpen] = useState(false);
+  const [isReturnPartsDialogOpen, setIsReturnPartsDialogOpen] = useState(false);
   const deviceRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   const [deviceStatuses, setDeviceStatuses] = useState<Record<string, DeviceStatus>>(
@@ -429,7 +431,7 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
                 <PackagePlus className="mr-2 h-4 w-4" />
                 <span>增领备件</span>
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setIsReturnPartsDialogOpen(true)}>
                 <PackageMinus className="mr-2 h-4 w-4" />
                 <span>故障件回库</span>
               </DropdownMenuItem>
@@ -456,6 +458,11 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
        <RequestPartsDialog
         isOpen={isRequestPartsDialogOpen}
         setIsOpen={setIsRequestPartsDialogOpen}
+        workOrder={workOrder}
+      />
+       <ReturnPartsDialog
+        isOpen={isReturnPartsDialogOpen}
+        setIsOpen={setIsReturnPartsDialogOpen}
         workOrder={workOrder}
       />
     </>
