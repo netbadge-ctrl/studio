@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { WorkOrder, Employee } from "@/lib/types";
 import { LeaderDashboardClient } from '@/components/leader-dashboard-client';
 import { WorkOrderDetailClient } from '@/components/work-order-detail-client';
@@ -49,9 +49,11 @@ const getTypeIcon = (type: WorkOrder["type"]) => {
 export function DatacenterOpsDemo({
     initialWorkOrders,
     initialEmployees,
+    onTitleChange,
 }: {
     initialWorkOrders: WorkOrder[];
     initialEmployees: Employee[];
+    onTitleChange: (title: string) => void;
 }) {
     const [view, setView] = useState<View>({ name: 'ENGINEER_DASHBOARD' });
     const [workOrders, setWorkOrders] = useState(initialWorkOrders);
@@ -65,6 +67,25 @@ export function DatacenterOpsDemo({
         // This is a simple history mechanism. A more robust solution might use a state management library or URL hash.
         setView(newView);
     };
+
+    useEffect(() => {
+        switch (view.name) {
+            case 'ENGINEER_DASHBOARD':
+                onTitleChange("我的工单");
+                break;
+            case 'LEADER_DASHBOARD':
+                onTitleChange("主管仪表盘");
+                break;
+            case 'WORK_ORDER_DETAIL':
+                onTitleChange(`工单详情 #${view.workOrderId}`);
+                break;
+            case 'WORK_ORDER_OPERATE':
+                onTitleChange(`工单操作 #${view.workOrderId}`);
+                break;
+            default:
+                onTitleChange("数据中心运维");
+        }
+    }, [view, onTitleChange]);
     
     const EngineerDashboard = () => {
         const myWorkOrders = workOrders.filter((wo) =>
@@ -78,18 +99,13 @@ export function DatacenterOpsDemo({
         
         return (
             <div>
-                 <header className="flex justify-between items-center">
-                    <div>
-                        <h1 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">
-                        我的工单
-                        </h1>
-                        <p className="mt-1 text-muted-foreground">
+                 <header className="flex justify-between items-center mb-6">
+                    <p className="text-muted-foreground">
                         以下是分配给您的任务。
-                        </p>
-                    </div>
+                    </p>
                     <Button onClick={() => navigateTo({ name: 'LEADER_DASHBOARD' })}>切换到主管视图</Button>
                 </header>
-                <div className="grid gap-4 mt-6 sm:grid-cols-1 lg:grid-cols-2">
+                <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-2">
                     {myWorkOrders.map((order) => (
                     <div onClick={() => navigateTo({ name: 'WORK_ORDER_DETAIL', workOrderId: order.id })} key={order.id} className="group cursor-pointer">
                         <Card className="flex flex-col transition-all duration-200 group-hover:shadow-lg group-hover:-translate-y-1">
@@ -132,18 +148,13 @@ export function DatacenterOpsDemo({
     const LeaderDashboard = () => {
          return (
             <div>
-                <header className="flex justify-between items-center">
-                    <div>
-                        <h1 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">
-                            主管仪表盘
-                        </h1>
-                        <p className="mt-1 text-muted-foreground">
-                            监控并分配所有工单。
-                        </p>
-                    </div>
+                <header className="flex justify-between items-center mb-6">
+                    <p className="text-muted-foreground">
+                        监控并分配所有工单。
+                    </p>
                      <Button onClick={() => navigateTo({ name: 'ENGINEER_DASHBOARD' })}>切换到工程师视图</Button>
                 </header>
-                <div className="mt-6">
+                <div>
                     <LeaderDashboardClient initialWorkOrders={workOrders} employees={employees} />
                 </div>
             </div>

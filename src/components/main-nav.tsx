@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation'
-import { Building, User, GanttChartSquare, Menu } from 'lucide-react';
+import { User, GanttChartSquare, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 
-export function MainNav() {
+export function MainNav({ title }: { title: string }) {
   const pathname = usePathname();
 
   const navLinks = (
@@ -38,10 +38,9 @@ export function MainNav() {
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-card px-4 md:px-6">
-      <Link href="/" className="flex items-center gap-2 text-lg font-semibold text-primary">
-        
-        <span className="font-bold">数据中心运维</span>
-      </Link>
+      <div className="flex items-center gap-2 text-lg font-semibold text-primary">
+        <span className="font-bold">{title}</span>
+      </div>
       <nav className="hidden md:flex items-center gap-2 mx-auto">
         {/* The consolidated component will handle view switching, so these links might be redundant or could be repurposed to control the state of the main component. For now, they are visually present but might not navigate in a traditional sense. */}
       </nav>
