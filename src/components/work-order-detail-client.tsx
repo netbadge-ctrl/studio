@@ -3,7 +3,6 @@
 
 import * as React from 'react';
 import type { WorkOrder, Component as ComponentType } from '@/lib/types';
-// import Link from 'next/link';
 import {
   Card,
   CardContent,
@@ -28,8 +27,6 @@ import {
   MapPin,
   ArrowRight,
   Server as ServerIcon,
-  HardDrive,
-  Network,
   Layers
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -103,8 +100,6 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
 
   const handleNavigate = (e: React.MouseEvent) => {
       e.preventDefault();
-      // This is a hacky way to communicate navigation without a router.
-      // In a real app, this would be a callback function.
       const event = new CustomEvent('navigateTo', { detail: { target: `/work-orders/${workOrder.id}/operate` } });
       window.dispatchEvent(event);
   }
@@ -130,75 +125,86 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
             </Badge>
           </div>
         </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="space-y-4">
-            <h3 className="font-semibold text-lg flex items-center gap-2">
-              <MapPin className="h-5 w-5 text-primary" />
-              设备位置
-            </h3>
-            <ScrollArea className="h-72 w-full p-4 bg-muted/50 rounded-lg border">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>设备</TableHead>
-                    <TableHead>序列号</TableHead>
-                    <TableHead>位置</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {workOrder.devices.map((device) => (
-                    <TableRow key={device.id}>
-                      <TableCell>
-                        <div className="flex items-center gap-2 font-medium">
-                          {getDeviceIcon(device.type)}
-                        </div>
-                      </TableCell>
-                      <TableCell className="font-mono text-xs">
-                        {device.serialNumber}
-                      </TableCell>
-                      <TableCell className="font-mono text-xs">
-                        {device.location.rack} / U{device.location.uPosition}
-                      </TableCell>
+        <CardContent className="grid md:grid-cols-2 gap-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <MapPin className="h-5 w-5 text-primary" />
+                设备位置
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ScrollArea className="h-96">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>设备</TableHead>
+                      <TableHead>序列号</TableHead>
+                      <TableHead>位置</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </ScrollArea>
-          </div>
+                  </TableHeader>
+                  <TableBody>
+                    {workOrder.devices.map((device) => (
+                      <TableRow key={device.id}>
+                        <TableCell>
+                          <div className="flex items-center gap-2 font-medium">
+                            {getDeviceIcon(device.type)}
+                            <span>{device.model}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell className="font-mono text-xs">
+                          {device.serialNumber}
+                        </TableCell>
+                        <TableCell className="font-mono text-xs">
+                          {device.location.rack} / U{device.location.uPosition}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </ScrollArea>
+            </CardContent>
+          </Card>
 
-          <div className="space-y-4">
-             <div className='flex justify-between items-center'>
-                <h3 className="font-semibold text-lg flex items-center gap-2">
+          <Card>
+            <CardHeader>
+              <CardTitle className='flex justify-between items-center text-lg'>
+                <span className="flex items-center gap-2">
                   <PackageSearch className="h-5 w-5 text-primary" />
                   所需备件
-                </h3>
-             </div>
-            {requiredComponents.length > 0 ? (
-              <div className="p-4 bg-muted/50 rounded-lg border">
-                <ul className="space-y-4">
-                  {requiredComponents.map(({ component: comp, quantity }) => (
-                    <li key={comp.partNumber} className="flex items-center justify-between gap-x-4">
-                      <div className="flex-grow">
-                         <p className='font-semibold leading-tight whitespace-nowrap'>{comp.model}</p>
-                         <p className='text-xs text-muted-foreground'>{comp.type} / {comp.manufacturer}</p>
-                      </div>
-                      <div className='flex flex-col items-end flex-shrink-0'>
-                        <span className="font-bold text-primary text-lg">x {quantity}</span>
-                         <p className='text-xs font-mono text-muted-foreground mt-1'>仓库盒号: {comp.partNumber}</p>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ) : (
-              <p className="text-sm text-muted-foreground text-center py-4">
-                此工单无需更换或添加备件。
-              </p>
-            )}
-          </div>
+                </span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ScrollArea className="h-96">
+                {requiredComponents.length > 0 ? (
+                  <ul className="space-y-4">
+                    {requiredComponents.map(({ component: comp, quantity }) => (
+                      <li key={comp.partNumber} className="flex items-center justify-between gap-x-4 p-2 rounded-lg bg-muted/50">
+                        <div className="flex-grow">
+                          <p className='font-semibold leading-tight whitespace-nowrap'>{comp.model}</p>
+                          <p className='text-xs text-muted-foreground'>{comp.type} / {comp.manufacturer}</p>
+                        </div>
+                        <div className='flex flex-col items-end flex-shrink-0'>
+                          <span className="font-bold text-primary text-lg">x {quantity}</span>
+                          <p className='text-xs font-mono text-muted-foreground mt-1'>仓库盒号: {comp.partNumber}</p>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <div className="flex items-center justify-center h-full">
+                    <p className="text-sm text-muted-foreground text-center py-4">
+                      此工单无需更换或添加备件。
+                    </p>
+                  </div>
+                )}
+              </ScrollArea>
+            </CardContent>
+          </Card>
         </CardContent>
-        <CardFooter className="flex-col items-stretch gap-2 md:flex-row-reverse">
-          <Button onClick={handleNavigate} size="lg">
+        <CardFooter className="flex justify-end pt-6">
+          <Button onClick={handleNavigate} size="lg" className='gap-2'>
               开始操作
               <ArrowRight />
           </Button>
