@@ -28,6 +28,12 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 't10.baidu.com',
+        port: '',
+        pathname: '/**',
+      }
     ],
   },
 };

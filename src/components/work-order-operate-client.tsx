@@ -192,7 +192,7 @@ function DeviceOperation({
               <TabsContent value="image" className="mt-4">
                 <div className="aspect-video bg-muted rounded-lg flex items-center justify-center relative overflow-hidden">
                   <Image 
-                      src="https://storage.googleapis.com/maker-studio-project-files-prod/v1/scenes/bRKM4o3t0mB-M-b-rI46-/resources/image_0.jpeg"
+                      src="https://t10.baidu.com/it/u=4241972780,3175495119&fm=199&app=68&f=JPEG?w=750&h=891&s=CFA12BC514878EEB0C00E1040300B043"
                       alt="操作指引图片"
                       fill
                       data-ai-hint="server motherboard"
