@@ -42,16 +42,18 @@ export function BulkCheckDialog({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>确认批量结单检测？</AlertDialogTitle>
-          <AlertDialogDescription>
-            <p className="mb-2">
-              将对工单内 <span className="font-bold text-primary">{deviceCount}</span> 台“待检测”服务器批量发起结单检测。
-            </p>
-            <p className="mb-2">
-              - 若检测通过，则服务器状态更新为 <span className="font-semibold text-green-600">“改配完成”</span>。
-            </p>
-             <p>
-              - 如不通过，服务器状态将更新为 <span className="font-semibold text-orange-600">“检测异常”</span>，您需要对“检测异常”的服务器进行单独处理。
-            </p>
+          <AlertDialogDescription asChild>
+            <div>
+              <p className="mb-2">
+                将对工单内 <span className="font-bold text-primary">{deviceCount}</span> 台“待检测”服务器批量发起结单检测。
+              </p>
+              <p className="mb-2">
+                - 若检测通过，则服务器状态更新为 <span className="font-semibold text-green-600">“改配完成”</span>。
+              </p>
+              <p>
+                - 如不通过，服务器状态将更新为 <span className="font-semibold text-orange-600">“检测异常”</span>，您需要对“检测异常”的服务器进行单独处理。
+              </p>
+            </div>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
