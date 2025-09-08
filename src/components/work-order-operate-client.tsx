@@ -21,6 +21,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { BulkCheckDialog } from './bulk-check-dialog';
 
 
 const getDeviceIcon = (type: Device['type']) => {
@@ -257,11 +258,21 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
   const { toast } = useToast();
   const [openAccordionItem, setOpenAccordionItem] = useState<string>('');
   const [isScanDeviceDialogOpen, setIsScanDeviceDialogOpen] = useState(false);
+  const [isBulkCheckDialogOpen, setIsBulkCheckDialogOpen] = useState(false);
   const deviceRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   const [deviceStatuses, setDeviceStatuses] = useState<Record<string, DeviceStatus>>(
     Object.fromEntries(workOrder.devices.map(d => [d.id, d.status]))
   );
+
+  const devicesWithStatus = useMemo(() => workOrder.devices.map(d => ({
+    ...d,
+    status: deviceStatuses[d.id] || d.status,
+  })), [workOrder.devices, deviceStatuses]);
+
+  const devicesPendingCheckCount = useMemo(() => {
+    return devicesWithStatus.filter(d => d.status === '待检测').length;
+  }, [devicesWithStatus]);
 
   const handleStatusChange = (deviceId: string, status: DeviceStatus) => {
     setDeviceStatuses(prev => ({ ...prev, [deviceId]: status }));
@@ -270,7 +281,7 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
   const handleFindDevice = (serialNumberInput: string) => {
     if (!serialNumberInput) return;
 
-    const device = workOrder.devices.find(d => d.serialNumber.toLowerCase() === serialNumberInput.toLowerCase());
+    const device = devicesWithStatus.find(d => d.serialNumber.toLowerCase() === serialNumberInput.toLowerCase());
 
     if (device) {
       setOpenAccordionItem(device.id);
@@ -306,10 +317,30 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
     window.dispatchEvent(event);
   }
 
-  const devicesWithStatus = workOrder.devices.map(d => ({
-    ...d,
-    status: deviceStatuses[d.id] || d.status,
-  }));
+  const handleBulkCheck = () => {
+    setDeviceStatuses(prev => {
+        const newStatuses = { ...prev };
+        devicesWithStatus.forEach(device => {
+            if (device.status === '待检测') {
+                // Simulate check result: 70% pass, 30% fail
+                newStatuses[device.id] = Math.random() < 0.7 ? '改配完成' : '检测异常';
+            }
+        });
+        return newStatuses;
+    });
+  };
+
+  const onOpenBulkCheckDialog = () => {
+    if (devicesPendingCheckCount === 0) {
+        toast({
+            title: "没有待检测的服务器",
+            description: "当前工单中没有需要进行结单检测的服务器。",
+            variant: "default"
+        });
+        return;
+    }
+    setIsBulkCheckDialogOpen(true);
+  }
 
   return (
     <>
@@ -388,7 +419,7 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56 mb-2">
-              <DropdownMenuItem>
+              <DropdownMenuItem onSelect={onOpenBulkCheckDialog}>
                 <FileCheck2 className="mr-2 h-4 w-4" />
                 <span>批量发起结单检测</span>
               </DropdownMenuItem>
@@ -409,6 +440,12 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
         isOpen={isScanDeviceDialogOpen}
         setIsOpen={setIsScanDeviceDialogOpen}
         onFindDevice={handleFindDevice}
+      />
+      <BulkCheckDialog
+        isOpen={isBulkCheckDialogOpen}
+        setIsOpen={setIsBulkCheckDialogOpen}
+        deviceCount={devicesPendingCheckCount}
+        onConfirm={handleBulkCheck}
       />
     </>
   )
