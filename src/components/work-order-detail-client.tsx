@@ -149,8 +149,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
                           <div className="flex items-center gap-3">
                             {getDeviceIcon(device.type)}
                             <div>
-                                <p className="font-medium">{device.model}</p>
-                                <p className="font-mono text-xs text-muted-foreground">{device.serialNumber}</p>
+                                <p className="font-mono text-sm text-foreground">{device.serialNumber}</p>
                             </div>
                           </div>
                         </TableCell>
