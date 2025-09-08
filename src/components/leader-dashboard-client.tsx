@@ -56,15 +56,24 @@ export function LeaderDashboardClient({
     assignedEmployees: Employee[]
   ) => {
     setWorkOrders((prevOrders) =>
-      prevOrders.map((order) =>
-        order.id === orderId
-          ? {
-              ...order,
-              assignedTo: assignedEmployees,
-              status: assignedEmployees.length > 0 ? "已分配" : "待处理",
-            }
-          : order
-      )
+      prevOrders.map((order) => {
+        if (order.id === orderId) {
+          const isAssigned = assignedEmployees.length > 0;
+          return {
+            ...order,
+            assignedTo: assignedEmployees,
+            status: isAssigned ? "已分配" : "待处理",
+            // If the work order is being assigned, reset all device statuses to '待处理'
+            devices: isAssigned
+              ? order.devices.map((device) => ({
+                  ...device,
+                  status: '待处理',
+                }))
+              : order.devices,
+          };
+        }
+        return order;
+      })
     );
   };
 
