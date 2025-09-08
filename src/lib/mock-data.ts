@@ -66,7 +66,6 @@ const rawWorkOrders: WorkOrder[] = [
         model: "Dell PowerEdge R740",
         serialNumber: "SN-003",
         status: "待处理",
-        location: { module: "天津武清", rack: "R12", uPosition: 26 },
         currentConfig: [
           { type: "内存", manufacturer: "Hynix", model: "16GB DDR4 2400MHz", quantity: 1, partNumber: "MEM-16G-2400-A", slot: "A1" },
           { type: "SSD", manufacturer: "Samsung", model: "PM883 480GB SSD", quantity: 1, partNumber: "SSD-480G-S-PM883", slot: "Disk 0" },
@@ -98,7 +97,6 @@ const rawWorkOrders: WorkOrder[] = [
         model: "Dell PowerEdge R740",
         serialNumber: "SN-005",
         status: "待处理",
-        location: { module: "天津武清", rack: "R12", uPosition: 28 },
         currentConfig: [
           { type: "内存", manufacturer: "Hynix", model: "16GB DDR4 2400MHz", quantity: 1, partNumber: "MEM-16G-2400-A", slot: "A1" },
           { type: "SSD", manufacturer: "Samsung", model: "PM883 480GB SSD", quantity: 1, partNumber: "SSD-480G-S-PM883", slot: "Disk 0" },
@@ -195,7 +193,6 @@ const rawWorkOrders: WorkOrder[] = [
         model: "HPE ProLiant DL380 Gen10",
         serialNumber: "SN-010",
         status: "待处理",
-        location: { module: "北京酒仙桥", rack: "R05", uPosition: 16 },
         currentConfig: [],
         targetConfig: [
             { type: "CPU", manufacturer: "Intel", model: "Xeon Silver 4210", quantity: 1, partNumber: "CPU-INT-4210", slot: "CPU 1"},
@@ -240,7 +237,6 @@ const rawWorkOrders: WorkOrder[] = [
         model: "Supermicro 2029U-TR4",
         serialNumber: "SN-012",
         status: "待处理",
-        location: { module: "北京万国", rack: "R21", uPosition: 4 },
         currentConfig: [
           { type: "SATA", manufacturer: "Seagate", model: "Exos 4TB HDD", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 1" },
           { type: "SATA", manufacturer: "Seagate", model: "Exos 4TB HDD", quantity: 1, partNumber: "HDD-4T-S-EXOS", slot: "Bay 2" },
@@ -346,7 +342,6 @@ const rawWorkOrders: WorkOrder[] = [
         model: "Dell PowerEdge R630",
         serialNumber: "SN-018",
         status: "待处理",
-        location: { module: "天津武清", rack: "R18", uPosition: 32 },
         currentConfig: [
             { type: "CPU", manufacturer: "Intel", model: "Xeon E5-2620v3", quantity: 1, partNumber: "CPU-INT-2620V3", slot: "CPU 1"},
         ],

@@ -115,7 +115,11 @@ export function DatacenterOpsDemo({
         );
 
         const getModulesForOrder = (order: WorkOrder) => {
-            const modules = new Set(order.devices.map(d => d.location.module));
+            const modules = new Set(
+              order.devices
+                .filter(d => d.location) // Filter out devices with no location
+                .map(d => d.location!.module) // Safe to access module now
+            );
             return Array.from(modules).join(', ');
         }
         

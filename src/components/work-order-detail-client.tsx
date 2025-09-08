@@ -48,7 +48,7 @@ const getStatusClass = (status: WorkOrder['status']) => {
 };
 
 const getDeviceIcon = (type: WorkOrder['devices'][0]['type']) => {
-  const props = { className: 'h-5 w-5 text-primary' };
+  const props = { className: 'h-5 w-5 text-primary flex-shrink-0' };
   switch (type) {
     case '服务器':
       return <ServerIcon {...props} />;
@@ -129,8 +129,8 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg">
-                <MapPin className="h-5 w-5 text-primary" />
-                设备位置
+                <Layers className="h-5 w-5 text-primary" />
+                设备清单
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -139,7 +139,6 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
                   <TableHeader>
                     <TableRow>
                       <TableHead>设备</TableHead>
-                      <TableHead>序列号</TableHead>
                       <TableHead>位置</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -147,16 +146,20 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
                     {workOrder.devices.map((device) => (
                       <TableRow key={device.id}>
                         <TableCell>
-                          <div className="flex items-center gap-2 font-medium">
+                          <div className="flex items-center gap-3">
                             {getDeviceIcon(device.type)}
-                            <span>{device.model}</span>
+                            <div>
+                                <p className="font-medium">{device.model}</p>
+                                <p className="font-mono text-xs text-muted-foreground">{device.serialNumber}</p>
+                            </div>
                           </div>
                         </TableCell>
                         <TableCell className="font-mono text-xs">
-                          {device.serialNumber}
-                        </TableCell>
-                        <TableCell className="font-mono text-xs">
-                          {device.location.rack} / U{device.location.uPosition}
+                           {device.location ? (
+                                `${device.location.rack} / U${device.location.uPosition}`
+                            ) : (
+                                <span className="text-muted-foreground">线下设备</span>
+                            )}
                         </TableCell>
                       </TableRow>
                     ))}

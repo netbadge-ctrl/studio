@@ -20,7 +20,7 @@ export type Device = {
   model: string;
   serialNumber: string;
   status: DeviceStatus;
-  location: {
+  location?: {
     module: string;
     rack: string;
     uPosition: number;
