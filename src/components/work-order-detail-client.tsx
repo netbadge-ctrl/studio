@@ -153,10 +153,10 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
         </CardHeader>
         <CardContent className="grid md:grid-cols-2 gap-6">
           <Card>
-            <CardHeader className="p-4">
+            <CardHeader className="p-4 bg-muted/50 rounded-t-lg">
               <CardTitle className='text-lg'>设备清单</CardTitle>
             </CardHeader>
-            <CardContent className="p-0">
+            <CardContent className="p-4">
               <ScrollArea className="h-80">
                 <Table>
                   <TableBody>
@@ -186,7 +186,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
           </Card>
 
           <Card>
-            <CardHeader className="p-4">
+            <CardHeader className="p-4 bg-muted/50 rounded-t-lg">
               <CardTitle className='flex justify-between items-center text-lg'>
                 <span className="flex items-center gap-2">
                   <PackageSearch className="h-5 w-5 text-primary" />
@@ -194,8 +194,8 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
                 </span>
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <ScrollArea className="h-96">
+            <CardContent className="p-4">
+              <ScrollArea className="h-80">
                 {requiredComponents.length > 0 ? (
                   <ul className="space-y-2">
                     {requiredComponents.map(({ component: comp, quantity }) => (
@@ -205,7 +205,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
                           <p className='text-xs text-muted-foreground'>{comp.type} / {comp.manufacturer}</p>
                         </div>
                         <div className='flex flex-col items-end flex-shrink-0'>
-                          <span className="font-mono text-sm text-foreground font-semibold">x {quantity}</span>
+                           <span className="font-mono text-sm text-foreground font-semibold">x {quantity}</span>
                           <p className='text-xs font-mono text-muted-foreground mt-1'>仓库盒号: {comp.partNumber}</p>
                         </div>
                       </li>
