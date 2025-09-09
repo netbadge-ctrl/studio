@@ -2,7 +2,7 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import type { WorkOrder, Employee } from "@/lib/types";
+import type { WorkOrder, Employee, Component } from "@/lib/types";
 import { LeaderDashboardClient } from '@/components/leader-dashboard-client';
 import { WorkOrderDetailClient } from '@/components/work-order-detail-client';
 import { WorkOrderOperateClient } from '@/components/work-order-operate-client';
@@ -13,13 +13,16 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { Server, Wrench, HardDrive, User, Calendar, Building2, UserSquare, Layers } from "lucide-react";
+import { ScanFaultyPartPage } from '@/components/scan-faulty-part-page';
+
 
 type View = 
   | { name: 'ENGINEER_DASHBOARD' }
   | { name: 'LEADER_DASHBOARD' }
   | { name: 'WORK_ORDER_DETAIL', workOrderId: string, previousView: 'ENGINEER_DASHBOARD' | 'LEADER_DASHBOARD' }
   | { name: 'WORK_ORDER_OPERATE', workOrderId: string }
-  | { name: 'REQUEST_PARTS', workOrderId: string };
+  | { name: 'REQUEST_PARTS', workOrderId: string }
+  | { name: 'SCAN_FAULTY_PART', workOrderId: string; partNumber: string, component: Component };
 
 const getStatusClass = (status: WorkOrder["status"]) => {
   switch (status) {
@@ -68,18 +71,36 @@ export function DatacenterOpsDemo({
 }) {
     const [view, setView] = useState<View>({ name: initialView });
     const [workOrders, setWorkOrders] = useState(initialWorkOrders);
+    const [partRequests, setPartRequests] = useState<Map<string, { component: Component, serials: string[] }>>(new Map());
     const employees = initialEmployees;
-
-    const currentWorkOrder = (view.name === 'WORK_ORDER_DETAIL' || view.name === 'WORK_ORDER_OPERATE' || view.name === 'REQUEST_PARTS') 
-        ? workOrders.find(wo => wo.id === view.workOrderId)
-        : null;
+    
+    const currentWorkOrder = (view.name !== 'ENGINEER_DASHBOARD' && view.name !== 'LEADER_DASHBOARD')
+    ? workOrders.find(wo => wo.id === view.workOrderId)
+    : null;
 
     const navigateTo = (newView: View) => {
         setView(newView);
     };
+    
+    const handlePartScanned = (partNumber: string, serialNumber: string) => {
+        setPartRequests(prev => {
+            const newRequests = new Map(prev);
+            const component = (view as any).component as Component; // We know this will be available
+            const existing = newRequests.get(partNumber);
+            if (existing) {
+                if (!existing.serials.includes(serialNumber)) {
+                    existing.serials.push(serialNumber);
+                }
+            } else {
+                newRequests.set(partNumber, { component, serials: [serialNumber] });
+            }
+            return newRequests;
+        });
+        navigateTo({ name: 'REQUEST_PARTS', workOrderId: (view as any).workOrderId });
+    };
 
     useEffect(() => {
-        const isSubPage = view.name === 'WORK_ORDER_DETAIL' || view.name === 'WORK_ORDER_OPERATE' || view.name === 'REQUEST_PARTS';
+        const isSubPage = view.name !== 'ENGINEER_DASHBOARD' && view.name !== 'LEADER_DASHBOARD';
         setShowBackButton(isSubPage);
 
         let backLabel = '';
@@ -112,6 +133,11 @@ export function DatacenterOpsDemo({
                 onTitleChange('增领备件');
                 backLabel = '返回操作页';
                 backView = { name: 'WORK_ORDER_OPERATE', workOrderId: view.workOrderId };
+                break;
+            case 'SCAN_FAULTY_PART':
+                onTitleChange('扫描坏件序列号');
+                backLabel = '返回增领列表';
+                backView = { name: 'REQUEST_PARTS', workOrderId: view.workOrderId };
                 break;
             default:
                 onTitleChange("数据中心运维");
@@ -212,12 +238,20 @@ export function DatacenterOpsDemo({
                 />;
 
             case 'REQUEST_PARTS':
-                if (!currentWorkOrder) return <div>工单未找到</div>;
-                return <RequestPartsPage 
+                 if (!currentWorkOrder) return <div>工单未找到</div>;
+                 return <RequestPartsPage 
                     workOrder={currentWorkOrder} 
                     onBack={() => navigateTo({ name: 'WORK_ORDER_OPERATE', workOrderId: view.workOrderId })}
+                    onScan={(component) => navigateTo({ name: 'SCAN_FAULTY_PART', workOrderId: view.workOrderId, partNumber: component.partNumber, component })}
+                    initialPartRequests={partRequests}
                 />;
-                
+            
+            case 'SCAN_FAULTY_PART':
+                return <ScanFaultyPartPage 
+                    component={view.component}
+                    onScanComplete={(serialNumber) => handlePartScanned(view.partNumber, serialNumber)}
+                />;
+
             default:
                 return <div>未知视图</div>;
         }
