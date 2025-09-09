@@ -41,12 +41,16 @@ export function RequestPartsDialog({
   const availableParts = React.useMemo(() => {
     const partsMap = new Map<string, Component>();
     workOrder.devices.forEach(device => {
-        const allParts = [...device.currentConfig, ...device.targetConfig];
-        allParts.forEach(comp => {
-            if (!partsMap.has(comp.partNumber)) {
+      const currentSlotMap = new Map(device.currentConfig.map(c => [c.slot, c]));
+      device.targetConfig.forEach(comp => {
+        const currentComp = currentSlotMap.get(comp.slot);
+        // Only add if it's a new component or a different component in the same slot
+        if (!currentComp || currentComp.partNumber !== comp.partNumber) {
+          if (!partsMap.has(comp.partNumber)) {
             partsMap.set(comp.partNumber, comp);
-            }
-        });
+          }
+        }
+      });
     });
     return Array.from(partsMap.values()).sort((a,b) => a.model.localeCompare(b.model));
   }, [workOrder]);
