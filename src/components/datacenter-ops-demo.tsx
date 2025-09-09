@@ -6,6 +6,7 @@ import type { WorkOrder, Employee } from "@/lib/types";
 import { LeaderDashboardClient } from '@/components/leader-dashboard-client';
 import { WorkOrderDetailClient } from '@/components/work-order-detail-client';
 import { WorkOrderOperateClient } from '@/components/work-order-operate-client';
+import { RequestPartsPage } from '@/components/request-parts-page';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,7 +18,8 @@ type View =
   | { name: 'ENGINEER_DASHBOARD' }
   | { name: 'LEADER_DASHBOARD' }
   | { name: 'WORK_ORDER_DETAIL', workOrderId: string, previousView: 'ENGINEER_DASHBOARD' | 'LEADER_DASHBOARD' }
-  | { name: 'WORK_ORDER_OPERATE', workOrderId: string };
+  | { name: 'WORK_ORDER_OPERATE', workOrderId: string }
+  | { name: 'REQUEST_PARTS', workOrderId: string };
 
 const getStatusClass = (status: WorkOrder["status"]) => {
   switch (status) {
@@ -68,7 +70,7 @@ export function DatacenterOpsDemo({
     const [workOrders, setWorkOrders] = useState(initialWorkOrders);
     const employees = initialEmployees;
 
-    const currentWorkOrder = (view.name === 'WORK_ORDER_DETAIL' || view.name === 'WORK_ORDER_OPERATE') 
+    const currentWorkOrder = (view.name === 'WORK_ORDER_DETAIL' || view.name === 'WORK_ORDER_OPERATE' || view.name === 'REQUEST_PARTS') 
         ? workOrders.find(wo => wo.id === view.workOrderId)
         : null;
 
@@ -77,8 +79,8 @@ export function DatacenterOpsDemo({
     };
 
     useEffect(() => {
-        const isDetailPage = view.name === 'WORK_ORDER_DETAIL' || view.name === 'WORK_ORDER_OPERATE';
-        setShowBackButton(isDetailPage);
+        const isSubPage = view.name === 'WORK_ORDER_DETAIL' || view.name === 'WORK_ORDER_OPERATE' || view.name === 'REQUEST_PARTS';
+        setShowBackButton(isSubPage);
 
         let backLabel = '';
         let backView: View = { name: 'ENGINEER_DASHBOARD' };
@@ -105,6 +107,11 @@ export function DatacenterOpsDemo({
                   backLabel = '返回准备页';
                   backView = { name: 'WORK_ORDER_DETAIL', workOrderId: view.workOrderId, previousView: previousViewForOperate };
                 }
+                break;
+            case 'REQUEST_PARTS':
+                onTitleChange('增领备件');
+                backLabel = '返回操作页';
+                backView = { name: 'WORK_ORDER_OPERATE', workOrderId: view.workOrderId };
                 break;
             default:
                 onTitleChange("数据中心运维");
@@ -199,7 +206,17 @@ export function DatacenterOpsDemo({
 
             case 'WORK_ORDER_OPERATE':
                 if (!currentWorkOrder) return <div>工单未找到</div>;
-                return <WorkOrderOperateClient workOrder={currentWorkOrder} />;
+                return <WorkOrderOperateClient 
+                    workOrder={currentWorkOrder} 
+                    onNavigateToRequestParts={() => navigateTo({ name: 'REQUEST_PARTS', workOrderId: view.workOrderId })}
+                />;
+
+            case 'REQUEST_PARTS':
+                if (!currentWorkOrder) return <div>工单未找到</div>;
+                return <RequestPartsPage 
+                    workOrder={currentWorkOrder} 
+                    onBack={() => navigateTo({ name: 'WORK_ORDER_OPERATE', workOrderId: view.workOrderId })}
+                />;
                 
             default:
                 return <div>未知视图</div>;

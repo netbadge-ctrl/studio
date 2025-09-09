@@ -22,7 +22,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { BulkCheckDialog } from './bulk-check-dialog';
-import { RequestPartsDialog } from './request-parts-dialog';
 import { ReturnPartsDialog } from './return-parts-dialog';
 import {
   AlertDialog,
@@ -196,7 +195,7 @@ function DeviceOperation({
                   onClick={() => setIsImageFullscreen(true)}
                 >
                   <Image 
-                      src="https://t10.baidu.com/it/u=4241972780,3175495119&fm=199&app=68&f=JPEG?w=750&h=891&s=CFA12BC51478EEB0C00E1040300B043"
+                      src="https://t10.baidu.com/it/u=4241972780,3175495119&fm=199&app=68&f=JPEG?w=750&h=891&s=CFA12BC514878EEB0C00E1040300B043"
                       alt="操作指引图片"
                       fill
                       data-ai-hint="server motherboard"
@@ -285,12 +284,11 @@ function DeviceOperation({
   );
 }
 
-export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) {
+export function WorkOrderOperateClient({ workOrder, onNavigateToRequestParts }: { workOrder: WorkOrder, onNavigateToRequestParts: () => void; }) {
   const { toast } = useToast();
   const [openAccordionItem, setOpenAccordionItem] = useState<string>('');
   const [isScanDeviceDialogOpen, setIsScanDeviceDialogOpen] = useState(false);
   const [isBulkCheckDialogOpen, setIsBulkCheckDialogOpen] = useState(false);
-  const [isRequestPartsDialogOpen, setIsRequestPartsDialogOpen] = useState(false);
   const [isReturnPartsDialogOpen, setIsReturnPartsDialogOpen] = useState(false);
   const [isCompleteConfirmOpen, setIsCompleteConfirmOpen] = useState(false);
   const deviceRefs = useRef<Record<string, HTMLDivElement | null>>({});
@@ -482,7 +480,7 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
                     <FileCheck2 className="mr-2 h-4 w-4" />
                     <span>批量发起结单检测</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onSelect={() => setIsRequestPartsDialogOpen(true)}>
+                  <DropdownMenuItem onSelect={onNavigateToRequestParts}>
                     <PackagePlus className="mr-2 h-4 w-4" />
                     <span>增领备件</span>
                   </DropdownMenuItem>
@@ -511,11 +509,6 @@ export function WorkOrderOperateClient({ workOrder }: { workOrder: WorkOrder }) 
         setIsOpen={setIsBulkCheckDialogOpen}
         deviceCount={devicesPendingCheckCount}
         onConfirm={handleBulkCheck}
-      />
-       <RequestPartsDialog
-        isOpen={isRequestPartsDialogOpen}
-        setIsOpen={setIsRequestPartsDialogOpen}
-        workOrder={workOrder}
       />
        <ReturnPartsDialog
         isOpen={isReturnPartsDialogOpen}
