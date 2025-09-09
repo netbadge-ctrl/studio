@@ -136,7 +136,7 @@ export function RequestPartsDialog({
         <DialogHeader>
           <DialogTitle className="text-2xl">增领备件</DialogTitle>
           <DialogDescription>
-            扫描或手动添加故障件以申领新的备件。系统将记录坏件并生成领料单。
+            扫描或手动添加故障件以申领新的备件。系统将记录坏件并生成领料单。仅用于领用的备件中出现坏件的替补领用。
           </DialogDescription>
         </DialogHeader>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1 overflow-hidden">
