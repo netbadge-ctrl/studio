@@ -83,6 +83,15 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
     });
   }, [workOrder.devices]);
 
+  const completionStatus = React.useMemo(() => {
+    const totalDevices = workOrder.devices.length;
+    if (totalDevices === 0) {
+      return "(0/0)";
+    }
+    const completedDevices = workOrder.devices.filter(d => d.status === '改配完成').length;
+    return `(完成度: ${completedDevices}/${totalDevices})`;
+  }, [workOrder.devices]);
+
 
   const requiredComponents = React.useMemo(() => {
     const componentsMap = new Map<string, { component: ComponentType, quantity: number }>();
@@ -135,7 +144,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
       <div className='space-y-4'>
         <Card>
           <CardHeader className="px-4 py-2 bg-muted/50 rounded-t-lg">
-            <CardTitle className='text-base'>设备清单 ({workOrder.devices.length} 台)</CardTitle>
+            <CardTitle className='text-base'>设备清单 {completionStatus}</CardTitle>
           </CardHeader>
           <CardContent className="p-0">
             <ScrollArea className="h-72">
