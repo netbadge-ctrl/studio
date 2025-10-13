@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Layers, Server as ServerIcon, ArrowUp, ArrowDown, Video, Image as ImageIcon, QrCode, CheckCircle, AlertTriangle, Search, MoreVertical, FileCheck2, PackagePlus, PackageMinus } from 'lucide-react';
+import { Layers, Server as ServerIcon, ArrowUp, ArrowDown, Video, Image as ImageIcon, QrCode, CheckCircle, AlertTriangle, Search, MoreVertical, FileCheck2, PackagePlus, PackageMinus, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -33,6 +33,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
+import { ScrollArea } from './ui/scroll-area';
 
 
 const getDeviceIcon = (type: Device['type']) => {
@@ -75,10 +77,12 @@ const formatLocation = (location: Device['location']) => {
 
 function DeviceOperation({ 
     device,
-    onStatusChange
+    onStatusChange,
+    onViewAnomaly,
  }: { 
     device: Device,
     onStatusChange: (status: DeviceStatus) => void;
+    onViewAnomaly: (device: Device) => void;
 }) {
   const [highlightedPart, setHighlightedPart] = useState<string | null>(null);
   const [isImageFullscreen, setIsImageFullscreen] = useState(false);
@@ -160,7 +164,7 @@ function DeviceOperation({
         break;
       case '检测异常':
         mainAction = (
-          <Button variant="destructive" size="lg" className="w-full" onClick={() => { /* Logic to view issue */ }}>
+          <Button variant="destructive" size="lg" className="w-full" onClick={() => onViewAnomaly(device)}>
             <AlertTriangle className='mr-2 h-5 w-5' />
             查看异常
           </Button>
@@ -291,6 +295,9 @@ export function WorkOrderOperateClient({ workOrder, onNavigateToRequestParts }: 
   const [isBulkCheckDialogOpen, setIsBulkCheckDialogOpen] = useState(false);
   const [isReturnPartsDialogOpen, setIsReturnPartsDialogOpen] = useState(false);
   const [isCompleteConfirmOpen, setIsCompleteConfirmOpen] = useState(false);
+  const [isAnomalyDialogOpen, setIsAnomalyDialogOpen] = useState(false);
+  const [selectedAnomalyDevice, setSelectedAnomalyDevice] = useState<Device | null>(null);
+
   const deviceRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   const [deviceStatuses, setDeviceStatuses] = useState<Record<string, DeviceStatus>>(
@@ -320,6 +327,11 @@ export function WorkOrderOperateClient({ workOrder, onNavigateToRequestParts }: 
 
   const handleStatusChange = (deviceId: string, status: DeviceStatus) => {
     setDeviceStatuses(prev => ({ ...prev, [deviceId]: status }));
+  };
+
+  const handleViewAnomaly = (device: Device) => {
+    setSelectedAnomalyDevice(device);
+    setIsAnomalyDialogOpen(true);
   };
 
   const handleFindDevice = (serialNumberInput: string) => {
@@ -407,6 +419,16 @@ export function WorkOrderOperateClient({ workOrder, onNavigateToRequestParts }: 
     [devicesWithStatus]
   );
 
+  const anomalyReportItems = [
+    { name: "CPU 压力测试", status: "pass", value: "30分钟, 100%" },
+    { name: "内存稳定性测试 (memtest86+)", status: "pass", value: "4/4 passes" },
+    { name: "PCIe 带宽测试 (GPU)", status: "pass", value: "15.8 GB/s" },
+    { name: "硬盘 I/O 性能 (fio)", status: "fail", value: "读: 150MB/s (预期 > 450MB/s)" },
+    { name: "网络连通性 (ping)", status: "pass", value: "0% packet loss" },
+    { name: "带外管理 (IPMI)", status: "pass", value: "连接正常" },
+    { name: "电源冗余测试", status: "fail", value: "PSU 2 无输出" },
+  ];
+
   return (
     <>
       <Card>
@@ -458,6 +480,7 @@ export function WorkOrderOperateClient({ workOrder, onNavigateToRequestParts }: 
                             <DeviceOperation 
                                 device={device} 
                                 onStatusChange={(newStatus) => handleStatusChange(device.id, newStatus)}
+                                onViewAnomaly={handleViewAnomaly}
                             />
                           </AccordionContent>
                       </AccordionItem>
@@ -546,6 +569,51 @@ export function WorkOrderOperateClient({ workOrder, onNavigateToRequestParts }: 
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <Dialog open={isAnomalyDialogOpen} onOpenChange={setIsAnomalyDialogOpen}>
+        <DialogContent className="sm:max-w-3xl h-[80vh] flex flex-col">
+            <DialogHeader>
+              <DialogTitle className="text-2xl flex items-center gap-2">
+                <AlertTriangle className="text-destructive" />
+                异常检测报告
+              </DialogTitle>
+              {selectedAnomalyDevice && (
+                <CardDescription>
+                  设备序列号: <span className="font-mono">{selectedAnomalyDevice.serialNumber}</span>
+                </CardDescription>
+              )}
+            </DialogHeader>
+            <div className="flex-1 overflow-hidden">
+                <ScrollArea className="h-full pr-6">
+                    <div className="space-y-4">
+                        {anomalyReportItems.map((item, index) => (
+                        <div key={index} className={cn(
+                            "flex items-start gap-4 p-4 rounded-lg border",
+                            item.status === 'pass' ? "bg-green-50/50 border-green-200" : "bg-destructive/10 border-destructive"
+                        )}>
+                            {item.status === 'pass' ? 
+                            <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-1" /> : 
+                            <X className="h-5 w-5 text-destructive flex-shrink-0 mt-1" />}
+                            <div className="flex-grow">
+                                <p className="font-semibold text-card-foreground">{item.name}</p>
+                                <p className={cn("text-sm", item.status === 'pass' ? 'text-muted-foreground' : 'text-destructive font-medium')}>
+                                    {item.value}
+                                </p>
+                            </div>
+                        </div>
+                        ))}
+                    </div>
+                </ScrollArea>
+            </div>
+             <DialogFooter className="mt-auto pt-4 border-t">
+                <DialogClose asChild>
+                    <Button variant="outline" className="w-full">关闭</Button>
+                </DialogClose>
+            </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   )
 }
+
+    
