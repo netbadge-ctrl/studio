@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from "react";
@@ -18,14 +19,22 @@ interface ScanDeviceDialogProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   onFindDevice: (serialNumber: string) => void;
+  defaultSerialNumber?: string;
 }
 
 export function ScanDeviceDialog({
   isOpen,
   setIsOpen,
   onFindDevice,
+  defaultSerialNumber = "",
 }: ScanDeviceDialogProps) {
-  const [serialNumber, setSerialNumber] = React.useState("");
+  const [serialNumber, setSerialNumber] = React.useState(defaultSerialNumber);
+
+  React.useEffect(() => {
+    if (isOpen) {
+      setSerialNumber(defaultSerialNumber);
+    }
+  }, [isOpen, defaultSerialNumber]);
 
   const handleSubmit = () => {
     onFindDevice(serialNumber);
@@ -62,7 +71,7 @@ export function ScanDeviceDialog({
           <Button variant="outline" onClick={() => setIsOpen(false)}>
             取消
           </Button>
-          <Button onClick={handleSubmit}>
+          <Button onClick={handleSubmit} disabled={!serialNumber}>
             <Search className="mr-2 h-4 w-4" />
             查找
           </Button>

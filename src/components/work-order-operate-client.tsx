@@ -272,7 +272,7 @@ function DeviceOperation({
           onClick={() => setIsImageFullscreen(false)}
         >
           <Image 
-            src="https://t10.baidu.com/it/u=4241972780,3175495119&fm=199&app=68&f=JPEG?w=750&h=891&s=CFA12BC51478EEB0C00E1040300B043"
+            src="https://t10.baidu.com/it/u=4241972780,3175495119&fm=199&app=68&f=JPEG?w=750&h=891&s=CFA12BC514878EEB0C00E1040300B043"
             alt="操作指引图片 - 全屏"
             width={1200}
             height={1200}
@@ -300,10 +300,22 @@ export function WorkOrderOperateClient({ workOrder, onNavigateToRequestParts }: 
   const devicesWithStatus = useMemo(() => workOrder.devices.map(d => ({
     ...d,
     status: deviceStatuses[d.id] || d.status,
-  })), [workOrder.devices, deviceStatuses]);
+  })).sort((a,b) => {
+    if (a.location && b.location) {
+        return formatLocation(a.location)!.localeCompare(formatLocation(b.location)!);
+    }
+    if(a.location) return -1;
+    if(b.location) return 1;
+    return a.serialNumber.localeCompare(b.serialNumber);
+  }), [workOrder.devices, deviceStatuses]);
 
   const devicesPendingCheckCount = useMemo(() => {
     return devicesWithStatus.filter(d => d.status === '待检测').length;
+  }, [devicesWithStatus]);
+
+  const defaultScanSerialNumber = useMemo(() => {
+    const firstUncompletedDevice = devicesWithStatus.find(d => d.status !== '改配完成');
+    return firstUncompletedDevice ? firstUncompletedDevice.serialNumber : '';
   }, [devicesWithStatus]);
 
   const handleStatusChange = (deviceId: string, status: DeviceStatus) => {
@@ -353,6 +365,7 @@ export function WorkOrderOperateClient({ workOrder, onNavigateToRequestParts }: 
   }
 
   const confirmCompleteWorkOrder = () => {
+    setIsCompleteConfirmOpen(false);
     toast({
       title: "工单已完成",
       description: "工单已成功标记为“已完成”。",
@@ -389,7 +402,10 @@ export function WorkOrderOperateClient({ workOrder, onNavigateToRequestParts }: 
     setIsBulkCheckDialogOpen(true);
   }
 
-  const isCompleted = workOrder.status === '已完成';
+  const isCompleted = useMemo(() => 
+    devicesWithStatus.every(d => d.status === '改配完成') && devicesWithStatus.length > 0,
+    [devicesWithStatus]
+  );
 
   return (
     <>
@@ -503,6 +519,7 @@ export function WorkOrderOperateClient({ workOrder, onNavigateToRequestParts }: 
         isOpen={isScanDeviceDialogOpen}
         setIsOpen={setIsScanDeviceDialogOpen}
         onFindDevice={handleFindDevice}
+        defaultSerialNumber={defaultScanSerialNumber}
       />
       <BulkCheckDialog
         isOpen={isBulkCheckDialogOpen}
@@ -520,7 +537,7 @@ export function WorkOrderOperateClient({ workOrder, onNavigateToRequestParts }: 
           <AlertDialogHeader>
             <AlertDialogTitle>确认完成工单？</AlertDialogTitle>
             <AlertDialogDescription>
-              在完成工单前，请确认是否需要增领备件或有故障件需要回库处理。
+              在完成工干前，请确认是否需要增领备件或有故障件需要回库处理。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
