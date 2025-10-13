@@ -199,7 +199,7 @@ function DeviceOperation({
                   onClick={() => setIsImageFullscreen(true)}
                 >
                   <Image 
-                      src="https://storage.googleapis.com/datask-ai-bucket/image-1.png"
+                      src="https://t10.baidu.com/it/u=4241972780,3175495119&fm=199&app=68&f=JPEG?w=750&h=891&s=CFA12BC514878EEB0C00E1040300B043"
                       alt="操作指引图片"
                       fill
                       data-ai-hint="server motherboard"
@@ -276,7 +276,7 @@ function DeviceOperation({
           onClick={() => setIsImageFullscreen(false)}
         >
           <Image 
-            src="https://storage.googleapis.com/datask-ai-bucket/image-1.png"
+            src="https://t10.baidu.com/it/u=4241972780,3175495119&fm=199&app=68&f=JPEG?w=750&h=891&s=CFA12BC514878EEB0C00E1040300B043"
             alt="操作指引图片 - 全屏"
             width={1200}
             height={1200}
@@ -507,46 +507,37 @@ export function WorkOrderOperateClient({ workOrder, onNavigateToRequestParts }: 
       
       <div className="fixed bottom-0 left-0 right-0 bg-card border-t p-4 z-40">
         <div className="max-w-7xl mx-auto flex items-center gap-2">
-          {isCompleted ? (
-              <Button size="lg" className="w-full" onClick={() => setIsReturnPartsDialogOpen(true)}>
-                <PackageMinus className="mr-2 h-4 w-4" />
-                故障件回库
-              </Button>
-          ) : (
-            <>
-              <Button variant="outline" size="lg" className="flex-shrink-0" onClick={() => setIsScanDeviceDialogOpen(true)}>
-                  <QrCode className="mr-2 h-5 w-5" />
-                  扫描设备
-              </Button>
-              
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="lg" className="flex-shrink-0">
-                      <MoreVertical className="mr-2 h-5 w-5" />
-                      更多操作
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56 mb-2">
-                  <DropdownMenuItem onSelect={onOpenBulkCheckDialog}>
-                    <FileCheck2 className="mr-2 h-4 w-4" />
-                    <span>批量发起结单检测</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onSelect={onNavigateToRequestParts}>
-                    <PackagePlus className="mr-2 h-4 w-4" />
-                    <span>增领备件</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onSelect={() => setIsReturnPartsDialogOpen(true)}>
-                    <PackageMinus className="mr-2 h-4 w-4" />
-                    <span>故障件回库</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+            <Button variant="outline" size="lg" className="flex-shrink-0" onClick={() => setIsScanDeviceDialogOpen(true)}>
+                <QrCode className="mr-2 h-5 w-5" />
+                扫描设备
+            </Button>
+            
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="lg" className="flex-shrink-0">
+                    <MoreVertical className="mr-2 h-5 w-5" />
+                    更多操作
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56 mb-2">
+                <DropdownMenuItem onSelect={onOpenBulkCheckDialog}>
+                  <FileCheck2 className="mr-2 h-4 w-4" />
+                  <span>批量发起结单检测</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onSelect={onNavigateToRequestParts}>
+                  <PackagePlus className="mr-2 h-4 w-4" />
+                  <span>增领备件</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => setIsReturnPartsDialogOpen(true)}>
+                  <PackageMinus className="mr-2 h-4 w-4" />
+                  <span>故障件回库</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
-              <Button size="lg" className="flex-grow" onClick={handleCompleteWorkOrder}>
-                  完成工单
-              </Button>
-            </>
-          )}
+            <Button size="lg" className="flex-grow" onClick={handleCompleteWorkOrder}>
+                完成工单
+            </Button>
         </div>
       </div>
 
