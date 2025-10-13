@@ -199,7 +199,7 @@ function DeviceOperation({
                   onClick={() => setIsImageFullscreen(true)}
                 >
                   <Image 
-                      src="https://t10.baidu.com/it/u=4241972780,3175495119&fm=199&app=68&f=JPEG?w=750&h=891&s=CFA12BC514878EEB0C00E1040300B043"
+                      src="https://storage.googleapis.com/datask-ai-bucket/image-1.png"
                       alt="操作指引图片"
                       fill
                       data-ai-hint="server motherboard"
@@ -276,7 +276,7 @@ function DeviceOperation({
           onClick={() => setIsImageFullscreen(false)}
         >
           <Image 
-            src="https://t10.baidu.com/it/u=4241972780,3175495119&fm=199&app=68&f=JPEG?w=750&h=891&s=CFA12BC514878EEB0C00E1040300B043"
+            src="https://storage.googleapis.com/datask-ai-bucket/image-1.png"
             alt="操作指引图片 - 全屏"
             width={1200}
             height={1200}
@@ -428,6 +428,18 @@ export function WorkOrderOperateClient({ workOrder, onNavigateToRequestParts }: 
     { name: "带外管理 (IPMI)", status: "pass", value: "连接正常" },
     { name: "电源冗余测试", status: "fail", value: "PSU 2 无输出" },
   ];
+
+  const handleReCheck = () => {
+    if (selectedAnomalyDevice) {
+      handleStatusChange(selectedAnomalyDevice.id, '改配完成');
+      toast({
+        title: "检测已重新发起",
+        description: `设备 ${selectedAnomalyDevice.serialNumber} 的状态已更新为“改配完成”。`
+      });
+      setIsAnomalyDialogOpen(false);
+      setSelectedAnomalyDevice(null);
+    }
+  };
 
   return (
     <>
@@ -605,10 +617,14 @@ export function WorkOrderOperateClient({ workOrder, onNavigateToRequestParts }: 
                     </div>
                 </ScrollArea>
             </div>
-             <DialogFooter className="mt-auto pt-4 border-t">
+             <DialogFooter className="mt-auto pt-4 border-t sm:justify-between">
                 <DialogClose asChild>
-                    <Button variant="outline" className="w-full">关闭</Button>
+                    <Button variant="outline">关闭</Button>
                 </DialogClose>
+                <Button onClick={handleReCheck}>
+                    <Search className="mr-2 h-4 w-4" />
+                    重新发起结单检测
+                </Button>
             </DialogFooter>
         </DialogContent>
       </Dialog>
