@@ -26,7 +26,8 @@ import {
   PackageSearch,
   ArrowRight,
   Server as ServerIcon,
-  Layers
+  Layers,
+  ArrowLeftRight
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -86,7 +87,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
   const completionStatus = React.useMemo(() => {
     const totalDevices = workOrder.devices.length;
     if (totalDevices === 0) {
-      return "(0/0)";
+      return "";
     }
     const completedDevices = workOrder.devices.filter(d => d.status === '改配完成').length;
     return `(完成度: ${completedDevices}/${totalDevices})`;
@@ -133,10 +134,34 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
     return Array.from(componentsMap.values()).sort((a, b) => a.component.model.localeCompare(b.component.model));
   }, [workOrder.devices]);
 
-  const handleNavigate = (e: React.MouseEvent) => {
+  const handleNavigate = (e: React.MouseEvent, path: string) => {
       e.preventDefault();
-      const event = new CustomEvent('navigateTo', { detail: { target: `/work-orders/${workOrder.id}/operate` } });
+      const event = new CustomEvent('navigateTo', { detail: { target: path } });
       window.dispatchEvent(event);
+  }
+
+  const renderFooter = () => {
+    if (workOrder.type === '服务器搬迁') {
+      return (
+        <div className="grid grid-cols-2 gap-4">
+          <Button onClick={(e) => handleNavigate(e, `/work-orders/${workOrder.id}/move-out`)} size="lg" variant="outline" className="gap-2 w-full">
+            <ArrowRight className="rotate-180" />
+            开始搬出
+          </Button>
+          <Button onClick={(e) => handleNavigate(e, `/work-orders/${workOrder.id}/move-in`)} size="lg" className="gap-2 w-full">
+            开始迁入
+            <ArrowRight />
+          </Button>
+        </div>
+      )
+    }
+
+    return (
+      <Button onClick={(e) => handleNavigate(e, `/work-orders/${workOrder.id}/operate`)} size="lg" className='gap-2 w-full'>
+          开始操作
+          <ArrowRight />
+      </Button>
+    )
   }
 
   return (
@@ -179,10 +204,15 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
           <CardHeader className="px-4 py-2 bg-muted/50 rounded-t-lg">
             <div className="flex items-center gap-2">
                 <CardTitle className='flex items-center gap-2 text-base'>
-                    <PackageSearch className="h-5 w-5 text-primary" />
-                    所需备件
+                  {workOrder.type === '服务器搬迁' 
+                    ? <ArrowLeftRight className="h-5 w-5 text-primary" />
+                    : <PackageSearch className="h-5 w-5 text-primary" />
+                  }
+                  {workOrder.type === '服务器搬迁' ? '搬迁摘要' : '所需备件'}
                 </CardTitle>
-                <CardDescription className="text-xs text-muted-foreground">请按备件清单领取备件</CardDescription>
+                <CardDescription className="text-xs text-muted-foreground">
+                  {workOrder.type === '服务器搬迁' ? '请确认搬迁前后的位置和配置' : '请按备件清单领取备件'}
+                </CardDescription>
             </div>
           </CardHeader>
           <CardContent className="p-0">
@@ -206,7 +236,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
               ) : (
                 <div className="flex items-center justify-center h-full p-4">
                   <p className="text-sm text-muted-foreground text-center py-4">
-                    此工单无需更换或添加备件。
+                    {workOrder.type === '服务器搬迁' ? '此工单的设备无需更换或添加备件。' : '此工单无需更换或添加备件。'}
                   </p>
                 </div>
               )}
@@ -216,10 +246,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
 
       <div className="fixed bottom-0 left-0 right-0 bg-card border-t p-4 z-40">
         <div className="max-w-7xl mx-auto">
-          <Button onClick={handleNavigate} size="lg" className='gap-2 w-full'>
-              开始操作
-              <ArrowRight />
-          </Button>
+          {renderFooter()}
         </div>
       </div>
     </>

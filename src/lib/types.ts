@@ -33,7 +33,7 @@ export type Device = {
 export type WorkOrder = {
   id: string;
   title: string;
-  type: '服务器改造' | '新服务器部署' | '交换机维护';
+  type: '服务器改造' | '新服务器部署' | '交换机维护' | '服务器搬迁';
   status: '待处理' | '已分配' | '进行中' | '已完成' | '已阻塞';
   assignedTo: Employee[];
   devices: Device[];

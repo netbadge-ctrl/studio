@@ -14,6 +14,8 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { Server, Wrench, HardDrive, User, Calendar, Building2, UserSquare, Layers } from "lucide-react";
 import { ScanFaultyPartPage } from '@/components/scan-faulty-part-page';
+import { WorkOrderMoveOutClient } from './work-order-move-out-client';
+import { WorkOrderMoveInClient } from './work-order-move-in-client';
 
 
 type View = 
@@ -22,7 +24,9 @@ type View =
   | { name: 'WORK_ORDER_DETAIL', workOrderId: string, previousView: 'ENGINEER_DASHBOARD' | 'LEADER_DASHBOARD' }
   | { name: 'WORK_ORDER_OPERATE', workOrderId: string }
   | { name: 'REQUEST_PARTS', workOrderId: string }
-  | { name: 'SCAN_FAULTY_PART', workOrderId: string; partNumber: string, component: Component };
+  | { name: 'SCAN_FAULTY_PART', workOrderId: string; partNumber: string, component: Component }
+  | { name: 'MOVE_OUT', workOrderId: string }
+  | { name: 'MOVE_IN', workOrderId: string };
 
 const getStatusClass = (status: WorkOrder["status"]) => {
   switch (status) {
@@ -139,6 +143,16 @@ export function DatacenterOpsDemo({
                 backLabel = '返回增领列表';
                 backView = { name: 'REQUEST_PARTS', workOrderId: view.workOrderId };
                 break;
+             case 'MOVE_OUT':
+                onTitleChange(`搬出操作 #${view.workOrderId}`);
+                backLabel = '返回准备页';
+                backView = { name: 'WORK_ORDER_DETAIL', workOrderId: view.workOrderId, previousView: 'ENGINEER_DASHBOARD' };
+                break;
+            case 'MOVE_IN':
+                onTitleChange(`迁入操作 #${view.workOrderId}`);
+                backLabel = '返回准备页';
+                backView = { name: 'WORK_ORDER_DETAIL', workOrderId: view.workOrderId, previousView: 'ENGINEER_DASHBOARD' };
+                break;
             default:
                 onTitleChange("数据中心运维");
         }
@@ -163,7 +177,7 @@ export function DatacenterOpsDemo({
         }
 
         const handleOrderClick = (order: WorkOrder) => {
-          if (order.status === '已完成') {
+          if (order.status === '已完成' && order.type !== '服务器搬迁') {
             navigateTo({ name: 'WORK_ORDER_OPERATE', workOrderId: order.id });
           } else {
             navigateTo({ name: 'WORK_ORDER_DETAIL', workOrderId: order.id, previousView: 'ENGINEER_DASHBOARD' });
@@ -187,12 +201,14 @@ export function DatacenterOpsDemo({
                                     <Calendar className="h-4 w-4 ml-auto flex-shrink-0" />
                                     <span>{order.createdAt}</span>
                                 </div>
+                                {order.devices.length > 0 && (
                                 <div className="flex items-center gap-2">
                                     <Building2 className="h-4 w-4 flex-shrink-0" />
                                     <span className="flex-grow">{getModulesForOrder(order)}</span>
                                     <Layers className="h-4 w-4 ml-auto flex-shrink-0" />
                                     <span>{order.devices.length} 台设备</span>
                                 </div>
+                                )}
                            </div>
                         </CardContent>
                         <CardFooter className="flex items-center justify-between text-sm text-muted-foreground pt-4 border-t">
@@ -252,6 +268,15 @@ export function DatacenterOpsDemo({
                     onScanComplete={(serialNumber) => handlePartScanned(view.partNumber, serialNumber)}
                 />;
 
+            case 'MOVE_OUT':
+                if (!currentWorkOrder) return <div>工单未找到</div>;
+                return <WorkOrderMoveOutClient workOrder={currentWorkOrder} />;
+
+            case 'MOVE_IN':
+                if (!currentWorkOrder) return <div>工单未找到</div>;
+                return <WorkOrderMoveInClient workOrder={currentWorkOrder} />;
+
+
             default:
                 return <div>未知视图</div>;
         }
@@ -260,10 +285,16 @@ export function DatacenterOpsDemo({
     React.useEffect(() => {
         const handleNavigate = (e: Event) => {
             const customEvent = e as CustomEvent;
-            if (customEvent.detail.target.includes('/operate')) {
-                const id = customEvent.detail.target.split('/')[2];
+            const target = customEvent.detail.target;
+            const id = target.split('/')[2];
+
+            if (target.includes('/operate')) {
                 navigateTo({ name: 'WORK_ORDER_OPERATE', workOrderId: id });
-            } else if (customEvent.detail.target === '/') {
+            } else if (target.includes('/move-out')) {
+                navigateTo({ name: 'MOVE_OUT', workOrderId: id });
+            } else if (target.includes('/move-in')) {
+                navigateTo({ name: 'MOVE_IN', workOrderId: id });
+            } else if (target === '/') {
                 navigateTo({ name: 'ENGINEER_DASHBOARD' });
             }
         };
