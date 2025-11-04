@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Layers, Server as ServerIcon, ArrowUp, ArrowDown, Video, Image as ImageIcon, QrCode, CheckCircle, AlertTriangle, Search, MoreVertical, FileCheck2, PackagePlus, PackageMinus, X } from 'lucide-react';
+import { Layers, Server as ServerIcon, ArrowUp, ArrowDown, Video, Image as ImageIcon, QrCode, CheckCircle, AlertTriangle, Search, MoreVertical, FileCheck2, PackagePlus, PackageMinus, X, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -429,6 +429,19 @@ export function WorkOrderOperateClient({ workOrder, onNavigateToRequestParts }: 
     { name: "电源冗余测试", status: "fail", value: "PSU 2 无输出" },
   ];
 
+  const { failedItems, passedItems } = useMemo(() => {
+    const failed: typeof anomalyReportItems = [];
+    const passed: typeof anomalyReportItems = [];
+    anomalyReportItems.forEach(item => {
+      if (item.status === 'fail') {
+        failed.push(item);
+      } else {
+        passed.push(item);
+      }
+    });
+    return { failedItems: failed, passedItems: passed };
+  }, [anomalyReportItems]);
+
   const handleReCheck = () => {
     if (selectedAnomalyDevice) {
       handleStatusChange(selectedAnomalyDevice.id, '改配完成');
@@ -589,22 +602,43 @@ export function WorkOrderOperateClient({ workOrder, onNavigateToRequestParts }: 
             <div className="flex-1 overflow-hidden">
                 <ScrollArea className="h-full pr-6">
                     <div className="space-y-4">
-                        {anomalyReportItems.map((item, index) => (
-                        <div key={index} className={cn(
-                            "flex items-start gap-4 p-4 rounded-lg border",
-                            item.status === 'pass' ? "bg-green-50/50 border-green-200" : "bg-destructive/10 border-destructive"
-                        )}>
-                            {item.status === 'pass' ? 
-                            <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-1" /> : 
-                            <X className="h-5 w-5 text-destructive flex-shrink-0 mt-1" />}
-                            <div className="flex-grow">
-                                <p className="font-semibold text-card-foreground">{item.name}</p>
-                                <p className={cn("text-sm", item.status === 'pass' ? 'text-muted-foreground' : 'text-destructive font-medium')}>
-                                    {item.value}
-                                </p>
+                        <div className="space-y-3">
+                            <p className="text-sm font-semibold text-destructive">未通过的检测项 ({failedItems.length}项)</p>
+                            {failedItems.map((item, index) => (
+                            <div key={`fail-${index}`} className="flex items-start gap-4 p-4 rounded-lg border bg-destructive/10 border-destructive">
+                                <X className="h-5 w-5 text-destructive flex-shrink-0 mt-1" />
+                                <div className="flex-grow">
+                                    <p className="font-semibold text-card-foreground">{item.name}</p>
+                                    <p className="text-sm text-destructive font-medium">{item.value}</p>
+                                </div>
                             </div>
+                            ))}
                         </div>
-                        ))}
+
+                        {passedItems.length > 0 && (
+                            <Accordion type="single" collapsible className="w-full">
+                                <AccordionItem value="passed-items" className="border-b-0">
+                                    <AccordionTrigger className="text-sm font-semibold text-muted-foreground hover:no-underline py-2">
+                                        <div className="flex items-center gap-2">
+                                            <CheckCircle className="h-4 w-4 text-green-600" />
+                                            <span>已通过的检测项 ({passedItems.length}项)</span>
+                                        </div>
+                                    </AccordionTrigger>
+                                    <AccordionContent className="pt-2">
+                                        <div className="space-y-3 pl-6">
+                                            {passedItems.map((item, index) => (
+                                                <div key={`pass-${index}`} className="flex items-start gap-4 py-2 border-t first:border-t-0">
+                                                    <div className="flex-grow">
+                                                        <p className="font-medium text-card-foreground text-sm">{item.name}</p>
+                                                        <p className="text-sm text-muted-foreground">{item.value}</p>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </AccordionContent>
+                                </AccordionItem>
+                            </Accordion>
+                        )}
                     </div>
                 </ScrollArea>
             </div>
@@ -622,3 +656,5 @@ export function WorkOrderOperateClient({ workOrder, onNavigateToRequestParts }: 
     </>
   )
 }
+
+    
