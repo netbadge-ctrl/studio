@@ -208,7 +208,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
                     ? <ArrowLeftRight className="h-5 w-5 text-primary" />
                     : <PackageSearch className="h-5 w-5 text-primary" />
                   }
-                  {workOrder.type === '服务器搬迁' ? '搬迁摘要' : '所需备件'}
+                  所需备件
                 </CardTitle>
                 <CardDescription className="text-xs text-muted-foreground">
                   {workOrder.type === '服务器搬迁' ? '请确认搬迁前后的位置和配置' : '请按备件清单领取备件'}
