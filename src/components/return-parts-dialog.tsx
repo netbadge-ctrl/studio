@@ -16,7 +16,6 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
 import { PackageMinus, Send } from "lucide-react";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
 
 interface ReturnPartsDialogProps {
   isOpen: boolean;
@@ -66,7 +65,7 @@ export function ReturnPartsDialog({
   
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="sm:max-w-3xl h-[70vh] flex flex-col">
+      <DialogContent className="sm:max-w-md h-[70vh] flex flex-col">
         <DialogHeader>
           <DialogTitle className="text-2xl flex items-center gap-2">
             <PackageMinus />
@@ -76,34 +75,27 @@ export function ReturnPartsDialog({
             请将以下从设备上拆除的备件，根据其部件号（仓库盒号）放回指定位置。
           </DialogDescription>
         </DialogHeader>
-        <div className="flex-1 overflow-hidden">
-            <ScrollArea className="h-full border rounded-lg">
+        <div className="flex-1 overflow-hidden -mx-6 px-2">
+            <ScrollArea className="h-full px-4">
                 {removedParts.length > 0 ? (
-                     <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>备件</TableHead>
-                                <TableHead>序列号 (SN)</TableHead>
-                                <TableHead className="text-right">回库盒号</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {removedParts.map(({ component, serialNumber }, index) => (
-                                <TableRow key={`${component.partNumber}-${index}`}>
-                                    <TableCell>
-                                        <p className="font-semibold">{component.model}</p>
-                                        <p className="text-xs text-muted-foreground">{component.type}</p>
-                                    </TableCell>
-                                    <TableCell>
-                                        <p className="font-mono text-sm">{serialNumber}</p>
-                                    </TableCell>
-                                    <TableCell className="text-right">
-                                        <p className="font-mono text-sm font-semibold">{component.partNumber}</p>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                     </Table>
+                     <div className="space-y-3">
+                        {removedParts.map(({ component, serialNumber }, index) => (
+                           <div key={`${component.partNumber}-${index}`} className="p-4 border rounded-lg bg-muted/30">
+                              <p className="font-semibold text-foreground">{component.model}</p>
+                              <p className="text-sm text-muted-foreground mb-3">{component.type}</p>
+                              <div className="space-y-2 text-sm">
+                                <div className="flex justify-between items-center">
+                                    <span className="text-muted-foreground">序列号 (SN):</span>
+                                    <span className="font-mono">{serialNumber}</span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-muted-foreground">回库盒号:</span>
+                                    <span className="font-mono font-semibold text-primary">{component.partNumber}</span>
+                                </div>
+                              </div>
+                           </div>
+                        ))}
+                     </div>
                 ) : (
                     <div className="h-full flex items-center justify-center">
                         <p className="text-muted-foreground text-center">此工单无需回库任何备件。</p>
