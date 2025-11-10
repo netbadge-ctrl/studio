@@ -230,7 +230,7 @@ function DeviceOperation({
                       <TableHeader>
                           <TableRow>
                               <TableHead>配件</TableHead>
-                              <TableHead className="text-right">位置/操作</TableHead>
+                              <TableHead className="text-right">操作</TableHead>
                           </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -252,7 +252,6 @@ function DeviceOperation({
                                   </TableCell>
                                   <TableCell className="text-right">
                                     <div className='flex flex-col items-end gap-1'>
-                                        <span className='font-mono text-xs sm:text-sm'>{component.slot}</span>
                                         <Badge variant={action === '装' ? 'default' : 'destructive'} className='whitespace-nowrap'>
                                           {action === '装' ? <ArrowUp className="mr-1 h-3 w-3" /> : <ArrowDown className="mr-1 h-3 w-3" />}
                                           {action}
