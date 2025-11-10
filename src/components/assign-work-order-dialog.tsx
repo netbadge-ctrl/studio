@@ -13,9 +13,10 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ArrowUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ScrollArea } from "./ui/scroll-area";
+import { Card } from "./ui/card";
 
 type SortKey = "name" | "activeOrders" | "completedToday";
 type SortDirection = "asc" | "desc";
@@ -43,9 +44,11 @@ export function AssignWorkOrderDialog({
     direction: "asc",
   });
 
-  const handleSelectEmployee = (employeeId: string, checked: boolean) => {
+  const handleSelectEmployee = (employeeId: string) => {
     setSelectedEmployees((prev) =>
-      checked ? [...prev, employeeId] : prev.filter((id) => id !== employeeId)
+      prev.includes(employeeId)
+        ? prev.filter((id) => id !== employeeId)
+        : [...prev, employeeId]
     );
   };
   
@@ -81,60 +84,66 @@ export function AssignWorkOrderDialog({
     setSelectedEmployees(workOrder.assignedTo.map((e) => e.id));
   }, [workOrder]);
 
-  const SortableHeader = ({ sortKey, label }: { sortKey: SortKey, label: string }) => (
-    <TableHead
-      className="cursor-pointer hover:bg-muted"
+  const SortButton = ({ sortKey, label }: { sortKey: SortKey, label: string }) => (
+    <Button
+      variant="ghost"
+      size="sm"
       onClick={() => handleSort(sortKey)}
+      className={cn("text-muted-foreground", sortConfig.key === sortKey && "text-primary")}
     >
-      <div className="flex items-center gap-2">
-        {label}
-        <ArrowUpDown className={cn("h-3 w-3", sortConfig.key === sortKey ? "text-primary" : "text-muted-foreground")} />
-      </div>
-    </TableHead>
+      {label}
+      <ArrowUpDown className="ml-2 h-4 w-4" />
+    </Button>
   );
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="sm:max-w-md h-[80vh] flex flex-col">
         <DialogHeader>
           <DialogTitle>分配工单: {workOrder.title}</DialogTitle>
           <DialogDescription>
             选择员工并查看其当前负载，以实现高效分配。
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="rounded-md border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[50px]"></TableHead>
-                  <SortableHeader sortKey="name" label="员工" />
-                  <SortableHeader sortKey="activeOrders" label="进行中" />
-                  <SortableHeader sortKey="completedToday" label="今日完成" />
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {sortedEmployees.map((employee) => (
-                  <TableRow key={employee.id}>
-                    <TableCell className="px-4">
-                       <Checkbox
-                          id={`emp-${employee.id}`}
-                          checked={selectedEmployees.includes(employee.id)}
-                          onCheckedChange={(checked) =>
-                            handleSelectEmployee(employee.id, !!checked)
-                          }
-                        />
-                    </TableCell>
-                    <TableCell className="font-medium">{employee.name}</TableCell>
-                    <TableCell>{employee.activeOrders}</TableCell>
-                    <TableCell>{employee.completedToday}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+        <div className="flex items-center justify-start gap-1 py-2">
+            <span className="text-sm text-muted-foreground ml-2">排序:</span>
+            <SortButton sortKey="activeOrders" label="进行中" />
+            <SortButton sortKey="completedToday" label="今日完成" />
         </div>
-        <DialogFooter>
+        <div className="flex-1 -mx-6 px-2 overflow-hidden">
+          <ScrollArea className="h-full px-4">
+            <div className="space-y-3">
+            {sortedEmployees.map((employee) => (
+                <Card 
+                    key={employee.id} 
+                    onClick={() => handleSelectEmployee(employee.id)}
+                    className={cn(
+                        "p-4 flex items-center gap-4 transition-all cursor-pointer",
+                        selectedEmployees.includes(employee.id) && "bg-primary/10 border-primary"
+                    )}
+                >
+                    <Checkbox
+                        id={`emp-${employee.id}`}
+                        checked={selectedEmployees.includes(employee.id)}
+                        className="h-5 w-5"
+                    />
+                    <div className="flex-grow">
+                        <p className="font-semibold text-foreground">{employee.name}</p>
+                    </div>
+                    <div className="flex flex-col items-end text-sm">
+                        <p className="text-foreground">{employee.activeOrders}</p>
+                        <p className="text-muted-foreground text-xs">进行中</p>
+                    </div>
+                    <div className="flex flex-col items-end text-sm">
+                        <p className="text-foreground">{employee.completedToday}</p>
+                        <p className="text-muted-foreground text-xs">今日完成</p>
+                    </div>
+                </Card>
+            ))}
+            </div>
+          </ScrollArea>
+        </div>
+        <DialogFooter className="mt-auto border-t pt-4">
           <Button variant="outline" onClick={() => setIsOpen(false)}>
             取消
           </Button>

@@ -167,7 +167,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
     <>
       <div className='space-y-4'>
         <Card>
-          <CardHeader className="px-4 py-2 bg-muted/50 rounded-t-lg">
+          <CardHeader className="px-4 py-3 bg-muted/50 rounded-t-lg">
             <CardTitle className='text-base'>设备清单 {completionStatus}</CardTitle>
           </CardHeader>
           <CardContent className="p-0">
@@ -200,13 +200,11 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
         </Card>
 
         <Card>
-          <CardHeader className="px-4 py-2 bg-muted/50 rounded-t-lg">
-            <div className="flex items-center gap-2">
-                <CardTitle className='flex items-center gap-2 text-base'>
+          <CardHeader className="px-4 py-3 bg-muted/50 rounded-t-lg">
+             <CardTitle className='flex items-center gap-2 text-base'>
                   <PackageSearch className="h-5 w-5 text-primary" />
                   所需备件
-                </CardTitle>
-            </div>
+              </CardTitle>
           </CardHeader>
           <CardContent className="p-0">
               {requiredComponents.length > 0 ? (
@@ -219,23 +217,23 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
 
                         if (isHighPerformance) {
                           return (
-                            <li key={comp.partNumber} className="border-b last:border-b-0">
-                              <AccordionItem value={comp.partNumber} className="border-b-0">
-                                <AccordionTrigger className="py-2 hover:no-underline">
+                            <li key={comp.partNumber}>
+                              <AccordionItem value={comp.partNumber} className="border rounded-lg">
+                                <AccordionTrigger className="p-4 hover:no-underline">
                                   <div className="flex items-center justify-between gap-x-4 w-full">
                                     <div className="flex-grow text-left">
                                       <div className='flex items-center gap-2'>
-                                        <p className='font-mono text-sm text-foreground font-semibold'>{modelName}</p>
+                                        <p className='font-semibold text-foreground'>{modelName}</p>
                                         <div className="flex items-center gap-1 text-red-500">
                                           <Zap className="h-4 w-4 text-yellow-500 fill-current" />
                                           <span className="text-xs font-semibold">有性能要求</span>
                                         </div>
                                       </div>
-                                      <p className='text-xs text-muted-foreground'>{comp.type} / {comp.manufacturer}</p>
+                                      <p className='text-sm text-muted-foreground'>{comp.type} / {comp.manufacturer}</p>
                                     </div>
                                     <div className='flex flex-col items-end flex-shrink-0'>
                                       <span className="font-mono text-sm text-foreground font-semibold">x {quantity}</span>
-                                      <p className='text-xs font-mono text-muted-foreground mt-1'>仓库盒号: {comp.partNumber}</p>
+                                      <p className='text-xs font-mono text-muted-foreground mt-1'>盒号: {comp.partNumber}</p>
                                     </div>
                                   </div>
                                 </AccordionTrigger>
@@ -264,14 +262,14 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
                         }
                         
                         return (
-                          <li key={comp.partNumber} className="flex items-center justify-between gap-x-4 py-2 border-b last:border-b-0">
+                          <li key={comp.partNumber} className="flex items-center justify-between gap-x-4 p-4 border rounded-lg">
                             <div className="flex-grow">
-                              <p className='font-mono text-sm text-foreground font-semibold'>{modelName}</p>
-                              <p className='text-xs text-muted-foreground'>{comp.type} / {comp.manufacturer}</p>
+                              <p className='font-semibold text-foreground'>{modelName}</p>
+                              <p className='text-sm text-muted-foreground'>{comp.type} / {comp.manufacturer}</p>
                             </div>
                             <div className='flex flex-col items-end flex-shrink-0'>
                               <span className="font-mono text-sm text-foreground font-semibold">x {quantity}</span>
-                              <p className='text-xs font-mono text-muted-foreground mt-1'>仓库盒号: {comp.partNumber}</p>
+                              <p className='text-xs font-mono text-muted-foreground mt-1'>盒号: {comp.partNumber}</p>
                             </div>
                           </li>
                         );

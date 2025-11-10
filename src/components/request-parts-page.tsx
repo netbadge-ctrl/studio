@@ -107,11 +107,11 @@ export function RequestPartsPage({
                 扫描或手动添加故障件以申领新的备件。系统将记录坏件并生成领料单。仅用于领用的备件中出现坏件的替补领用。
             </p>
             {availableParts.length > 0 ? (
-                <ul className="space-y-2">
-                    {availableParts.map((comp) => (
-                    <li key={comp.partNumber} className="flex items-center justify-between gap-4 p-3 bg-muted/50 rounded-md">
+                <ul className="space-y-3">
+                    {availableParts.map((comp, index) => (
+                    <li key={comp.partNumber} className="flex items-center justify-between gap-4 p-4 bg-muted/50 rounded-lg border">
                         <div className="flex-grow">
-                            <p className='font-mono text-sm text-foreground font-semibold'>{comp.model}</p>
+                            <p className='font-mono text-sm text-foreground font-semibold'>备件Model号{index + 1}</p>
                             <p className='text-xs text-muted-foreground'>仓库盒号: {comp.partNumber}</p>
                         </div>
                         <Button size="sm" variant="outline" onClick={() => onScan(comp)}>
@@ -137,20 +137,20 @@ export function RequestPartsPage({
             <CardContent>
                 {partRequests.size > 0 ? (
                     <div className="space-y-4">
-                        {Array.from(partRequests.values()).map(({ component, serials }) => (
-                        <div key={component.partNumber} className="p-3 bg-blue-50/50 rounded-md">
-                            <div className="flex items-center justify-between gap-4 mb-3">
+                        {Array.from(partRequests.values()).map(({ component, serials }, index) => (
+                        <div key={component.partNumber} className="p-4 border rounded-lg bg-card">
+                            <div className="flex items-start justify-between gap-4 mb-3">
                                 <div className="flex-grow">
-                                    <p className='font-mono text-sm text-foreground font-semibold'>{component.model}</p>
+                                    <p className='font-semibold text-foreground'>备件Model号{index + 1}</p>
                                     <p className='text-xs text-muted-foreground'>仓库盒号: {component.partNumber}</p>
                                 </div>
-                                <Badge variant="secondary">坏件数量: {serials.length}</Badge>
+                                <Badge variant="secondary">坏件: {serials.length}</Badge>
                             </div>
-                            <ul className="space-y-1 pl-2 border-l-2 border-blue-200">
+                            <ul className="space-y-2 pt-2 border-t">
                                 {serials.map(sn => (
-                                    <li key={sn} className="flex items-center justify-between text-sm">
+                                    <li key={sn} className="flex items-center justify-between text-sm p-2 bg-muted/50 rounded-md">
                                         <span className="font-mono text-muted-foreground">{sn}</span>
-                                        <Button size="icon" variant="ghost" className="h-6 w-6 text-muted-foreground hover:text-destructive" onClick={() => removeSerial(component.partNumber, sn)}>
+                                        <Button size="icon" variant="ghost" className="h-7 w-7 text-muted-foreground hover:text-destructive" onClick={() => removeSerial(component.partNumber, sn)}>
                                             <XCircle className="h-4 w-4"/>
                                         </Button>
                                     </li>
