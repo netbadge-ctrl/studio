@@ -542,7 +542,7 @@ export function WorkOrderOperateClient({ workOrder, onNavigateToRequestParts }: 
                 </DropdownMenuItem>
                 <DropdownMenuItem onSelect={() => setIsReturnPartsDialogOpen(true)}>
                   <PackageMinus className="mr-2 h-4 w-4" />
-                  <span>故障件回库</span>
+                  <span>备件回库</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

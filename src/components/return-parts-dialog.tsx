@@ -58,7 +58,7 @@ export function ReturnPartsDialog({
 
     toast({
       title: "回库请求已提交",
-      description: `共 ${removedParts.length} 个故障件已提交回库处理。`,
+      description: `共 ${removedParts.length} 个备件已提交回库处理。`,
     });
     
     setIsOpen(false);
@@ -70,10 +70,10 @@ export function ReturnPartsDialog({
         <DialogHeader>
           <DialogTitle className="text-2xl flex items-center gap-2">
             <PackageMinus />
-            故障件回库
+            备件回库
           </DialogTitle>
           <DialogDescription>
-            请将以下从设备上拆除的故障件，根据其部件号（仓库盒号）放回指定位置。
+            请将以下从设备上拆除的备件，根据其部件号（仓库盒号）放回指定位置。
           </DialogDescription>
         </DialogHeader>
         <div className="flex-1 overflow-hidden">
@@ -82,7 +82,7 @@ export function ReturnPartsDialog({
                      <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead>故障件</TableHead>
+                                <TableHead>备件</TableHead>
                                 <TableHead>序列号 (SN)</TableHead>
                                 <TableHead className="text-right">回库盒号</TableHead>
                             </TableRow>
@@ -106,7 +106,7 @@ export function ReturnPartsDialog({
                      </Table>
                 ) : (
                     <div className="h-full flex items-center justify-center">
-                        <p className="text-muted-foreground text-center">此工单无需回库任何故障件。</p>
+                        <p className="text-muted-foreground text-center">此工单无需回库任何备件。</p>
                     </div>
                 )}
             </ScrollArea>
