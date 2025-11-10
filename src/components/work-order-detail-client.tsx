@@ -143,16 +143,10 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
   const renderFooter = () => {
     if (workOrder.type === '服务器搬迁') {
       return (
-        <div className="grid grid-cols-2 gap-4">
-          <Button onClick={(e) => handleNavigate(e, `/work-orders/${workOrder.id}/move-out`)} size="lg" variant="outline" className="gap-2 w-full">
-            <ArrowRight className="rotate-180" />
-            开始搬出
-          </Button>
-          <Button onClick={(e) => handleNavigate(e, `/work-orders/${workOrder.id}/move-in`)} size="lg" className="gap-2 w-full">
-            开始迁入
-            <ArrowRight />
-          </Button>
-        </div>
+        <Button onClick={(e) => handleNavigate(e, `/work-orders/${workOrder.id}/move-out`)} size="lg" className="gap-2 w-full">
+          开始搬出
+          <ArrowRight />
+        </Button>
       )
     }
 
@@ -210,19 +204,16 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
                   }
                   所需备件
                 </CardTitle>
-                <CardDescription className="text-xs text-muted-foreground">
-                  {workOrder.type === '服务器搬迁' ? '请确认搬迁前后的位置和配置' : '请按备件清单领取备件'}
-                </CardDescription>
             </div>
           </CardHeader>
           <CardContent className="p-0">
               {requiredComponents.length > 0 ? (
                 <ScrollArea className="h-72">
                   <ul className="space-y-2 p-4">
-                    {requiredComponents.map(({ component: comp, quantity }) => (
+                    {requiredComponents.map(({ component: comp, quantity }, index) => (
                       <li key={comp.partNumber} className="flex items-center justify-between gap-x-4 py-2 border-b last:border-b-0">
                         <div className="flex-grow">
-                          <p className='font-mono text-sm text-foreground font-semibold'>{comp.model}</p>
+                          <p className='font-mono text-sm text-foreground font-semibold'>备件Model号{index + 1}</p>
                           <p className='text-xs text-muted-foreground'>{comp.type} / {comp.manufacturer}</p>
                         </div>
                         <div className='flex flex-col items-end flex-shrink-0'>
