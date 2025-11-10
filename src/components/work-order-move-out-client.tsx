@@ -27,10 +27,13 @@ import { Calendar } from "@/components/ui/calendar";
 import {
   Dialog,
   DialogContent,
+  DialogHeader,
+  DialogTitle,
   DialogTrigger,
+  DialogClose
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
-import { CalendarIcon, Send } from "lucide-react";
+import { CalendarIcon, Send, X } from "lucide-react";
 import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
@@ -124,6 +127,9 @@ export function WorkOrderMoveOutClient({ workOrder }: { workOrder: WorkOrder }) 
                       </FormControl>
                     </DialogTrigger>
                     <DialogContent className="w-auto p-0">
+                       <DialogHeader className="sr-only">
+                         <DialogTitle>选择出库日期</DialogTitle>
+                       </DialogHeader>
                       <Calendar
                         mode="single"
                         selected={field.value}
