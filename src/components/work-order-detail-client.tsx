@@ -210,7 +210,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
           </CardHeader>
           <CardContent className="p-0">
               {requiredComponents.length > 0 ? (
-                <ScrollArea className="h-72">
+                <ScrollArea>
                   <Accordion type="single" collapsible className="w-full">
                     <ul className="space-y-2 p-4">
                       {requiredComponents.map(({ component: comp, quantity }, index) => {
@@ -298,5 +298,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
     </>
   );
 }
+
+    
 
     
