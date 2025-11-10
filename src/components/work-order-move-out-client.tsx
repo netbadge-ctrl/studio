@@ -25,15 +25,16 @@ import {
 import { Input } from "@/components/ui/input";
 import { Calendar } from "@/components/ui/calendar";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { CalendarIcon, Send } from "lucide-react";
 import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const moveOutFormSchema = z.object({
   destination: z.string(),
@@ -47,6 +48,7 @@ const moveOutFormSchema = z.object({
 export function WorkOrderMoveOutClient({ workOrder }: { workOrder: WorkOrder }) {
   const { toast } = useToast();
   const router = useRouter();
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
 
   // For demo purposes, we'll assume the destination is the same for all devices
   // and hardcode it. A real app might have a destination field on the work order itself.
@@ -102,8 +104,8 @@ export function WorkOrderMoveOutClient({ workOrder }: { workOrder: WorkOrder }) 
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>选择出库时间</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
+                   <Dialog open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>
+                    <DialogTrigger asChild>
                       <FormControl>
                         <Button
                           variant={"outline"}
@@ -120,19 +122,22 @@ export function WorkOrderMoveOutClient({ workOrder }: { workOrder: WorkOrder }) 
                           <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                         </Button>
                       </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
+                    </DialogTrigger>
+                    <DialogContent className="w-auto p-0">
                       <Calendar
                         mode="single"
                         selected={field.value}
-                        onSelect={field.onChange}
+                        onSelect={(date) => {
+                          field.onChange(date);
+                          setIsDatePickerOpen(false);
+                        }}
                         disabled={(date) =>
                           date < new Date(new Date().setHours(0,0,0,0)) 
                         }
                         initialFocus
                       />
-                    </PopoverContent>
-                  </Popover>
+                    </DialogContent>
+                  </Dialog>
                   <FormMessage />
                 </FormItem>
               )}
