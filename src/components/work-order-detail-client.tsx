@@ -27,9 +27,14 @@ import {
   ArrowRight,
   Server as ServerIcon,
   Layers,
-  ArrowLeftRight
+  ArrowLeftRight,
+  Zap,
+  ChevronDown,
+  List,
+  ListChecks
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 
 const getStatusClass = (status: WorkOrder['status']) => {
@@ -198,10 +203,7 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
           <CardHeader className="px-4 py-2 bg-muted/50 rounded-t-lg">
             <div className="flex items-center gap-2">
                 <CardTitle className='flex items-center gap-2 text-base'>
-                  {workOrder.type === '服务器搬迁' 
-                    ? <ArrowLeftRight className="h-5 w-5 text-primary" />
-                    : <PackageSearch className="h-5 w-5 text-primary" />
-                  }
+                  <PackageSearch className="h-5 w-5 text-primary" />
                   所需备件
                 </CardTitle>
             </div>
@@ -209,25 +211,78 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
           <CardContent className="p-0">
               {requiredComponents.length > 0 ? (
                 <ScrollArea className="h-72">
-                  <ul className="space-y-2 p-4">
-                    {requiredComponents.map(({ component: comp, quantity }, index) => (
-                      <li key={comp.partNumber} className="flex items-center justify-between gap-x-4 py-2 border-b last:border-b-0">
-                        <div className="flex-grow">
-                          <p className='font-mono text-sm text-foreground font-semibold'>备件Model号{index + 1}</p>
-                          <p className='text-xs text-muted-foreground'>{comp.type} / {comp.manufacturer}</p>
-                        </div>
-                        <div className='flex flex-col items-end flex-shrink-0'>
-                           <span className="font-mono text-sm text-foreground font-semibold">x {quantity}</span>
-                          <p className='text-xs font-mono text-muted-foreground mt-1'>仓库盒号: {comp.partNumber}</p>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
+                  <Accordion type="single" collapsible className="w-full">
+                    <ul className="space-y-2 p-4">
+                      {requiredComponents.map(({ component: comp, quantity }, index) => {
+                        const isHighPerformance = comp.type === '网卡';
+                        const modelName = `备件Model号${index + 1}`;
+
+                        if (isHighPerformance) {
+                          return (
+                            <li key={comp.partNumber} className="border-b last:border-b-0">
+                              <AccordionItem value={comp.partNumber} className="border-b-0">
+                                <AccordionTrigger className="py-2 hover:no-underline">
+                                  <div className="flex items-center justify-between gap-x-4 w-full">
+                                    <div className="flex-grow text-left">
+                                      <div className='flex items-center gap-2'>
+                                        <p className='font-mono text-sm text-foreground font-semibold'>{modelName}</p>
+                                        <div className="flex items-center gap-1 text-red-500">
+                                          <Zap className="h-4 w-4 text-yellow-500 fill-current" />
+                                          <span className="text-xs font-semibold">有性能要求</span>
+                                        </div>
+                                      </div>
+                                      <p className='text-xs text-muted-foreground'>{comp.type} / {comp.manufacturer}</p>
+                                    </div>
+                                    <div className='flex flex-col items-end flex-shrink-0'>
+                                      <span className="font-mono text-sm text-foreground font-semibold">x {quantity}</span>
+                                      <p className='text-xs font-mono text-muted-foreground mt-1'>仓库盒号: {comp.partNumber}</p>
+                                    </div>
+                                  </div>
+                                </AccordionTrigger>
+                                <AccordionContent className="pb-4 pt-2 bg-muted/50 rounded-b-lg px-4">
+                                  <div className="space-y-3">
+                                      <div>
+                                        <h4 className="text-sm font-semibold flex items-center gap-2 mb-2"><List className="h-4 w-4 text-primary" />性能要求</h4>
+                                        <div className="pl-6 text-xs text-muted-foreground space-y-1">
+                                            <p>• 网络延迟 &lt; 10us P99</p>
+                                            <p>• 吞吐量 &gt; 90Gbps</p>
+                                        </div>
+                                      </div>
+                                      <div>
+                                        <h4 className="text-sm font-semibold flex items-center gap-2 mb-2"><ListChecks className="h-4 w-4 text-primary" />推荐备件SN清单</h4>
+                                        <div className="pl-6 text-xs text-muted-foreground font-mono space-y-1">
+                                            <p>SN-NIC-23A8F-001</p>
+                                            <p>SN-NIC-23A8F-002</p>
+                                            <p>SN-NIC-23A8F-005</p>
+                                        </div>
+                                      </div>
+                                  </div>
+                                </AccordionContent>
+                              </AccordionItem>
+                            </li>
+                          );
+                        }
+                        
+                        return (
+                          <li key={comp.partNumber} className="flex items-center justify-between gap-x-4 py-2 border-b last:border-b-0">
+                            <div className="flex-grow">
+                              <p className='font-mono text-sm text-foreground font-semibold'>{modelName}</p>
+                              <p className='text-xs text-muted-foreground'>{comp.type} / {comp.manufacturer}</p>
+                            </div>
+                            <div className='flex flex-col items-end flex-shrink-0'>
+                              <span className="font-mono text-sm text-foreground font-semibold">x {quantity}</span>
+                              <p className='text-xs font-mono text-muted-foreground mt-1'>仓库盒号: {comp.partNumber}</p>
+                            </div>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </Accordion>
                 </ScrollArea>
               ) : (
                 <div className="flex items-center justify-center h-full p-4">
                   <p className="text-sm text-muted-foreground text-center py-4">
-                    {workOrder.type === '服务器搬迁' ? '此工单的设备无需更换或添加备件。' : '此工单无需更换或添加备件。'}
+                    此工单无需更换或添加备件。
                   </p>
                 </div>
               )}
@@ -243,3 +298,5 @@ export function WorkOrderDetailClient({ workOrder }: { workOrder: WorkOrder }) {
     </>
   );
 }
+
+    
