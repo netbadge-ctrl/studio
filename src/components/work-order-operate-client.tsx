@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Layers, Server as ServerIcon, ArrowUp, ArrowDown, Video, Image as ImageIcon, QrCode, CheckCircle, AlertTriangle, Search, MoreVertical, FileCheck2, PackagePlus, PackageMinus, X, ChevronDown, Fingerprint, ClipboardList } from 'lucide-react';
+import { Layers, Server as ServerIcon, ArrowUp, ArrowDown, Video, Image as ImageIcon, QrCode, CheckCircle, AlertTriangle, Search, MoreVertical, FileCheck2, PackagePlus, PackageMinus, X, ChevronDown, Fingerprint, ClipboardList, Check, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -223,7 +223,7 @@ function DeviceOperation({
         {operationDetails.length > 0 && (
           <Card>
               <CardHeader>
-                  <CardTitle className='text-xl'>配件按照下表操作</CardTitle>
+                  <CardTitle className='text-xl'>配件操作</CardTitle>
               </CardHeader>
               <CardContent>
                   <Table>
@@ -457,13 +457,29 @@ export function WorkOrderOperateClient({ workOrder, onNavigateToRequestParts }: 
   
   const getConfigDiff = (online: Component[], target: Component[]) => {
       const allSlots = Array.from(new Set([...online.map(c => c.slot), ...target.map(c => c.slot)])).sort();
-      const diff: {slot: string, online: Component | null, target: Component | null, isDiff: boolean}[] = [];
+      const diff: {
+        slot: string; 
+        online: Component | null; 
+        target: Component | null; 
+        status: 'match' | 'mismatch' | 'missing_online' | 'missing_target' 
+      }[] = [];
 
       for(const slot of allSlots) {
           const onlineComp = online.find(c => c.slot === slot) || null;
           const targetComp = target.find(c => c.slot === slot) || null;
-          const isDiff = onlineComp?.partNumber !== targetComp?.partNumber;
-          diff.push({ slot, online: onlineComp, target: targetComp, isDiff });
+          
+          let status: 'match' | 'mismatch' | 'missing_online' | 'missing_target';
+          if (onlineComp && targetComp) {
+            status = onlineComp.partNumber === targetComp.partNumber ? 'match' : 'mismatch';
+          } else if (onlineComp) {
+            status = 'missing_target'; // Extra part online
+          } else {
+            status = 'missing_online'; // Missing part online
+          }
+          
+          if (status !== 'match') {
+            diff.push({ slot, online: onlineComp, target: targetComp, status });
+          }
       }
       return diff;
   }
@@ -593,7 +609,7 @@ export function WorkOrderOperateClient({ workOrder, onNavigateToRequestParts }: 
           <AlertDialogHeader>
             <AlertDialogTitle>确认完成工单？</AlertDialogTitle>
             <AlertDialogDescription>
-              在完成工干前，请确认是否需要增领备件或有故障件需要回库处理。
+              在完成工干前，请确认是否需要增领备件或有备件需要回库处理。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -604,7 +620,7 @@ export function WorkOrderOperateClient({ workOrder, onNavigateToRequestParts }: 
       </AlertDialog>
 
       <Dialog open={isAnomalyDialogOpen} onOpenChange={setIsAnomalyDialogOpen}>
-        <DialogContent className="sm:max-w-4xl h-[80vh] flex flex-col">
+        <DialogContent className="sm:max-w-md h-[80vh] flex flex-col">
             <DialogHeader>
               <DialogTitle className="text-2xl flex items-center gap-2">
                 <AlertTriangle className="text-destructive" />
@@ -623,49 +639,47 @@ export function WorkOrderOperateClient({ workOrder, onNavigateToRequestParts }: 
                   <TabsTrigger value="network">网络错误</TabsTrigger>
                 </TabsList>
                 <TabsContent value="hardware" className="flex-1 overflow-hidden mt-4">
-                  <ScrollArea className="h-full pr-6">
-                    <p className='text-sm font-semibold mb-4 text-card-foreground'>配置比对</p>
-                    <div className="grid grid-cols-2 gap-4">
-                      {/* Online Config */}
-                      <div>
-                        <h3 className="text-base font-semibold flex items-center gap-2 mb-2">
-                          <Fingerprint className="text-primary"/> 线上实际配置
-                        </h3>
-                        <div className="space-y-2">
-                          {configDiff.map(({ slot, online, isDiff }) => (
-                            <div key={`online-${slot}`} className={cn("p-3 rounded-md text-sm", isDiff ? "bg-destructive/10" : "bg-muted/50")}>
-                              {online ? (
-                                <>
-                                  <p className={cn("font-semibold", isDiff && "text-destructive")}>{online.model}</p>
-                                  <p className="text-xs text-muted-foreground font-mono">{online.partNumber} @ {slot}</p>
-                                </>
-                              ) : (
-                                <p className="text-muted-foreground italic">空插槽 @ {slot}</p>
-                              )}
-                            </div>
-                          ))}
+                  <ScrollArea className="h-full pr-4">
+                    <div className="space-y-4">
+                        <div className="flex items-center text-sm text-muted-foreground">
+                            <p>发现 <span className="font-bold text-destructive">{configDiff.length}</span> 处硬件配置与目标不一致。</p>
                         </div>
-                      </div>
-                      {/* Target Config */}
-                      <div>
-                        <h3 className="text-base font-semibold flex items-center gap-2 mb-2">
-                          <ClipboardList className="text-primary"/> 目标配置
-                        </h3>
-                        <div className="space-y-2">
-                           {configDiff.map(({ slot, target, isDiff }) => (
-                            <div key={`target-${slot}`} className={cn("p-3 rounded-md text-sm", isDiff ? "bg-destructive/10" : "bg-muted/50")}>
-                              {target ? (
-                                <>
-                                  <p className={cn("font-semibold", isDiff && "text-destructive")}>{target.model}</p>
-                                  <p className="text-xs text-muted-foreground font-mono">{target.partNumber} @ {slot}</p>
-                                </>
-                              ) : (
-                                <p className="text-muted-foreground italic">空插槽 @ {slot}</p>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
+                        {configDiff.map(({ slot, online, target, status }) => (
+                            <Card key={slot} className="bg-muted/30">
+                                <CardHeader className='p-4'>
+                                    <CardTitle className='text-base flex items-center gap-2'>
+                                        <AlertTriangle className='h-5 w-5 text-orange-500'/>
+                                        插槽: {slot}
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent className='p-4 pt-0 space-y-3'>
+                                    {/* Online */}
+                                    <div className='flex gap-3'>
+                                        <div className="flex-shrink-0 text-muted-foreground text-xs w-12 text-right">线上</div>
+                                        <div className='flex-grow border-l-2 pl-3'>
+                                            {online ? (
+                                                <div>
+                                                    <p className='text-sm text-foreground'>{online.model}</p>
+                                                    <p className='text-xs text-muted-foreground font-mono'>{online.partNumber}</p>
+                                                </div>
+                                            ) : <p className='text-sm text-muted-foreground italic'>无配件</p>}
+                                        </div>
+                                    </div>
+                                    {/* Target */}
+                                     <div className='flex gap-3'>
+                                        <div className="flex-shrink-0 text-muted-foreground text-xs w-12 text-right">目标</div>
+                                        <div className='flex-grow border-l-2 border-green-500 pl-3'>
+                                            {target ? (
+                                                <div>
+                                                    <p className='text-sm text-foreground font-semibold'>{target.model}</p>
+                                                    <p className='text-xs text-muted-foreground font-mono'>{target.partNumber}</p>
+                                                </div>
+                                            ) : <p className='text-sm text-muted-foreground italic'>无配件</p>}
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        ))}
                     </div>
                   </ScrollArea>
                 </TabsContent>
@@ -704,5 +718,3 @@ export function WorkOrderOperateClient({ workOrder, onNavigateToRequestParts }: 
     </>
   )
 }
-
-    
