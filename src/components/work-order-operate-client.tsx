@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Layers, Server as ServerIcon, ArrowUp, ArrowDown, Video, Image as ImageIcon, QrCode, CheckCircle, AlertTriangle, Search, MoreVertical, FileCheck2, PackagePlus, PackageMinus, X, ChevronDown } from 'lucide-react';
+import { Layers, Server as ServerIcon, ArrowUp, ArrowDown, Video, Image as ImageIcon, QrCode, CheckCircle, AlertTriangle, Search, MoreVertical, FileCheck2, PackagePlus, PackageMinus, X, ChevronDown, Fingerprint, ClipboardList } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -417,30 +417,7 @@ export function WorkOrderOperateClient({ workOrder, onNavigateToRequestParts }: 
     devicesWithStatus.every(d => d.status === '改配完成') && devicesWithStatus.length > 0,
     [devicesWithStatus]
   );
-
-  const anomalyReportItems = [
-    { name: "CPU 压力测试", status: "pass", value: "30分钟, 100%" },
-    { name: "内存稳定性测试 (memtest86+)", status: "pass", value: "4/4 passes" },
-    { name: "PCIe 带宽测试 (GPU)", status: "pass", value: "15.8 GB/s" },
-    { name: "硬盘 I/O 性能 (fio)", status: "fail", value: "读: 150MB/s (预期 > 450MB/s)" },
-    { name: "网络连通性 (ping)", status: "pass", value: "0% packet loss" },
-    { name: "带外管理 (IPMI)", status: "pass", value: "连接正常" },
-    { name: "电源冗余测试", status: "fail", value: "PSU 2 无输出" },
-  ];
-
-  const { failedItems, passedItems } = useMemo(() => {
-    const failed: typeof anomalyReportItems = [];
-    const passed: typeof anomalyReportItems = [];
-    anomalyReportItems.forEach(item => {
-      if (item.status === 'fail') {
-        failed.push(item);
-      } else {
-        passed.push(item);
-      }
-    });
-    return { failedItems: failed, passedItems: passed };
-  }, [anomalyReportItems]);
-
+  
   const handleReCheck = () => {
     if (selectedAnomalyDevice) {
       handleStatusChange(selectedAnomalyDevice.id, '改配完成');
@@ -452,6 +429,47 @@ export function WorkOrderOperateClient({ workOrder, onNavigateToRequestParts }: 
       setSelectedAnomalyDevice(null);
     }
   };
+  
+  // --- Anomaly Dialog Data & Logic ---
+  const { onlineConfig, networkTestItems } = useMemo(() => {
+    if (!selectedAnomalyDevice) return { onlineConfig: [], networkTestItems: [] };
+    
+    // Simulate a fetched online config that differs from the target
+    const simulatedOnlineConfig = selectedAnomalyDevice.targetConfig.map(comp => {
+      // Let's make the first memory module different
+      if (comp.slot === 'A1' && comp.type === '内存') {
+        return {
+          ...comp,
+          model: '16GB DDR4 2400MHz',
+          partNumber: 'MEM-16G-2400-A'
+        };
+      }
+      return comp;
+    }).filter(c => c.slot !== 'A2'); // And let's pretend one module is missing
+    
+    const tests = [
+      { name: "网络连通性 (ping)", status: "fail", value: "目标主机不可达" },
+      { name: "带外管理 (IPMI)", status: "pass", value: "连接正常" },
+    ];
+
+    return { onlineConfig: simulatedOnlineConfig, networkTestItems: tests };
+  }, [selectedAnomalyDevice]);
+  
+  const getConfigDiff = (online: Component[], target: Component[]) => {
+      const allSlots = Array.from(new Set([...online.map(c => c.slot), ...target.map(c => c.slot)])).sort();
+      const diff: {slot: string, online: Component | null, target: Component | null, isDiff: boolean}[] = [];
+
+      for(const slot of allSlots) {
+          const onlineComp = online.find(c => c.slot === slot) || null;
+          const targetComp = target.find(c => c.slot === slot) || null;
+          const isDiff = onlineComp?.partNumber !== targetComp?.partNumber;
+          diff.push({ slot, online: onlineComp, target: targetComp, isDiff });
+      }
+      return diff;
+  }
+  
+  const configDiff = selectedAnomalyDevice ? getConfigDiff(onlineConfig, selectedAnomalyDevice.targetConfig) : [];
+  // --- End Anomaly Dialog ---
 
   return (
     <>
@@ -586,7 +604,7 @@ export function WorkOrderOperateClient({ workOrder, onNavigateToRequestParts }: 
       </AlertDialog>
 
       <Dialog open={isAnomalyDialogOpen} onOpenChange={setIsAnomalyDialogOpen}>
-        <DialogContent className="sm:max-w-3xl h-[80vh] flex flex-col">
+        <DialogContent className="sm:max-w-4xl h-[80vh] flex flex-col">
             <DialogHeader>
               <DialogTitle className="text-2xl flex items-center gap-2">
                 <AlertTriangle className="text-destructive" />
@@ -599,47 +617,78 @@ export function WorkOrderOperateClient({ workOrder, onNavigateToRequestParts }: 
               )}
             </DialogHeader>
             <div className="flex-1 overflow-hidden">
-                <ScrollArea className="h-full pr-6">
-                    <div className="space-y-4">
-                        <div className="space-y-3">
-                            <p className="text-sm font-semibold text-destructive">未通过的检测项 ({failedItems.length}项)</p>
-                            {failedItems.map((item, index) => (
-                            <div key={`fail-${index}`} className="flex items-start gap-4 p-4 rounded-lg border bg-destructive/10 border-destructive">
-                                <X className="h-5 w-5 text-destructive flex-shrink-0 mt-1" />
-                                <div className="flex-grow">
-                                    <p className="font-semibold text-card-foreground">{item.name}</p>
-                                    <p className="text-sm text-destructive font-medium">{item.value}</p>
-                                </div>
+              <Tabs defaultValue="hardware" className="w-full h-full flex flex-col">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="hardware">硬件错误</TabsTrigger>
+                  <TabsTrigger value="network">网络错误</TabsTrigger>
+                </TabsList>
+                <TabsContent value="hardware" className="flex-1 overflow-hidden mt-4">
+                  <ScrollArea className="h-full pr-6">
+                    <p className='text-sm font-semibold mb-4 text-card-foreground'>配置比对</p>
+                    <div className="grid grid-cols-2 gap-4">
+                      {/* Online Config */}
+                      <div>
+                        <h3 className="text-base font-semibold flex items-center gap-2 mb-2">
+                          <Fingerprint className="text-primary"/> 线上实际配置
+                        </h3>
+                        <div className="space-y-2">
+                          {configDiff.map(({ slot, online, isDiff }) => (
+                            <div key={`online-${slot}`} className={cn("p-3 rounded-md text-sm", isDiff ? "bg-destructive/10" : "bg-muted/50")}>
+                              {online ? (
+                                <>
+                                  <p className={cn("font-semibold", isDiff && "text-destructive")}>{online.model}</p>
+                                  <p className="text-xs text-muted-foreground font-mono">{online.partNumber} @ {slot}</p>
+                                </>
+                              ) : (
+                                <p className="text-muted-foreground italic">空插槽 @ {slot}</p>
+                              )}
                             </div>
-                            ))}
+                          ))}
                         </div>
-
-                        {passedItems.length > 0 && (
-                            <Accordion type="single" collapsible className="w-full">
-                                <AccordionItem value="passed-items" className="border-b-0">
-                                    <AccordionTrigger className="text-sm font-semibold text-muted-foreground hover:no-underline py-2">
-                                        <div className="flex items-center gap-2">
-                                            <CheckCircle className="h-4 w-4 text-green-600" />
-                                            <span>已通过的检测项 ({passedItems.length}项)</span>
-                                        </div>
-                                    </AccordionTrigger>
-                                    <AccordionContent className="pt-2">
-                                        <div className="space-y-3 pl-6">
-                                            {passedItems.map((item, index) => (
-                                                <div key={`pass-${index}`} className="flex items-start gap-4 py-2 border-t first:border-t-0">
-                                                    <div className="flex-grow">
-                                                        <p className="font-medium text-card-foreground text-sm">{item.name}</p>
-                                                        <p className="text-sm text-muted-foreground">{item.value}</p>
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </AccordionContent>
-                                </AccordionItem>
-                            </Accordion>
-                        )}
+                      </div>
+                      {/* Target Config */}
+                      <div>
+                        <h3 className="text-base font-semibold flex items-center gap-2 mb-2">
+                          <ClipboardList className="text-primary"/> 目标配置
+                        </h3>
+                        <div className="space-y-2">
+                           {configDiff.map(({ slot, target, isDiff }) => (
+                            <div key={`target-${slot}`} className={cn("p-3 rounded-md text-sm", isDiff ? "bg-destructive/10" : "bg-muted/50")}>
+                              {target ? (
+                                <>
+                                  <p className={cn("font-semibold", isDiff && "text-destructive")}>{target.model}</p>
+                                  <p className="text-xs text-muted-foreground font-mono">{target.partNumber} @ {slot}</p>
+                                </>
+                              ) : (
+                                <p className="text-muted-foreground italic">空插槽 @ {slot}</p>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
                     </div>
-                </ScrollArea>
+                  </ScrollArea>
+                </TabsContent>
+                <TabsContent value="network" className="flex-1 overflow-hidden mt-4">
+                   <ScrollArea className="h-full pr-6">
+                      <div className="space-y-3">
+                          {networkTestItems.map((item, index) => (
+                          <div key={`net-test-${index}`} className={cn("flex items-start gap-4 p-4 rounded-lg border", item.status === 'fail' ? "bg-destructive/10 border-destructive" : "bg-muted/30")}>
+                              {item.status === 'fail' ? (
+                                <X className="h-5 w-5 text-destructive flex-shrink-0 mt-1" />
+                              ): (
+                                <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-1" />
+                              )}
+                              <div className="flex-grow">
+                                  <p className="font-semibold text-card-foreground">{item.name}</p>
+                                  <p className={cn("text-sm", item.status === 'fail' ? 'text-destructive font-medium' : 'text-muted-foreground')}>{item.value}</p>
+                              </div>
+                          </div>
+                          ))}
+                      </div>
+                   </ScrollArea>
+                </TabsContent>
+              </Tabs>
             </div>
              <DialogFooter className="mt-auto pt-4 border-t sm:justify-between">
                 <DialogClose asChild>
