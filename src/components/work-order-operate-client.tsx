@@ -432,8 +432,8 @@ export function WorkOrderOperateClient({ workOrder, onNavigateToRequestParts }: 
   };
   
   // --- Anomaly Dialog Data & Logic ---
-  const { onlineConfig, networkTestItems } = useMemo(() => {
-    if (!selectedAnomalyDevice) return { onlineConfig: [], networkTestItems: [] };
+  const { onlineConfig, networkTestItems, failedNetworkTests } = useMemo(() => {
+    if (!selectedAnomalyDevice) return { onlineConfig: [], networkTestItems: [], failedNetworkTests: [] };
     
     // Simulate a fetched online config that differs from the target
     const simulatedOnlineConfig = selectedAnomalyDevice.targetConfig.map(comp => {
@@ -452,8 +452,10 @@ export function WorkOrderOperateClient({ workOrder, onNavigateToRequestParts }: 
       { name: "网络连通性 (ping)", status: "fail", value: "目标主机不可达" },
       { name: "带外管理 (IPMI)", status: "pass", value: "连接正常" },
     ];
+    
+    const failedTests = tests.filter(t => t.status === 'fail');
 
-    return { onlineConfig: simulatedOnlineConfig, networkTestItems: tests };
+    return { onlineConfig: simulatedOnlineConfig, networkTestItems: tests, failedNetworkTests: failedTests };
   }, [selectedAnomalyDevice]);
   
   const getConfigDiff = (online: Component[], target: Component[]) => {
@@ -638,50 +640,52 @@ export function WorkOrderOperateClient({ workOrder, onNavigateToRequestParts }: 
                   <div className="space-y-6">
                       
                       {/* Hardware Errors Section */}
-                      <div>
-                          <h3 className="text-lg font-semibold mb-3">硬件错误</h3>
-                          <div className="space-y-4">
-                              <div className="flex items-center text-sm text-muted-foreground">
-                                  <p>发现 <span className="font-bold text-destructive">{configDiff.length}</span> 处硬件配置与目标不一致。</p>
-                              </div>
-                              {configDiff.map(({ slot, online, target, status }) => (
-                                  <Card key={slot} className="bg-destructive/5">
-                                      <CardHeader className='p-4'>
-                                          <CardTitle className='text-base flex items-center gap-2'>
-                                              <AlertTriangle className='h-5 w-5 text-orange-500'/>
-                                              插槽: {slot}
-                                          </CardTitle>
-                                      </CardHeader>
-                                      <CardContent className='p-4 pt-0 space-y-3'>
-                                          {/* Online */}
-                                          <div className='flex gap-3'>
-                                              <div className="flex-shrink-0 text-muted-foreground text-xs w-12 text-right">线上</div>
-                                              <div className='flex-grow border-l-2 pl-3 border-destructive'>
-                                                  {online ? (
-                                                      <div>
-                                                          <p className='text-sm text-foreground'>{online.model}</p>
-                                                          <p className='text-xs text-muted-foreground font-mono'>{online.partNumber}</p>
-                                                      </div>
-                                                  ) : <p className='text-sm text-destructive italic'>无配件</p>}
-                                              </div>
-                                          </div>
-                                          {/* Target */}
-                                          <div className='flex gap-3'>
-                                              <div className="flex-shrink-0 text-muted-foreground text-xs w-12 text-right">目标</div>
-                                              <div className='flex-grow border-l-2 border-green-500 pl-3'>
-                                                  {target ? (
-                                                      <div>
-                                                          <p className='text-sm text-foreground font-semibold'>{target.model}</p>
-                                                          <p className='text-xs text-muted-foreground font-mono'>{target.partNumber}</p>
-                                                      </div>
-                                                  ) : <p className='text-sm text-muted-foreground italic'>无配件</p>}
-                                              </div>
-                                          </div>
-                                      </CardContent>
-                                  </Card>
-                              ))}
-                          </div>
-                      </div>
+                      {configDiff.length > 0 && (
+                        <div>
+                            <h3 className="text-lg font-semibold mb-3">硬件错误</h3>
+                            <div className="space-y-4">
+                                <div className="flex items-center text-sm text-muted-foreground">
+                                    <p>发现 <span className="font-bold text-destructive">{configDiff.length}</span> 处硬件配置与目标不一致。</p>
+                                </div>
+                                {configDiff.map(({ slot, online, target, status }) => (
+                                    <Card key={slot} className="bg-destructive/5">
+                                        <CardHeader className='p-4'>
+                                            <CardTitle className='text-base flex items-center gap-2'>
+                                                <AlertTriangle className='h-5 w-5 text-orange-500'/>
+                                                插槽: {slot}
+                                            </CardTitle>
+                                        </CardHeader>
+                                        <CardContent className='p-4 pt-0 space-y-3'>
+                                            {/* Online */}
+                                            <div className='flex gap-3'>
+                                                <div className="flex-shrink-0 text-muted-foreground text-xs w-12 text-right">线上</div>
+                                                <div className='flex-grow border-l-2 pl-3 border-destructive'>
+                                                    {online ? (
+                                                        <div>
+                                                            <p className='text-sm text-foreground'>{online.model}</p>
+                                                            <p className='text-xs text-muted-foreground font-mono'>{online.partNumber}</p>
+                                                        </div>
+                                                    ) : <p className='text-sm text-destructive italic'>无配件</p>}
+                                                </div>
+                                            </div>
+                                            {/* Target */}
+                                            <div className='flex gap-3'>
+                                                <div className="flex-shrink-0 text-muted-foreground text-xs w-12 text-right">目标</div>
+                                                <div className='flex-grow border-l-2 border-green-500 pl-3'>
+                                                    {target ? (
+                                                        <div>
+                                                            <p className='text-sm text-foreground font-semibold'>{target.model}</p>
+                                                            <p className='text-xs text-muted-foreground font-mono'>{target.partNumber}</p>
+                                                        </div>
+                                                    ) : <p className='text-sm text-muted-foreground italic'>无配件</p>}
+                                                </div>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                ))}
+                            </div>
+                        </div>
+                      )}
 
                       <Separator className="my-6" />
 
@@ -689,19 +693,22 @@ export function WorkOrderOperateClient({ workOrder, onNavigateToRequestParts }: 
                       <div>
                           <h3 className="text-lg font-semibold mb-3">网络错误</h3>
                            <div className="space-y-3">
-                              {networkTestItems.map((item, index) => (
-                              <div key={`net-test-${index}`} className={cn("flex items-start gap-4 p-4 rounded-lg border", item.status === 'fail' ? "bg-destructive/10 border-destructive" : "bg-muted/30")}>
-                                  {item.status === 'fail' ? (
-                                    <X className="h-5 w-5 text-destructive flex-shrink-0 mt-1" />
-                                  ): (
-                                    <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-1" />
-                                  )}
-                                  <div className="flex-grow">
-                                      <p className="font-semibold text-card-foreground">{item.name}</p>
-                                      <p className={cn("text-sm", item.status === 'fail' ? 'text-destructive font-medium' : 'text-muted-foreground')}>{item.value}</p>
+                              {failedNetworkTests.length > 0 ? (
+                                failedNetworkTests.map((item, index) => (
+                                  <div key={`net-test-${index}`} className="flex items-start gap-4 p-4 rounded-lg border bg-destructive/10 border-destructive">
+                                      <X className="h-5 w-5 text-destructive flex-shrink-0 mt-1" />
+                                      <div className="flex-grow">
+                                          <p className="font-semibold text-card-foreground">{item.name}</p>
+                                          <p className="text-sm text-destructive font-medium">{item.value}</p>
+                                      </div>
                                   </div>
-                              </div>
-                              ))}
+                                ))
+                              ) : (
+                                <div className="flex items-center gap-3 p-4 rounded-lg border bg-green-500/10 border-green-500/20 text-green-700">
+                                  <CheckCircle className="h-5 w-5" />
+                                  <p className="text-sm font-medium">所有网络测试均已通过。</p>
+                                </div>
+                              )}
                           </div>
                       </div>
                   </div>
