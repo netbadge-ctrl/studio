@@ -4,10 +4,10 @@
 import * as React from "react";
 import type { WorkOrder, Component } from "@/lib/types";
 import { Button } from "@/components/ui/button";
-import { QrCode, Send, XCircle, Package, ListChecks } from "lucide-react";
+import { QrCode, Send, XCircle, Package, ListChecks, Inbox, PackageSearch, ArrowDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
 interface RequestPartsPageProps {
   workOrder: WorkOrder;
@@ -30,22 +30,16 @@ export function RequestPartsPage({
   const { toast } = useToast();
   const [partRequests, setPartRequests] = React.useState<Map<string, PartRequest>>(initialPartRequests);
 
-  const availableParts = React.useMemo(() => {
+  // This represents all unique parts that *could* be replaced in this work order.
+  const replaceableParts = React.useMemo(() => {
     const partsMap = new Map<string, Component>();
-
     workOrder.devices.forEach(device => {
-      const currentSlotMap = new Map(device.currentConfig.map(c => [c.slot, c.partNumber]));
-      
-      device.targetConfig.forEach(comp => {
-        const currentPartInSlot = currentSlotMap.get(comp.slot);
-        if (!currentPartInSlot || currentPartInSlot !== comp.partNumber) {
-          if (!partsMap.has(comp.partNumber)) {
-            partsMap.set(comp.partNumber, comp);
-          }
+      device.currentConfig.forEach(comp => {
+        if (!partsMap.has(comp.partNumber)) {
+          partsMap.set(comp.partNumber, comp);
         }
       });
     });
-
     return Array.from(partsMap.values()).sort((a,b) => a.model.localeCompare(b.model));
   }, [workOrder]);
   
@@ -90,76 +84,112 @@ export function RequestPartsPage({
   
   const totalItems = Array.from(partRequests.values()).reduce((acc, item) => acc + item.serials.length, 0);
 
+  // This is a proxy for the scan button. In a real app, this would trigger the camera.
+  // We'll just pick a random replaceable part to simulate a scan.
+  const handleUnifiedScan = () => {
+    if (replaceableParts.length > 0) {
+      // For this demo, let's just pick the first replaceable part to scan.
+      // A real implementation would involve a camera and QR code library.
+      onScan(replaceableParts[0]);
+    } else {
+      toast({
+        title: "无坏件可扫",
+        description: "此工单没有可被替换的备件。",
+      });
+    }
+  };
+
+
   return (
     <div className="flex flex-col h-full">
-      <div className="flex-1 overflow-y-auto space-y-4">
+      <div className="flex-1 overflow-y-auto space-y-4 pb-24">
+        
+        {/* Unified Scan Action */}
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg">
-                <Package className="h-5 w-5" />
-                备件清单
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground mb-4">
-                扫描或手动添加故障件以申领新的备件。系统将记录坏件并生成领料单。仅用于领用的备件中出现坏件的替补领用。
-            </p>
-            {availableParts.length > 0 ? (
-                <ul className="space-y-3">
-                    {availableParts.map((comp, index) => (
-                    <li key={comp.partNumber} className="flex items-center justify-between gap-4 p-4 bg-muted/50 rounded-lg border">
-                        <div className="flex-grow">
-                            <p className='font-semibold text-foreground'>{`备件Model号${index + 1}`}</p>
-                            <p className='text-xs text-muted-foreground'>仓库盒号: {comp.partNumber}</p>
-                        </div>
-                        <Button size="sm" variant="outline" onClick={() => onScan(comp)}>
-                            <QrCode className="mr-2 h-4 w-4" />
-                            扫码坏件
-                        </Button>
-                    </li>
-                    ))}
-                </ul>
-            ) : (
-                <p className="text-sm text-muted-foreground text-center py-4">此工单无需领用新备件。</p>
-            )}
-          </CardContent>
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                    <QrCode className="h-5 w-5 text-primary"/>
+                    扫描坏件
+                </CardTitle>
+                <CardDescription>
+                    点击下方按钮，开始扫描从设备上替换下来的故障备件序列号。
+                </CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Button size="lg" className="w-full" onClick={handleUnifiedScan}>
+                    <QrCode className="mr-2 h-5 w-5"/>
+                    开始扫描
+                </Button>
+            </CardContent>
         </Card>
 
+        {/* Area 1: Faulty Parts List */}
         <Card>
             <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg">
-                    <ListChecks className="h-5 w-5" />
-                    坏件与申领列表
+                    <Inbox className="h-5 w-5" />
+                    区域1: 坏件清单
                 </CardTitle>
+                 <CardDescription>
+                    已扫描的坏件将在此处列出，请确认信息并准备回库。
+                </CardDescription>
             </CardHeader>
             <CardContent>
                 {partRequests.size > 0 ? (
-                    <div className="space-y-4">
-                        {Array.from(partRequests.values()).map(({ component, serials }, index) => (
-                        <div key={component.partNumber} className="p-4 border rounded-lg bg-card">
-                            <div className="flex items-start justify-between gap-4 mb-3">
-                                <div className="flex-grow">
-                                    <p className='font-semibold text-foreground'>{`备件Model号${index + 1}`}</p>
-                                    <p className='text-xs text-muted-foreground'>仓库盒号: {component.partNumber}</p>
-                                </div>
-                                <Badge variant="secondary">坏件: {serials.length}</Badge>
-                            </div>
-                            <ul className="space-y-2 pt-2 border-t">
-                                {serials.map(sn => (
-                                    <li key={sn} className="flex items-center justify-between text-sm p-2 bg-muted/50 rounded-md">
-                                        <span className="font-mono text-muted-foreground">{sn}</span>
-                                        <Button size="icon" variant="ghost" className="h-7 w-7 text-muted-foreground hover:text-destructive" onClick={() => removeSerial(component.partNumber, sn)}>
-                                            <XCircle className="h-4 w-4"/>
-                                        </Button>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                        ))}
-                    </div>
+                    <ul className="space-y-3">
+                        {Array.from(partRequests.entries()).flatMap(([partNumber, { component, serials }]) => 
+                            serials.map(sn => (
+                                <li key={sn} className="flex items-center justify-between gap-3 p-3 bg-muted/50 rounded-lg border">
+                                    <div className="flex-grow">
+                                        <p className="font-mono text-foreground text-sm">{sn}</p>
+                                        <p className="text-xs text-muted-foreground">{component.model}</p>
+                                    </div>
+                                    <div className="text-right">
+                                        <p className="font-mono text-xs text-primary font-semibold">{partNumber}</p>
+                                        <p className="text-xs text-muted-foreground">回库盒号</p>
+                                    </div>
+                                    <Button size="icon" variant="ghost" className="h-7 w-7 text-muted-foreground hover:text-destructive" onClick={() => removeSerial(partNumber, sn)}>
+                                        <XCircle className="h-4 w-4"/>
+                                    </Button>
+                                </li>
+                            ))
+                        )}
+                    </ul>
                 ) : (
                     <div className="h-full flex items-center justify-center py-8">
-                        <p className="text-muted-foreground text-center">请从上方列表扫码添加坏件...</p>
+                        <p className="text-muted-foreground text-center">请扫描坏件以添加到此列表...</p>
+                    </div>
+                )}
+            </CardContent>
+        </Card>
+
+        {/* Area 2: Replacement Request List */}
+        <Card>
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-lg">
+                    <PackageSearch className="h-5 w-5" />
+                    区域2: 申领清单
+                </CardTitle>
+                <CardDescription>
+                    系统已根据您扫描的坏件自动生成需要领用的新备件清单。
+                </CardDescription>
+            </CardHeader>
+            <CardContent>
+                 {partRequests.size > 0 ? (
+                    <ul className="space-y-3">
+                        {Array.from(partRequests.values()).map(({ component, serials }) => (
+                             <li key={component.partNumber} className="flex items-center justify-between gap-4 p-4 border rounded-lg">
+                                <div className="flex-grow">
+                                    <p className='font-semibold text-foreground'>{component.model}</p>
+                                    <p className='text-xs font-mono text-muted-foreground'>领取盒号: {component.partNumber}</p>
+                                </div>
+                                <Badge variant="secondary" className="text-base">x {serials.length}</Badge>
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
+                    <div className="h-full flex items-center justify-center py-8">
+                        <p className="text-muted-foreground text-center">扫描坏件后，将在此自动生成申领清单。</p>
                     </div>
                 )}
             </CardContent>
