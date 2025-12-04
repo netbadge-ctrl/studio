@@ -16,11 +16,17 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
 import { PackageMinus, Send } from "lucide-react";
+import { Badge } from "./ui/badge";
 
 interface ReturnPartsDialogProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   workOrder: WorkOrder;
+}
+
+type AggregatedPart = {
+  component: Component;
+  serialNumbers: string[];
 }
 
 export function ReturnPartsDialog({
@@ -30,21 +36,40 @@ export function ReturnPartsDialog({
 }: ReturnPartsDialogProps) {
   const { toast } = useToast();
 
-  const removedParts = React.useMemo(() => {
-    const parts: { component: Component, serialNumber: string }[] = [];
+  const aggregatedParts = React.useMemo(() => {
+    const partsMap = new Map<string, AggregatedPart>();
+    
     workOrder.devices.forEach(device => {
       const targetPartNumbersInSlots = new Map(device.targetConfig.map(c => [c.slot, c.partNumber]));
+      
       device.currentConfig.forEach(component => {
+        // This component is considered "removed" if the target slot doesn't exist 
+        // or has a different part number.
         if (targetPartNumbersInSlots.get(component.slot) !== component.partNumber) {
-          parts.push({ component, serialNumber: `SN-FAULT-${device.serialNumber.slice(-4)}-${component.slot}` });
+          const serialNumber = `SN-FAULT-${device.serialNumber.slice(-4)}-${component.slot}`;
+          const existing = partsMap.get(component.partNumber);
+          if (existing) {
+            existing.serialNumbers.push(serialNumber);
+          } else {
+            partsMap.set(component.partNumber, {
+              component: component,
+              serialNumbers: [serialNumber],
+            });
+          }
         }
       });
     });
-    return parts.sort((a,b) => a.component.model.localeCompare(b.component.model));
+
+    return Array.from(partsMap.values()).sort((a,b) => a.component.model.localeCompare(b.component.model));
   }, [workOrder]);
 
+  const totalPartsCount = React.useMemo(() => {
+    return aggregatedParts.reduce((acc, group) => acc + group.serialNumbers.length, 0);
+  }, [aggregatedParts]);
+
+
   const handleSubmit = () => {
-    if (removedParts.length === 0) {
+    if (totalPartsCount === 0) {
       toast({
         variant: "default",
         title: "没有需要回库的备件",
@@ -53,11 +78,11 @@ export function ReturnPartsDialog({
       return;
     }
     
-    console.log("Submitting part returns:", removedParts);
+    console.log("Submitting part returns:", aggregatedParts);
 
     toast({
       title: "回库请求已提交",
-      description: `共 ${removedParts.length} 个备件已提交回库处理。`,
+      description: `共 ${totalPartsCount} 个备件已提交回库处理。`,
     });
     
     setIsOpen(false);
@@ -77,22 +102,25 @@ export function ReturnPartsDialog({
         </DialogHeader>
         <div className="flex-1 overflow-hidden -mx-6 px-2">
             <ScrollArea className="h-full px-4">
-                {removedParts.length > 0 ? (
-                     <div className="space-y-3">
-                        {removedParts.map(({ component, serialNumber }, index) => (
-                           <div key={`${component.partNumber}-${index}`} className="p-4 border rounded-lg bg-muted/30">
-                              <p className="font-semibold text-foreground">{component.model}</p>
-                              <p className="text-sm text-muted-foreground mb-3">{component.type}</p>
-                              <div className="space-y-2 text-sm">
-                                <div className="flex justify-between items-center">
-                                    <span className="text-muted-foreground">序列号 (SN):</span>
-                                    <span className="font-mono">{serialNumber}</span>
-                                </div>
-                                <div className="flex justify-between items-center">
-                                    <span className="text-muted-foreground">回库盒号:</span>
-                                    <span className="font-mono font-semibold text-primary">{component.partNumber}</span>
-                                </div>
+                {aggregatedParts.length > 0 ? (
+                     <div className="space-y-4">
+                        {aggregatedParts.map(({ component, serialNumbers }) => (
+                           <div key={component.partNumber} className="p-4 border rounded-lg bg-card">
+                              <div className="flex items-start justify-between gap-4 mb-3">
+                                  <div className="flex-grow">
+                                      <p className="font-semibold text-foreground">{component.model}</p>
+                                      <p className='text-sm text-muted-foreground'>回库盒号: <span className="font-mono">{component.partNumber}</span></p>
+                                  </div>
+                                  <Badge variant="secondary">数量: {serialNumbers.length}</Badge>
                               </div>
+                              <ul className="space-y-2 pt-3 border-t">
+                                  {serialNumbers.map(sn => (
+                                      <li key={sn} className="flex items-center justify-between text-sm p-2 bg-muted/50 rounded-md">
+                                          <span className="text-muted-foreground">序列号:</span>
+                                          <span className="font-mono text-foreground">{sn}</span>
+                                      </li>
+                                  ))}
+                              </ul>
                            </div>
                         ))}
                      </div>
@@ -107,9 +135,9 @@ export function ReturnPartsDialog({
             <DialogClose asChild>
                 <Button variant="outline">关闭</Button>
             </DialogClose>
-            <Button onClick={handleSubmit}>
+            <Button onClick={handleSubmit} disabled={totalPartsCount === 0}>
                 <Send className="mr-2 h-4 w-4" />
-                确认回库 ({removedParts.length}件)
+                确认回库 ({totalPartsCount}件)
             </Button>
         </DialogFooter>
       </DialogContent>
