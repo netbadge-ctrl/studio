@@ -176,7 +176,7 @@ export function RequestPartsPage({
   const renderCameraView = () => {
     if (hasCameraPermission === null) {
       return (
-        <div className="aspect-video w-full">
+        <div className="w-full h-60">
             <Skeleton className="h-full w-full rounded-md" />
             <p className="text-sm text-muted-foreground mt-2 text-center">正在请求摄像头权限...</p>
         </div>
@@ -196,7 +196,7 @@ export function RequestPartsPage({
     }
     
     return (
-      <div className="relative w-full aspect-video bg-black rounded-lg overflow-hidden border">
+      <div className="relative w-full h-60 bg-black rounded-lg overflow-hidden border">
         <video ref={videoRef} className="w-full h-full object-cover" autoPlay muted playsInline />
         <div className="absolute inset-0 flex items-center justify-center">
             <div className="w-3/4 h-1/2 border-4 border-dashed border-white/50 rounded-lg" />
@@ -326,3 +326,5 @@ export function RequestPartsPage({
     </div>
   );
 }
+
+    
