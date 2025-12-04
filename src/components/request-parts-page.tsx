@@ -215,12 +215,7 @@ export function RequestPartsPage({
         
         {/* Unified Scan Action */}
         <Card>
-            <CardHeader>
-                <CardDescription>
-                    直接使用摄像头扫描故障备件，或手动输入其序列号。
-                </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 p-4 md:p-6">
               {renderCameraView()}
               <Button 
                 variant="secondary" 
@@ -331,7 +326,3 @@ export function RequestPartsPage({
     </div>
   );
 }
-
-    
-
-    
