@@ -38,8 +38,6 @@ export function RequestPartsPage({
       
       device.targetConfig.forEach(comp => {
         const currentPartInSlot = currentSlotMap.get(comp.slot);
-        // This logic identifies a component as "new" if the slot is empty in currentConfig,
-        // or if the part number in targetConfig is different from currentConfig for the same slot.
         if (!currentPartInSlot || currentPartInSlot !== comp.partNumber) {
           if (!partsMap.has(comp.partNumber)) {
             partsMap.set(comp.partNumber, comp);
@@ -73,8 +71,8 @@ export function RequestPartsPage({
     if (partRequests.size === 0) {
         toast({
             variant: "destructive",
-            title: "未选择任何备件",
-            description: "请先通过扫码或点击按钮添加需要申领的备件。",
+            title: "未申领任何备件",
+            description: "请先扫描坏件以添加申领请求。",
         });
         return;
     }
@@ -111,7 +109,7 @@ export function RequestPartsPage({
                     {availableParts.map((comp, index) => (
                     <li key={comp.partNumber} className="flex items-center justify-between gap-4 p-4 bg-muted/50 rounded-lg border">
                         <div className="flex-grow">
-                            <p className='font-mono text-sm text-foreground font-semibold'>备件Model号{index + 1}</p>
+                            <p className='font-semibold text-foreground'>备件Model号{index + 1}</p>
                             <p className='text-xs text-muted-foreground'>仓库盒号: {comp.partNumber}</p>
                         </div>
                         <Button size="sm" variant="outline" onClick={() => onScan(comp)}>
