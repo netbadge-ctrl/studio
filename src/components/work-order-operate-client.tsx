@@ -1,4 +1,5 @@
 
+
 "use client"
 
 import { useState, useRef, useMemo, useEffect } from 'react';
@@ -508,9 +509,10 @@ export function WorkOrderOperateClient({ workOrder, onNavigateToRequestParts }: 
                   collapsible
                   value={openAccordionItem} 
                   onValueChange={(value) => {
-                    if (isCompleted) return;
                     const device = devicesWithStatus.find(d => d.id === value);
-                    if (device && device.status === '待处理') {
+                    if (!device || device.status === '改配完成') return;
+
+                    if (device.status === '待处理') {
                         handleStatusChange(device.id, '改配中');
                     }
                     setOpenAccordionItem(value);
@@ -523,7 +525,10 @@ export function WorkOrderOperateClient({ workOrder, onNavigateToRequestParts }: 
                         value={device.id} 
                         className="border-b-0 rounded-lg border bg-card text-card-foreground shadow-sm transition-all data-[state=open]:shadow-lg data-[state=open]:border-primary"
                       >
-                          <AccordionTrigger disabled={isCompleted} className="px-4 py-3 hover:no-underline text-base disabled:cursor-not-allowed">
+                          <AccordionTrigger 
+                            disabled={device.status === '改配完成'} 
+                            className="px-4 py-3 hover:no-underline text-base disabled:cursor-not-allowed disabled:opacity-70"
+                          >
                               <div className="flex items-center gap-3 w-full">
                                   {getDeviceIcon(device.type)}
                                   <div className='text-left flex-grow'>
@@ -730,3 +735,4 @@ export function WorkOrderOperateClient({ workOrder, onNavigateToRequestParts }: 
 }
 
     
+
