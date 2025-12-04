@@ -109,7 +109,7 @@ export function RequestPartsPage({
                     {availableParts.map((comp, index) => (
                     <li key={comp.partNumber} className="flex items-center justify-between gap-4 p-4 bg-muted/50 rounded-lg border">
                         <div className="flex-grow">
-                            <p className='font-semibold text-foreground'>备件Model号{index + 1}</p>
+                            <p className='font-semibold text-foreground'>{`备件Model号${index + 1}`}</p>
                             <p className='text-xs text-muted-foreground'>仓库盒号: {comp.partNumber}</p>
                         </div>
                         <Button size="sm" variant="outline" onClick={() => onScan(comp)}>
@@ -139,7 +139,7 @@ export function RequestPartsPage({
                         <div key={component.partNumber} className="p-4 border rounded-lg bg-card">
                             <div className="flex items-start justify-between gap-4 mb-3">
                                 <div className="flex-grow">
-                                    <p className='font-semibold text-foreground'>备件Model号{index + 1}</p>
+                                    <p className='font-semibold text-foreground'>{`备件Model号${index + 1}`}</p>
                                     <p className='text-xs text-muted-foreground'>仓库盒号: {component.partNumber}</p>
                                 </div>
                                 <Badge variant="secondary">坏件: {serials.length}</Badge>
@@ -177,3 +177,5 @@ export function RequestPartsPage({
     </div>
   );
 }
+
+    
