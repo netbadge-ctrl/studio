@@ -216,10 +216,6 @@ export function RequestPartsPage({
         {/* Unified Scan Action */}
         <Card>
             <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                    <QrCode className="h-5 w-5 text-primary"/>
-                    扫描坏件
-                </CardTitle>
                 <CardDescription>
                     直接使用摄像头扫描故障备件，或手动输入其序列号。
                 </CardDescription>
@@ -335,5 +331,7 @@ export function RequestPartsPage({
     </div>
   );
 }
+
+    
 
     
