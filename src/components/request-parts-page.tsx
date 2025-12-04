@@ -202,7 +202,7 @@ export function RequestPartsPage({
             <div className="w-3/4 h-1/2 border-4 border-dashed border-white/50 rounded-lg" />
         </div>
         <p className="text-center text-xs text-white/80 bg-black/50 p-1 absolute bottom-0 w-full">
-          请将序列号条码对准扫描框
+          请将坏备件的SN条码对准扫描框
         </p>
       </div>
     );
