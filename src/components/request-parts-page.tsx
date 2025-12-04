@@ -4,15 +4,18 @@
 import * as React from "react";
 import type { WorkOrder, Component } from "@/lib/types";
 import { Button } from "@/components/ui/button";
-import { QrCode, Send, XCircle, Package, ListChecks, Inbox, PackageSearch, ArrowDown } from "lucide-react";
+import { QrCode, Send, XCircle, Package, Inbox, PackageSearch, AlertTriangle, CheckCircle, Camera } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Skeleton } from "./ui/skeleton";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
 
 interface RequestPartsPageProps {
   workOrder: WorkOrder;
-  onBack: () => void;
-  onScan: (component: Component) => void;
+  onScanComplete: (component: Component, serialNumber: string) => void;
   initialPartRequests: Map<string, { component: Component; serials: string[] }>;
 }
 
@@ -23,14 +26,44 @@ type PartRequest = {
 
 export function RequestPartsPage({
   workOrder,
-  onBack,
-  onScan,
+  onScanComplete,
   initialPartRequests,
 }: RequestPartsPageProps) {
   const { toast } = useToast();
   const [partRequests, setPartRequests] = React.useState<Map<string, PartRequest>>(initialPartRequests);
+  const [hasCameraPermission, setHasCameraPermission] = React.useState<boolean | null>(null);
+  const [manualSerialNumber, setManualSerialNumber] = React.useState("");
+  const videoRef = React.useRef<HTMLVideoElement>(null);
 
-  // This represents all unique parts that *could* be replaced in this work order.
+  React.useEffect(() => {
+    const getCameraPermission = async () => {
+      if (typeof navigator === 'undefined' || !navigator.mediaDevices) {
+        setHasCameraPermission(false);
+        return;
+      }
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        setHasCameraPermission(true);
+
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+        }
+      } catch (error) {
+        console.error('Error accessing camera:', error);
+        setHasCameraPermission(false);
+      }
+    };
+
+    getCameraPermission();
+    
+    return () => {
+      if (videoRef.current && videoRef.current.srcObject) {
+        const stream = videoRef.current.srcObject as MediaStream;
+        stream.getTracks().forEach(track => track.stop());
+      }
+    };
+  }, []);
+
   const replaceableParts = React.useMemo(() => {
     const partsMap = new Map<string, Component>();
     workOrder.devices.forEach(device => {
@@ -42,6 +75,28 @@ export function RequestPartsPage({
     });
     return Array.from(partsMap.values()).sort((a,b) => a.model.localeCompare(b.model));
   }, [workOrder]);
+
+  const handleScan = (serialNumber: string) => {
+    if (!serialNumber.trim()) return;
+    
+    // In a real app, you would decode the QR code to get component info.
+    // For this demo, we'll assume the first replaceable part is the one being replaced.
+    if (replaceableParts.length > 0) {
+      const componentToReplace = replaceableParts[0];
+      onScanComplete(componentToReplace, serialNumber.trim());
+      toast({
+          title: "录入成功",
+          description: `已添加坏件 SN: ${serialNumber.trim()}`
+      });
+      setManualSerialNumber("");
+    } else {
+      toast({
+        variant: "destructive",
+        title: "无备件信息",
+        description: "无法关联扫描的坏件，因为此工单没有可替换的备件。",
+      });
+    }
+  };
   
   const removeSerial = (partNumber: string, serialToRemove: string) => {
     setPartRequests(prev => {
@@ -79,24 +134,44 @@ export function RequestPartsPage({
     });
     
     setPartRequests(new Map());
-    onBack();
+    // onBack is called from the main nav now
   };
   
   const totalItems = Array.from(partRequests.values()).reduce((acc, item) => acc + item.serials.length, 0);
 
-  // This is a proxy for the scan button. In a real app, this would trigger the camera.
-  // We'll just pick a random replaceable part to simulate a scan.
-  const handleUnifiedScan = () => {
-    if (replaceableParts.length > 0) {
-      // For this demo, let's just pick the first replaceable part to scan.
-      // A real implementation would involve a camera and QR code library.
-      onScan(replaceableParts[0]);
-    } else {
-      toast({
-        title: "无坏件可扫",
-        description: "此工单没有可被替换的备件。",
-      });
+  const renderCameraView = () => {
+    if (hasCameraPermission === null) {
+      return (
+        <div className="aspect-video w-full">
+            <Skeleton className="h-full w-full rounded-md" />
+            <p className="text-sm text-muted-foreground mt-2 text-center">正在请求摄像头权限...</p>
+        </div>
+      )
     }
+
+    if (hasCameraPermission === false) {
+      return (
+        <Alert variant="destructive">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertTitle>摄像头访问受限</AlertTitle>
+          <AlertDescription>
+            无法访问摄像头。请在浏览器设置中授予摄像头权限，或使用下方的“手动输入”功能。
+          </AlertDescription>
+        </Alert>
+      );
+    }
+    
+    return (
+      <div className="relative w-full aspect-video bg-black rounded-lg overflow-hidden border">
+        <video ref={videoRef} className="w-full h-full object-cover" autoPlay muted playsInline />
+        <div className="absolute inset-0 flex items-center justify-center">
+            <div className="w-3/4 h-1/2 border-4 border-dashed border-white/50 rounded-lg" />
+        </div>
+        <p className="text-center text-xs text-white/80 bg-black/50 p-1 absolute bottom-0 w-full">
+          请将序列号条码对准扫描框
+        </p>
+      </div>
+    );
   };
 
 
@@ -112,14 +187,33 @@ export function RequestPartsPage({
                     扫描坏件
                 </CardTitle>
                 <CardDescription>
-                    点击下方按钮，开始扫描从设备上替换下来的故障备件序列号。
+                    直接使用摄像头扫描故障备件，或手动输入其序列号。
                 </CardDescription>
             </CardHeader>
-            <CardContent>
-                <Button size="lg" className="w-full" onClick={handleUnifiedScan}>
-                    <QrCode className="mr-2 h-5 w-5"/>
-                    开始扫描
-                </Button>
+            <CardContent className="space-y-4">
+              {renderCameraView()}
+              <Button 
+                variant="secondary" 
+                className="w-full" 
+                onClick={() => handleScan(`SN-FAULT-${Date.now()}`)}
+                disabled={!hasCameraPermission}
+              >
+                <Camera className="mr-2" />
+                模拟扫码成功
+              </Button>
+               <div className="space-y-2">
+                  <Label htmlFor="serial-number">无法扫描？请手动输入</Label>
+                  <div className="flex gap-2">
+                  <Input
+                    id="serial-number"
+                    value={manualSerialNumber}
+                    onChange={(e) => setManualSerialNumber(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleScan(manualSerialNumber)}
+                    placeholder="在此输入坏件序列号"
+                  />
+                  <Button onClick={() => handleScan(manualSerialNumber)}><CheckCircle className="h-4 w-4" /></Button>
+                  </div>
+              </div>
             </CardContent>
         </Card>
 
@@ -207,5 +301,3 @@ export function RequestPartsPage({
     </div>
   );
 }
-
-    

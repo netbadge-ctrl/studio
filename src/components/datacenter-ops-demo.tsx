@@ -13,7 +13,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { Server, Wrench, HardDrive, User, Calendar, Building2, UserSquare, Layers } from "lucide-react";
-import { ScanFaultyPartPage } from '@/components/scan-faulty-part-page';
 import { WorkOrderMoveOutClient } from './work-order-move-out-client';
 import { WorkOrderMoveInClient } from './work-order-move-in-client';
 
@@ -24,7 +23,6 @@ type View =
   | { name: 'WORK_ORDER_DETAIL', workOrderId: string, previousView: 'ENGINEER_DASHBOARD' | 'LEADER_DASHBOARD' }
   | { name: 'WORK_ORDER_OPERATE', workOrderId: string }
   | { name: 'REQUEST_PARTS', workOrderId: string }
-  | { name: 'SCAN_FAULTY_PART', workOrderId: string; partNumber: string, component: Component }
   | { name: 'MOVE_OUT', workOrderId: string }
   | { name: 'MOVE_IN', workOrderId: string };
 
@@ -86,21 +84,20 @@ export function DatacenterOpsDemo({
         setView(newView);
     };
     
-    const handlePartScanned = (partNumber: string, serialNumber: string) => {
+    const handlePartScanned = (workOrderId: string, component: Component, serialNumber: string) => {
         setPartRequests(prev => {
             const newRequests = new Map(prev);
-            const component = (view as any).component as Component; // We know this will be available
-            const existing = newRequests.get(partNumber);
+            const existing = newRequests.get(component.partNumber);
             if (existing) {
                 if (!existing.serials.includes(serialNumber)) {
                     existing.serials.push(serialNumber);
                 }
             } else {
-                newRequests.set(partNumber, { component, serials: [serialNumber] });
+                newRequests.set(component.partNumber, { component, serials: [serialNumber] });
             }
             return newRequests;
         });
-        navigateTo({ name: 'REQUEST_PARTS', workOrderId: (view as any).workOrderId });
+        // Stay on the same page, no navigation needed
     };
 
     useEffect(() => {
@@ -137,11 +134,6 @@ export function DatacenterOpsDemo({
                 onTitleChange('增领备件');
                 backLabel = '返回操作页';
                 backView = { name: 'WORK_ORDER_OPERATE', workOrderId: view.workOrderId };
-                break;
-            case 'SCAN_FAULTY_PART':
-                onTitleChange('扫描坏件序列号');
-                backLabel = '返回增领列表';
-                backView = { name: 'REQUEST_PARTS', workOrderId: view.workOrderId };
                 break;
              case 'MOVE_OUT':
                 onTitleChange(`搬出操作 #${view.workOrderId}`);
@@ -257,15 +249,8 @@ export function DatacenterOpsDemo({
                  if (!currentWorkOrder) return <div>工单未找到</div>;
                  return <RequestPartsPage 
                     workOrder={currentWorkOrder} 
-                    onBack={() => navigateTo({ name: 'WORK_ORDER_OPERATE', workOrderId: view.workOrderId })}
-                    onScan={(component) => navigateTo({ name: 'SCAN_FAULTY_PART', workOrderId: view.workOrderId, partNumber: component.partNumber, component })}
+                    onScanComplete={(component, serialNumber) => handlePartScanned(view.workOrderId, component, serialNumber)}
                     initialPartRequests={partRequests}
-                />;
-            
-            case 'SCAN_FAULTY_PART':
-                return <ScanFaultyPartPage 
-                    component={view.component}
-                    onScanComplete={(serialNumber) => handlePartScanned(view.partNumber, serialNumber)}
                 />;
 
             case 'MOVE_OUT':
