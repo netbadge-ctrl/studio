@@ -15,8 +15,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
-import { PackageMinus, Send } from "lucide-react";
+import { PackageMinus, Send, ChevronDown } from "lucide-react";
 import { Badge } from "./ui/badge";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { cn } from "@/lib/utils";
 
 interface ReturnPartsDialogProps {
   isOpen: boolean;
@@ -35,6 +37,7 @@ export function ReturnPartsDialog({
   workOrder,
 }: ReturnPartsDialogProps) {
   const { toast } = useToast();
+  const [openCollapsible, setOpenCollapsible] = React.useState<string | null>(null);
 
   const aggregatedParts = React.useMemo(() => {
     const partsMap = new Map<string, AggregatedPart>();
@@ -43,8 +46,6 @@ export function ReturnPartsDialog({
       const targetPartNumbersInSlots = new Map(device.targetConfig.map(c => [c.slot, c.partNumber]));
       
       device.currentConfig.forEach(component => {
-        // This component is considered "removed" if the target slot doesn't exist 
-        // or has a different part number.
         if (targetPartNumbersInSlots.get(component.slot) !== component.partNumber) {
           const serialNumber = `SN-FAULT-${device.serialNumber.slice(-4)}-${component.slot}`;
           const existing = partsMap.get(component.partNumber);
@@ -104,24 +105,32 @@ export function ReturnPartsDialog({
             <ScrollArea className="h-full px-4">
                 {aggregatedParts.length > 0 ? (
                      <div className="space-y-4">
-                        {aggregatedParts.map(({ component, serialNumbers }) => (
-                           <div key={component.partNumber} className="p-4 border rounded-lg bg-card">
-                              <div className="flex items-start justify-between gap-4 mb-3">
-                                  <div className="flex-grow">
-                                      <p className="font-semibold text-foreground">{component.model}</p>
-                                      <p className='text-sm text-muted-foreground'>回库盒号: <span className="font-mono">{component.partNumber}</span></p>
-                                  </div>
+                        {aggregatedParts.map(({ component, serialNumbers }, index) => (
+                           <Collapsible 
+                              key={component.partNumber} 
+                              className="p-4 border rounded-lg bg-card data-[state=open]:shadow-md"
+                              open={openCollapsible === component.partNumber}
+                              onOpenChange={(isOpen) => setOpenCollapsible(isOpen ? component.partNumber : null)}
+                            >
+                              <CollapsibleTrigger className="flex items-start justify-between gap-4 w-full group">
+                                <div className="flex-grow text-left">
+                                  <p className="font-semibold text-foreground">备件Model号{index + 1}</p>
+                                  <p className='text-sm text-muted-foreground'>回库盒号: <span className="font-mono">{component.partNumber}</span></p>
+                                </div>
+                                <div className="flex items-center gap-4">
                                   <Badge variant="secondary">数量: {serialNumbers.length}</Badge>
-                              </div>
-                              <ul className="space-y-2 pt-3 border-t">
+                                  <ChevronDown className="h-5 w-5 text-muted-foreground transition-transform duration-200 group-data-[state=open]:rotate-180" />
+                                </div>
+                              </CollapsibleTrigger>
+                              <CollapsibleContent className="space-y-2 pt-4 mt-4 border-t">
                                   {serialNumbers.map(sn => (
-                                      <li key={sn} className="flex items-center justify-between text-sm p-2 bg-muted/50 rounded-md">
+                                      <li key={sn} className="flex items-center justify-between text-sm p-2 bg-muted/50 rounded-md list-none">
                                           <span className="text-muted-foreground">序列号:</span>
                                           <span className="font-mono text-foreground">{sn}</span>
                                       </li>
                                   ))}
-                              </ul>
-                           </div>
+                              </CollapsibleContent>
+                           </Collapsible>
                         ))}
                      </div>
                 ) : (
