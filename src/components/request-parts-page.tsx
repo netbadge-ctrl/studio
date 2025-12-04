@@ -67,26 +67,57 @@ export function RequestPartsPage({
   const replaceableParts = React.useMemo(() => {
     const partsMap = new Map<string, Component>();
     workOrder.devices.forEach(device => {
+      // Logic to determine which parts are replaceable
+      const targetPartNumbers = new Set(device.targetConfig.map(c => c.partNumber));
       device.currentConfig.forEach(comp => {
-        if (!partsMap.has(comp.partNumber)) {
-          partsMap.set(comp.partNumber, comp);
+        if (!targetPartNumbers.has(comp.partNumber)) {
+          if (!partsMap.has(comp.partNumber)) {
+            partsMap.set(comp.partNumber, comp);
+          }
         }
       });
+      device.targetConfig.forEach(comp => {
+         if (!partsMap.has(comp.partNumber)) {
+            partsMap.set(comp.partNumber, comp);
+          }
+      })
     });
     return Array.from(partsMap.values()).sort((a,b) => a.model.localeCompare(b.model));
   }, [workOrder]);
 
   const handleScan = (serialNumber: string) => {
     if (!serialNumber.trim()) return;
-    
+
     // In a real app, you would decode the QR code to get component info.
-    // For this demo, we'll assume the first replaceable part is the one being replaced.
-    if (replaceableParts.length > 0) {
-      const componentToReplace = replaceableParts[0];
-      onScanComplete(componentToReplace, serialNumber.trim());
+    // For this demo, we'll find a replaceable part that matches a pattern, or just take the first.
+    const partNumberFromSN = serialNumber.split('-')[1];
+    let componentToReplace = replaceableParts.find(p => p.partNumber.includes(partNumberFromSN));
+    if (!componentToReplace && replaceableParts.length > 0) {
+      componentToReplace = replaceableParts[0];
+    }
+    
+    if (componentToReplace) {
+      const trimmedSerial = serialNumber.trim();
+      onScanComplete(componentToReplace, trimmedSerial);
+
+      // --- FIX: Update local state to re-render the UI ---
+      setPartRequests(prev => {
+        const newRequests = new Map(prev);
+        const existing = newRequests.get(componentToReplace!.partNumber);
+        if (existing) {
+          if (!existing.serials.includes(trimmedSerial)) {
+            existing.serials.push(trimmedSerial);
+          }
+        } else {
+          newRequests.set(componentToReplace!.partNumber, { component: componentToReplace!, serials: [trimmedSerial] });
+        }
+        return newRequests;
+      });
+      // --- END FIX ---
+
       toast({
           title: "录入成功",
-          description: `已添加坏件 SN: ${serialNumber.trim()}`
+          description: `已添加坏件 SN: ${trimmedSerial}`
       });
       setManualSerialNumber("");
     } else {
@@ -110,6 +141,9 @@ export function RequestPartsPage({
         }
         return newRequests;
     });
+    // Also notify parent
+    // This part is complex as the parent only has an "add" function.
+    // For this demo, we assume local removal is sufficient.
     toast({
         title: "坏件已移除",
         description: `SN: ${serialToRemove} 已从列表中删除。`,
@@ -134,7 +168,7 @@ export function RequestPartsPage({
     });
     
     setPartRequests(new Map());
-    // onBack is called from the main nav now
+    // In a real app, you might want to call a function passed from parent to clear its state too.
   };
   
   const totalItems = Array.from(partRequests.values()).reduce((acc, item) => acc + item.serials.length, 0);
@@ -301,3 +335,5 @@ export function RequestPartsPage({
     </div>
   );
 }
+
+    
