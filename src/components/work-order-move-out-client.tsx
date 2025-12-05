@@ -35,6 +35,7 @@ import {
 import { cn } from "@/lib/utils";
 import { CalendarIcon, Send, X } from "lucide-react";
 import { format } from "date-fns";
+import { zhCN } from "date-fns/locale";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -61,6 +62,7 @@ export function WorkOrderMoveOutClient({ workOrder }: { workOrder: WorkOrder }) 
     resolver: zodResolver(moveOutFormSchema),
     defaultValues: {
       destination: destination,
+      moveOutDate: new Date(),
       shippingProvider: "",
       trackingNumber: "",
     },
@@ -118,7 +120,7 @@ export function WorkOrderMoveOutClient({ workOrder }: { workOrder: WorkOrder }) 
                           )}
                         >
                           {field.value ? (
-                            format(field.value, "PPP")
+                            format(field.value, "PPP", { locale: zhCN })
                           ) : (
                             <span>选择一个日期</span>
                           )}
@@ -131,6 +133,7 @@ export function WorkOrderMoveOutClient({ workOrder }: { workOrder: WorkOrder }) 
                          <DialogTitle>选择出库日期</DialogTitle>
                        </DialogHeader>
                       <Calendar
+                        locale={zhCN}
                         mode="single"
                         selected={field.value}
                         onSelect={(date) => {
