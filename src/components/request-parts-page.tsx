@@ -30,7 +30,15 @@ export function RequestPartsPage({
   initialPartRequests,
 }: RequestPartsPageProps) {
   const { toast } = useToast();
-  const [partRequests, setPartRequests] = React.useState<Map<string, PartRequest>>(initialPartRequests);
+  const [partRequests, setPartRequests] = React.useState<Map<string, PartRequest>>(() => {
+    // Let's create some mock data to make the page look more realistic on initial load.
+    const mockRequests = new Map<string, PartRequest>();
+    const mockComponent1: Component = { type: '内存', manufacturer: 'Hynix', model: '16GB DDR4 2400MHz', quantity: 1, partNumber: 'MEM-16G-2400-A', slot: 'A1' };
+    const mockComponent2: Component = { type: 'SSD', manufacturer: 'Samsung', model: 'PM883 480GB SSD', quantity: 1, partNumber: 'SSD-480G-S-PM883', slot: 'Disk 0' };
+    mockRequests.set(mockComponent1.partNumber, { component: mockComponent1, serials: ['SN-FAULTY-A1B2C3D4'] });
+    mockRequests.set(mockComponent2.partNumber, { component: mockComponent2, serials: ['SN-FAULTY-E5F6G7H8', 'SN-FAULTY-I9J0K1L2'] });
+    return mockRequests;
+  });
   const [hasCameraPermission, setHasCameraPermission] = React.useState<boolean | null>(null);
   const [manualSerialNumber, setManualSerialNumber] = React.useState("");
   const videoRef = React.useRef<HTMLVideoElement>(null);
@@ -242,12 +250,12 @@ export function RequestPartsPage({
             </CardContent>
         </Card>
 
-        {/* Area 1: Faulty Parts List */}
+        {/* Faulty Parts List */}
         <Card>
             <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg">
                     <Inbox className="h-5 w-5" />
-                    区域1: 坏件清单
+                    坏件清单
                 </CardTitle>
                  <CardDescription>
                     已扫描的坏件将在此处列出，请确认信息并准备回库。
@@ -282,12 +290,12 @@ export function RequestPartsPage({
             </CardContent>
         </Card>
 
-        {/* Area 2: Replacement Request List */}
+        {/* Replacement Request List */}
         <Card>
             <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg">
                     <PackageSearch className="h-5 w-5" />
-                    区域2: 申领清单
+                    申领清单
                 </CardTitle>
                 <CardDescription>
                     系统已根据您扫描的坏件自动生成需要领用的新备件清单。
